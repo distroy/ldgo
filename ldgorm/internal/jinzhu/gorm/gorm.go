@@ -14,16 +14,16 @@ type gormDb = gorm.DB
 type GormDb struct {
 	*gormDb
 
-	txLevel int
-	inSubTx bool
+	txLvl int
+	inTx  bool
 }
 
 func (w *GormDb) panicTxLevelLessZero() {
 	panic("tx level must not be less than zero")
 }
 
-func (w *GormDb) panicSubTxCommittedOrRollbacked() {
-	panic("sub tx can not be committed or rollbacked again")
+func (w *GormDb) panicTxCommittedOrRollbacked() {
+	panic("tx can not be committed or rollbacked again")
 }
 
 func (w *GormDb) clone() *GormDb {
@@ -62,15 +62,15 @@ func (w *GormDb) Model(value interface{}) *GormDb {
 }
 
 func (w *GormDb) Transaction(fc func(tx *GormDb) error) (err error) {
-	if w.txLevel > 0 {
+	if w.txLvl > 0 {
 		return fc(w)
 	}
 
-	panicked := true
+	paniced := true
 	tx := w.Begin()
 	defer func() {
 		// Make sure to rollback when panic, Block error or Commit error
-		if panicked || err != nil {
+		if paniced || err != nil {
 			tx.Rollback()
 		}
 	}()
@@ -81,83 +81,83 @@ func (w *GormDb) Transaction(fc func(tx *GormDb) error) (err error) {
 		err = tx.Commit().Error
 	}
 
-	panicked = false
+	paniced = false
 	return
 }
 
 func (w *GormDb) Begin() *GormDb {
-	if w.txLevel < 0 {
+	if w.txLvl < 0 {
 		w.panicTxLevelLessZero()
 	}
 
 	w = w.clone()
 
-	if w.txLevel == 0 {
+	if w.txLvl == 0 {
 		w.gormDb = w.gormDb.Begin()
 	}
 
-	w.inSubTx = true
-	w.txLevel++
+	w.inTx = true
+	w.txLvl++
 	return w
 }
 
 func (w *GormDb) Commit() *GormDb {
-	if !w.inSubTx {
-		w.panicSubTxCommittedOrRollbacked()
+	if !w.inTx {
+		w.panicTxCommittedOrRollbacked()
 	}
 
 	w = w.clone()
 
-	w.txLevel--
-	if w.txLevel < 0 {
+	w.txLvl--
+	if w.txLvl < 0 {
 		w.panicTxLevelLessZero()
 	}
 
-	if w.txLevel == 0 {
+	if w.txLvl == 0 {
 		w.gormDb = w.gormDb.Commit()
 	}
 
-	w.inSubTx = false
+	w.inTx = false
 	return w
 }
 
 func (w *GormDb) Rollback() *GormDb {
-	if !w.inSubTx {
-		w.panicSubTxCommittedOrRollbacked()
+	if !w.inTx {
+		w.panicTxCommittedOrRollbacked()
 	}
 
 	w = w.clone()
 
-	w.txLevel--
-	if w.txLevel < 0 {
+	w.txLvl--
+	if w.txLvl < 0 {
 		w.panicTxLevelLessZero()
 	}
 
-	if w.txLevel == 0 {
+	if w.txLvl == 0 {
 		w.gormDb = w.gormDb.Rollback()
 	}
 
-	w.inSubTx = false
+	w.inTx = false
 	return w
 }
 
 func (w *GormDb) RollbackUnlessCommitted() *GormDb {
-	if !w.inSubTx {
+	if !w.inTx {
 		return w
 	}
 
 	w = w.clone()
 
-	w.txLevel--
-	if w.txLevel < 0 {
+	w.txLvl--
+	if w.txLvl < 0 {
 		w.panicTxLevelLessZero()
 	}
 
-	if w.txLevel == 0 {
+	if w.txLvl == 0 {
 		w.gormDb = w.gormDb.RollbackUnlessCommitted()
 	}
 
-	w.inSubTx = false
+	w.inTx = false
 	return w
 }
 
