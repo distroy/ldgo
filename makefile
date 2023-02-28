@@ -83,6 +83,8 @@ go-test-report-dir:
 go-test-coverage: go-test-report-dir
 	$(GO) test $(GO_FLAGS) $(GO_TEST_FLAGS) ./... \
 		-coverprofile="$(GO_TEST_REPORT_DIR)/go-coverage.out"
+	$(GO) tool cover -html $(GO_TEST_REPORT_DIR)/go-coverage.out \
+		-o $(GO_TEST_REPORT_DIR)/go-coverage.html
 
 go-test-report: go-test-report-dir
 	$(GO) test $(GO_FLAGS) $(GO_TEST_FLAGS) ./... \

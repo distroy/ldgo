@@ -61,4 +61,9 @@ jobs:
       - run: go mod download
       - run: make setup
       - run: make go-test-coverage
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: go-coverage
+          path: log/go-coverage.html
       - run: git-diff-go-coverage -file log/go-coverage.out
