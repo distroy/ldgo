@@ -5,7 +5,6 @@
 package ldatomic
 
 import (
-	"sync/atomic"
 	"time"
 	"unsafe"
 )
@@ -17,10 +16,9 @@ var (
 )
 
 type Time struct {
-	// d    Pointer
-	sec  int64
-	nano int32
-	loc  unsafe.Pointer
+	sec  Int64
+	nano Int
+	loc  Pointer
 }
 
 func NewTime(d time.Time) *Time {
@@ -31,9 +29,9 @@ func NewTime(d time.Time) *Time {
 	// 	nano, loc.String(), d.Unix(), d.Format("2006-01-02T15:04:05-0700"))
 
 	p := &Time{}
-	p.storeSec(sec)
-	p.storeNano(nano)
-	p.storeLoc(loc)
+	p.sec.Store(sec)
+	p.nano.Store(nano)
+	p.loc.Store(unsafe.Pointer(loc))
 	return p
 }
 
@@ -44,7 +42,7 @@ func (p *Time) Store(d time.Time) {
 	// log.Printf("store time. nano:%d, loc:%s, time:%s",
 	// 	newNano, newLoc.String(), d.Format("2006-01-02T15:04:05-0700"))
 	for {
-		loc := p.loadLoc()
+		loc := (*time.Location)(p.loc.Load())
 		if loc == &storeTimeInProgress {
 			// Store in progress. Wait.
 			// Since we disable preemption around the store,
@@ -57,14 +55,14 @@ func (p *Time) Store(d time.Time) {
 		// active spin wait to wait for completion.
 		runtime_procPin()
 
-		if !p.cmpAndSwapLoc(loc, &storeTimeInProgress) {
+		if !p.loc.CompareAndSwap(unsafe.Pointer(loc), unsafe.Pointer(&storeTimeInProgress)) {
 			runtime_procUnpin()
 			continue
 		}
 
-		p.storeSec(newSec)
-		p.storeNano(newNano)
-		p.storeLoc(newLoc)
+		p.sec.Store(newSec)
+		p.nano.Store(newNano)
+		p.loc.Store(unsafe.Pointer(newLoc))
 		runtime_procUnpin()
 
 		return
@@ -73,13 +71,13 @@ func (p *Time) Store(d time.Time) {
 
 func (p *Time) Load() time.Time {
 	for {
-		loc := p.loadLoc()
+		loc := (*time.Location)(p.loc.Load())
 		if loc == &storeTimeInProgress {
 			continue
 		}
 
-		sec := p.loadSec()
-		nano := p.loadNano()
+		sec := p.sec.Load()
+		nano := p.nano.Load()
 		return p.makeTime(sec, nano, loc)
 	}
 }
@@ -90,7 +88,7 @@ func (p *Time) Swap(new time.Time) (old time.Time) {
 	newLoc := new.Location()
 
 	for {
-		oldLoc := p.loadLoc()
+		oldLoc := (*time.Location)(p.loc.Load())
 		if oldLoc == &storeTimeInProgress {
 			// Store in progress. Wait.
 			// Since we disable preemption around the store,
@@ -103,14 +101,14 @@ func (p *Time) Swap(new time.Time) (old time.Time) {
 		// active spin wait to wait for completion.
 		runtime_procPin()
 
-		if !p.cmpAndSwapLoc(oldLoc, &storeTimeInProgress) {
+		if !p.loc.CompareAndSwap(unsafe.Pointer(oldLoc), unsafe.Pointer(&storeTimeInProgress)) {
 			runtime_procUnpin()
 			continue
 		}
 
-		oldSec := p.swapSec(newSec)
-		oldNano := p.swapNano(newNano)
-		p.storeLoc(newLoc)
+		oldSec := p.sec.Swap(newSec)
+		oldNano := p.nano.Swap(newNano)
+		p.loc.Store(unsafe.Pointer(newLoc))
 		runtime_procUnpin()
 
 		return p.makeTime(oldSec, oldNano, oldLoc)
@@ -127,7 +125,7 @@ func (p *Time) CompareAndSwap(old, new time.Time) (swapped bool) {
 	oldLoc := old.Location()
 
 	for {
-		pLoc := p.loadLoc()
+		pLoc := (*time.Location)(p.loc.Load())
 		if pLoc == &storeTimeInProgress {
 			continue
 
@@ -136,34 +134,68 @@ func (p *Time) CompareAndSwap(old, new time.Time) (swapped bool) {
 		}
 
 		runtime_procPin()
-		if !p.cmpAndSwapLoc(pLoc, &storeTimeInProgress) {
+		if !p.loc.CompareAndSwap(unsafe.Pointer(pLoc), unsafe.Pointer(&storeTimeInProgress)) {
 			runtime_procUnpin()
 			return false
 		}
 
-		if !p.cmpAndSwapNano(oldNano, newNano) {
-			p.storeLoc(pLoc)
+		if !p.nano.CompareAndSwap(oldNano, newNano) {
+			p.loc.Store(unsafe.Pointer(pLoc))
 			runtime_procUnpin()
 			return false
 		}
 
-		if !p.cmpAndSwapSec(oldSec, newSec) {
-			p.storeNano(oldNano)
-			p.storeLoc(pLoc)
+		if !p.sec.CompareAndSwap(oldSec, newSec) {
+			p.nano.Store(oldNano)
+			p.loc.Store(unsafe.Pointer(pLoc))
 			runtime_procUnpin()
 			return false
 		}
 
-		p.storeLoc(newLoc)
+		p.loc.Store(unsafe.Pointer(newLoc))
 		runtime_procUnpin()
 		return true
 	}
 }
 
 func (p *Time) Add(d time.Duration) (new time.Time) {
-	return p.MustChange(func(old time.Time) (new time.Time) {
-		return old.Add(d)
-	})
+	sec := d / time.Second
+	nano := d % time.Second
+
+	for {
+		loc := (*time.Location)(p.loc.Load())
+		if loc == &storeTimeInProgress {
+			continue
+		}
+
+		runtime_procPin()
+
+		if !p.loc.CompareAndSwap(unsafe.Pointer(loc), unsafe.Pointer(&storeTimeInProgress)) {
+			runtime_procUnpin()
+			continue
+		}
+
+		newNano := p.nano.Add(int(nano))
+		if newNano < 0 {
+			newNano = p.nano.Add(int(time.Second))
+			sec--
+
+		} else if newNano >= int(time.Second) {
+			newNano = p.nano.Sub(int(time.Second))
+			sec++
+		}
+
+		newSec := p.sec.Add(int64(sec))
+
+		p.loc.Store(unsafe.Pointer(loc))
+		runtime_procUnpin()
+
+		return p.makeTime(newSec, newNano, loc)
+	}
+}
+
+func (p *Time) Sub(d time.Time) time.Duration {
+	return p.Load().Sub(d)
 }
 
 func (p *Time) AddDate(years int, months int, days int) (new time.Time) {
@@ -200,27 +232,4 @@ func (p *Time) makeTime(sec int64, nano int, loc *time.Location) time.Time {
 	// 	sec, nano, loc.String(), t.Format("2006-01-02T15:04:05-0700"))
 
 	return t
-}
-
-func (p *Time) storeSec(d int64)              { atomic.StoreInt64(&p.sec, d) }
-func (p *Time) loadSec() int64                { return atomic.LoadInt64(&p.sec) }
-func (p *Time) swapSec(new int64) (old int64) { return atomic.SwapInt64(&p.sec, new) }
-func (p *Time) cmpAndSwapSec(old, new int64) (swapped bool) {
-	return atomic.CompareAndSwapInt64(&p.sec, old, new)
-}
-
-func (p *Time) storeNano(d int)            { atomic.StoreInt32(&p.nano, int32(d)) }
-func (p *Time) loadNano() int              { return int(atomic.LoadInt32(&p.nano)) }
-func (p *Time) swapNano(new int) (old int) { return int(atomic.SwapInt32(&p.nano, int32(new))) }
-func (p *Time) cmpAndSwapNano(old, new int) (swapped bool) {
-	return atomic.CompareAndSwapInt32(&p.nano, int32(old), int32(new))
-}
-
-func (p *Time) storeLoc(d *time.Location) { atomic.StorePointer(&p.loc, unsafe.Pointer(d)) }
-func (p *Time) loadLoc() *time.Location   { return (*time.Location)(atomic.LoadPointer(&p.loc)) }
-func (p *Time) swapLoc(new *time.Location) (old *time.Location) {
-	return (*time.Location)(atomic.SwapPointer(&p.loc, unsafe.Pointer(new)))
-}
-func (p *Time) cmpAndSwapLoc(old, new *time.Location) (swapped bool) {
-	return atomic.CompareAndSwapPointer(&p.loc, unsafe.Pointer(old), unsafe.Pointer(new))
 }
