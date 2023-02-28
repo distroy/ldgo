@@ -11,6 +11,8 @@ import (
 
 var _ = (*atomic.Value)(nil)
 
+var firstStoreValueInProgress byte
+
 //go:linkname runtime_procPin sync/atomic.runtime_procPin
 func runtime_procPin()
 
@@ -45,7 +47,7 @@ type ifaceWords struct {
 func (v *Value) Load() (val interface{}) {
 	vw := (*ifaceWords)(unsafe.Pointer(v))
 	typ := atomic.LoadPointer(&vw.typ)
-	if typ == nil || typ == unsafe.Pointer(&firstStoreInProgress) {
+	if typ == nil || typ == unsafe.Pointer(&firstStoreValueInProgress) {
 		// First store not yet completed.
 		return nil
 	}
@@ -55,8 +57,6 @@ func (v *Value) Load() (val interface{}) {
 	nw.data = data
 	return
 }
-
-var firstStoreInProgress byte
 
 // Store sets the value of the Value to x.
 // All calls to Store for a given Value must use values of the same concrete type.
@@ -74,7 +74,7 @@ func (v *Value) Store(val interface{}) {
 			// Disable preemption so that other goroutines can use
 			// active spin wait to wait for completion.
 			runtime_procPin()
-			if !atomic.CompareAndSwapPointer(&vw.typ, nil, unsafe.Pointer(&firstStoreInProgress)) {
+			if !atomic.CompareAndSwapPointer(&vw.typ, nil, unsafe.Pointer(&firstStoreValueInProgress)) {
 				runtime_procUnpin()
 				continue
 			}
@@ -84,7 +84,7 @@ func (v *Value) Store(val interface{}) {
 			runtime_procUnpin()
 			return
 
-		} else if typ == unsafe.Pointer(&firstStoreInProgress) {
+		} else if typ == unsafe.Pointer(&firstStoreValueInProgress) {
 			// First store in progress. Wait.
 			// Since we disable preemption around the first store,
 			// we can wait with active spinning.
@@ -119,7 +119,7 @@ func (v *Value) Swap(new interface{}) (old interface{}) {
 			// active spin wait to wait for completion; and so that
 			// GC does not see the fake type accidentally.
 			runtime_procPin()
-			if !atomic.CompareAndSwapPointer(&vw.typ, nil, unsafe.Pointer(&firstStoreInProgress)) {
+			if !atomic.CompareAndSwapPointer(&vw.typ, nil, unsafe.Pointer(&firstStoreValueInProgress)) {
 				runtime_procUnpin()
 				continue
 			}
@@ -129,7 +129,7 @@ func (v *Value) Swap(new interface{}) (old interface{}) {
 			runtime_procUnpin()
 			return nil
 
-		} else if typ == unsafe.Pointer(&firstStoreInProgress) {
+		} else if typ == unsafe.Pointer(&firstStoreValueInProgress) {
 			// First store in progress. Wait.
 			// Since we disable preemption around the first store,
 			// we can wait with active spinning.
@@ -174,7 +174,7 @@ func (v *Value) CompareAndSwap(old, new interface{}) (swapped bool) {
 			// active spin wait to wait for completion; and so that
 			// GC does not see the fake type accidentally.
 			runtime_procPin()
-			if !atomic.CompareAndSwapPointer(&vw.typ, nil, unsafe.Pointer(&firstStoreInProgress)) {
+			if !atomic.CompareAndSwapPointer(&vw.typ, nil, unsafe.Pointer(&firstStoreValueInProgress)) {
 				runtime_procUnpin()
 				continue
 			}
@@ -184,7 +184,7 @@ func (v *Value) CompareAndSwap(old, new interface{}) (swapped bool) {
 			runtime_procUnpin()
 			return true
 
-		} else if typ == unsafe.Pointer(&firstStoreInProgress) {
+		} else if typ == unsafe.Pointer(&firstStoreValueInProgress) {
 			// First store in progress. Wait.
 			// Since we disable preemption around the first store,
 			// we can wait with active spinning.

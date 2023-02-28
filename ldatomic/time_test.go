@@ -11,7 +11,9 @@ import (
 	"github.com/smartystreets/goconvey/convey"
 )
 
-var _testTimezone = testFixedTimezone("Asia/Bejing", +(8 * time.Hour))
+var (
+	testTimezone = testFixedTimezone("Asia/Bejing", +(8 * time.Hour))
+)
 
 func testFixedTimezone(name string, tm time.Duration) *time.Location {
 	sec := int(tm / time.Second)
@@ -20,12 +22,12 @@ func testFixedTimezone(name string, tm time.Duration) *time.Location {
 
 func TestTime(t *testing.T) {
 	const format = "2006-01-02T15:04:05-0700"
-	now := time.Unix(1644479966, 0).In(_testTimezone)
+	now := time.Unix(1644479966, 0).In(testTimezone)
 	convey.Convey(t.Name(), t, func() {
-		convey.So(NewTime(time.Time{}).Load().Format(format), convey.ShouldEqual, _zeroTime.Format(format))
+		convey.So(NewTime(zeroTime).Load().Format(format), convey.ShouldEqual, zeroTime.Format(format))
 
 		p := Time{}
-		convey.So(p.Load().Format(format), convey.ShouldEqual, _zeroTime.Format(format))
+		convey.So(p.Load().Format(format), convey.ShouldEqual, zeroTime.Format(format))
 
 		p.Store(now)
 		convey.So(p.Load().Format(format), convey.ShouldEqual, "2022-02-10T15:59:26+0800")
