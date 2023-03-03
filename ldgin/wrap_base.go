@@ -234,8 +234,8 @@ func (w *wrapper) call(g *gin.Context, h reflect.Value) {
 		if e := recover(); e != nil {
 			seq := c.sequence
 
-			const size = 64 << 10
-			buf := make([]byte, size)
+			array := [4 << 10]byte{}
+			buf := array[:]
 			buf = buf[:runtime.Stack(buf, false)]
 
 			log.Printf("http: panic serving. remote=%s,sequence=%s,err=%v,stack=\n%s",

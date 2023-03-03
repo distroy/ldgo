@@ -6,10 +6,8 @@ package ldgopool
 
 import (
 	"log"
-	"runtime/debug"
+	"runtime"
 	"sync"
-
-	"github.com/distroy/ldgo/ldconv"
 )
 
 type AsyncPoolConfig struct {
@@ -67,7 +65,12 @@ func (that *asyncPool) main() {
 func (that *asyncPool) doWithRecover(fn func()) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Println(err, ldconv.BytesToStrUnsafe(debug.Stack()))
+			array := [4 << 10]byte{}
+			buf := array[:]
+			buf = buf[:runtime.Stack(buf, false)]
+
+			log.Printf("[async pool] do async func panic. err:%v, stack:\n%s", err, buf)
+			// log.Println(err, ldconv.BytesToStrUnsafe(buf))
 		}
 	}()
 

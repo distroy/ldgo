@@ -6,9 +6,8 @@ package ldgopool
 
 import (
 	"log"
-	"runtime/debug"
+	"runtime"
 
-	"github.com/distroy/ldgo/ldconv"
 	"github.com/distroy/ldgo/ldsync"
 )
 
@@ -58,7 +57,12 @@ func (that goPool) GoN(n int, fn func(done <-chan none)) {
 	fnGo := func() {
 		defer func() {
 			if err := recover(); err != nil {
-				log.Println(err, ldconv.BytesToStrUnsafe(debug.Stack()))
+				array := [4 << 10]byte{}
+				buf := array[:]
+				buf = buf[:runtime.Stack(buf, false)]
+
+				// log.Println(err, ldconv.BytesToStrUnsafe(buf))
+				log.Printf("[go pool] go func panic. err:%v, stack:\n%s", err, buf)
 			}
 			that.done.Done()
 		}()
@@ -72,7 +76,12 @@ func (that goPool) RunN(n int, fn func()) {
 	fnGo := func() {
 		defer func() {
 			if err := recover(); err != nil {
-				log.Println(err, ldconv.BytesToStrUnsafe(debug.Stack()))
+				array := [4 << 10]byte{}
+				buf := array[:]
+				buf = buf[:runtime.Stack(buf, false)]
+
+				// log.Println(err, ldconv.BytesToStrUnsafe(buf))
+				log.Printf("[go pool] run func panic. err:%v, stack:\n%s", err, buf)
 			}
 			that.done.Done()
 		}()
