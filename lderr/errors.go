@@ -34,6 +34,7 @@ var (
 	ErrHttpReadBody      = New(http.StatusOK, -302, "http read body error")
 	ErrHttpNewRequest    = New(http.StatusOK, -303, "http new request error")
 	ErrHttpInvalidStatus = New(http.StatusOK, -304, "http invalid status")
+	ErrHttpRenderBody    = New(http.StatusOK, -305, "http render body fail")
 
 	ErrRpcCall      = New(http.StatusOK, -311, "rpc call error")
 	ErrRpcTimeout   = New(http.StatusOK, -312, "rpc timeout")
