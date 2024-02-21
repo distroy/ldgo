@@ -21,8 +21,8 @@ jobs:
   go-format-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
         with:
           go-version: "1.20.7"
       - run: make setup
@@ -32,8 +32,8 @@ jobs:
   go-cognitive-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
         # name: go-setup
         with:
           go-version: "1.20.7"
@@ -44,8 +44,8 @@ jobs:
   go-test-coverage-job:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
         with:
           go-version: "1.20.7"
       - run: go mod download
