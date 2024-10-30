@@ -8,7 +8,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldredis"
+	"github.com/distroy/ldgo/v3/ldredis"
 	"github.com/redis/go-redis/v9"
 )
 

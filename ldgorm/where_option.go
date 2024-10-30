@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/distroy/ldgo/v2/ldconv"
+	"github.com/distroy/ldgo/v3/ldconv"
 )
 
 type WhereOption interface {

@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"sync/atomic"
 
-	"github.com/distroy/ldgo/v2/ldhook"
+	"github.com/distroy/ldgo/v3/ldhook"
 	"gorm.io/gorm"
 )
 

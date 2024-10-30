@@ -5,20 +5,15 @@
 package ldrand
 
 import (
-	"math/rand"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldconv"
+	"github.com/distroy/ldgo/v3/ldconv"
 )
 
 var (
 	randStringLetters = ldconv.StrToBytesUnsafe("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	globalRand        = New(NewFastSource(time.Now().UnixNano()))
 )
-
-func init() {
-	rand.Seed(time.Now().UnixNano())
-}
 
 func Int() int     { return globalRand.Int() }
 func Int31() int32 { return globalRand.Int31() }

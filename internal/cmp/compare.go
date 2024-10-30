@@ -7,7 +7,7 @@ package cmp
 import (
 	"bytes"
 
-	"github.com/distroy/ldgo/v2/ldconv"
+	"github.com/distroy/ldgo/v3/ldconv"
 )
 
 func CompareInterface(a, b interface{}) int {

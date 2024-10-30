@@ -7,7 +7,7 @@ package internal
 import (
 	"context"
 
-	"github.com/distroy/ldgo/v2/ldctx"
+	"github.com/distroy/ldgo/v3/ldctx"
 )
 
 type ctxKey int

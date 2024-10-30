@@ -9,7 +9,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/distroy/ldgo/v2/ldctx"
+	"github.com/distroy/ldgo/v3/ldctx"
 	"go.uber.org/zap"
 )
 

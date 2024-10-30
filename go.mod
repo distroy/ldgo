@@ -1,4 +1,4 @@
-module github.com/distroy/ldgo/v2
+module github.com/distroy/ldgo/v3
 
 go 1.20
 

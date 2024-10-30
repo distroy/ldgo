@@ -5,7 +5,7 @@
 package ldlog
 
 import (
-	"github.com/distroy/ldgo/v2/ldatomic"
+	"github.com/distroy/ldgo/v3/ldatomic"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

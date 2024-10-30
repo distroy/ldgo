@@ -10,11 +10,11 @@ import (
 	"reflect"
 	"unsafe"
 
-	"github.com/distroy/ldgo/v2/ldconv"
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/lderr"
-	"github.com/distroy/ldgo/v2/ldredis"
-	"github.com/distroy/ldgo/v2/ldredis/internal"
+	"github.com/distroy/ldgo/v3/ldconv"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldredis"
+	"github.com/distroy/ldgo/v3/ldredis/internal"
 	"go.uber.org/zap"
 )
 
@@ -181,8 +181,8 @@ func getCallerField(rds *ldredis.Redis) zap.Field {
 	return internal.GetCallerField(caller)
 }
 
-//go:linkname getOptions github.com/distroy/ldgo/v2/ldredis.getOptions
+//go:linkname getOptions github.com/distroy/ldgo/v3/ldredis.getOptions
 func getOptions(*ldredis.Redis) *internal.Options
 
-//go:linkname getOptionsPointer github.com/distroy/ldgo/v2/ldredis.getOptionsPointer
+//go:linkname getOptionsPointer github.com/distroy/ldgo/v3/ldredis.getOptionsPointer
 func getOptionsPointer(c *ldredis.Redis) unsafe.Pointer

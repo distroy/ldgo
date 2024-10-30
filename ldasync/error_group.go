@@ -9,7 +9,7 @@ import (
 	"log"
 	"runtime/debug"
 
-	"github.com/distroy/ldgo/v2/ldatomic"
+	"github.com/distroy/ldgo/v3/ldatomic"
 )
 
 type ErrGroup struct {

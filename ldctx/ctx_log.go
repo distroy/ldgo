@@ -9,7 +9,7 @@ import (
 	"fmt"
 	_ "unsafe"
 
-	"github.com/distroy/ldgo/v2/ldlog"
+	"github.com/distroy/ldgo/v3/ldlog"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -37,10 +37,10 @@ type stringer interface {
 	String() string
 }
 
-//go:linkname zCoreByLogger github.com/distroy/ldgo/v2/ldlog.zCoreByLogger
+//go:linkname zCoreByLogger github.com/distroy/ldgo/v3/ldlog.zCoreByLogger
 func zCoreByLogger(l *ldlog.Logger, lvl zapcore.Level, skip int) *zap.Logger
 
-//go:linkname zSugarByLogger github.com/distroy/ldgo/v2/ldlog.zSugarByLogger
+//go:linkname zSugarByLogger github.com/distroy/ldgo/v3/ldlog.zSugarByLogger
 func zSugarByLogger(l *ldlog.Logger, lvl zapcore.Level, skip int) *zap.SugaredLogger
 
 func zCore(c context.Context, lvl zapcore.Level, skip int) *zap.Logger {

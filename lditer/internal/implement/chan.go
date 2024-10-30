@@ -5,8 +5,8 @@
 package implement
 
 import (
-	"github.com/distroy/ldgo/v2/ldchan"
-	"github.com/distroy/ldgo/v2/lditer"
+	"github.com/distroy/ldgo/v3/ldchan"
+	"github.com/distroy/ldgo/v3/lditer"
 )
 
 var (
