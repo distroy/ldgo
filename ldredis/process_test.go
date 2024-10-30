@@ -8,8 +8,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/lderr"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/lderr"
 	redis "github.com/redis/go-redis/v9"
 	"github.com/smartystreets/goconvey/convey"
 )

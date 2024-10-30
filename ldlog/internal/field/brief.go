@@ -7,9 +7,9 @@ package field
 import (
 	"fmt"
 
-	"github.com/distroy/ldgo/v2/ldconv"
-	"github.com/distroy/ldgo/v2/ldmath"
-	"github.com/distroy/ldgo/v2/ldptr"
+	"github.com/distroy/ldgo/v3/ldconv"
+	"github.com/distroy/ldgo/v3/ldmath"
+	"github.com/distroy/ldgo/v3/ldptr"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

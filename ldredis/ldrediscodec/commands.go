@@ -8,9 +8,9 @@ import (
 	"context"
 	"encoding"
 
-	"github.com/distroy/ldgo/v2/ldconv"
-	"github.com/distroy/ldgo/v2/ldredis"
-	"github.com/distroy/ldgo/v2/ldredis/internal"
+	"github.com/distroy/ldgo/v3/ldconv"
+	"github.com/distroy/ldgo/v3/ldredis"
+	"github.com/distroy/ldgo/v3/ldredis/internal"
 	redis "github.com/redis/go-redis/v9"
 )
 

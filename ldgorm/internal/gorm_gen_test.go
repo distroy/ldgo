@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/distroy/ldgo/v2/ldhook"
-	"github.com/distroy/ldgo/v2/ldlog"
-	"github.com/distroy/ldgo/v2/ldrand"
+	"github.com/distroy/ldgo/v3/ldhook"
+	"github.com/distroy/ldgo/v3/ldlog"
+	"github.com/distroy/ldgo/v3/ldrand"
 	"github.com/smartystreets/goconvey/convey"
 	"gorm.io/gorm"
 )

@@ -9,7 +9,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/distroy/ldgo/v2/ldio"
+	"github.com/distroy/ldgo/v3/ldio"
 	"github.com/gin-gonic/gin"
 )
 

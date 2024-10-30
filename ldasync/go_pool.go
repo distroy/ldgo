@@ -8,7 +8,7 @@ import (
 	"log"
 	"runtime/debug"
 
-	"github.com/distroy/ldgo/v2/ldsync"
+	"github.com/distroy/ldgo/v3/ldsync"
 )
 
 func Go(fn func()) *GoPool { return GoN(1, fn) }

@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldasync"
-	"github.com/distroy/ldgo/v2/ldctx"
+	"github.com/distroy/ldgo/v3/ldasync"
+	"github.com/distroy/ldgo/v3/ldctx"
 	"github.com/smartystreets/goconvey/convey"
 )
 

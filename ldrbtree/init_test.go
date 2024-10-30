@@ -8,8 +8,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/distroy/ldgo/v2/ldrand"
-	"github.com/distroy/ldgo/v2/ldsort"
+	"github.com/distroy/ldgo/v3/ldrand"
+	"github.com/distroy/ldgo/v3/ldsort"
 )
 
 const (

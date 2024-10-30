@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 	"unsafe"
 
-	"github.com/distroy/ldgo/v2/internal/race"
+	"github.com/distroy/ldgo/v3/internal/race"
 )
 
 // A WaitGroup waits for a collection of goroutines to finish.

@@ -7,7 +7,7 @@ package ldbyte
 import (
 	"io"
 
-	"github.com/distroy/ldgo/v2/ldmath"
+	"github.com/distroy/ldgo/v3/ldmath"
 )
 
 var (

@@ -5,7 +5,7 @@
 package ldrediscodec
 
 import (
-	"github.com/distroy/ldgo/v2/ldredis"
+	"github.com/distroy/ldgo/v3/ldredis"
 )
 
 func New[T comparable](rds *ldredis.Redis, codec Codec[T]) *Redis[T] {

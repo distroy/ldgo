@@ -7,7 +7,7 @@ package ldcmp
 import (
 	"time"
 
-	"github.com/distroy/ldgo/v2/internal/cmp"
+	"github.com/distroy/ldgo/v3/internal/cmp"
 )
 
 type Integer interface {

@@ -7,7 +7,7 @@ package ldtopk
 import (
 	"sync"
 
-	"github.com/distroy/ldgo/v2/ldcmp"
+	"github.com/distroy/ldgo/v3/ldcmp"
 )
 
 type LessFunc[T any] func(a, b T) bool

@@ -5,7 +5,7 @@
 package ldgin
 
 import (
-	"github.com/distroy/ldgo/v2/ldctx"
+	"github.com/distroy/ldgo/v3/ldctx"
 	"github.com/gin-gonic/gin"
 )
 

@@ -9,9 +9,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/distroy/ldgo/v2/internal/jsontag"
-	"github.com/distroy/ldgo/v2/ldcmp"
-	"github.com/distroy/ldgo/v2/ldsort"
+	"github.com/distroy/ldgo/v3/internal/jsontag"
+	"github.com/distroy/ldgo/v3/ldcmp"
+	"github.com/distroy/ldgo/v3/ldsort"
 	"go.uber.org/zap"
 )
 

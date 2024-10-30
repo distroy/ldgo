@@ -15,10 +15,10 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/distroy/ldgo/v2/ldconv"
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/lderr"
-	"github.com/distroy/ldgo/v2/ldgin"
+	"github.com/distroy/ldgo/v3/ldconv"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldgin"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )

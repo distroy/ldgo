@@ -5,7 +5,7 @@
 package ldconv
 
 import (
-	"github.com/distroy/ldgo/v2/ldbyte"
+	"github.com/distroy/ldgo/v3/ldbyte"
 )
 
 const (

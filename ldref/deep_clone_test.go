@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/distroy/ldgo/v2/lderr"
+	"github.com/distroy/ldgo/v3/lderr"
 	"github.com/smartystreets/goconvey/convey"
 )
 

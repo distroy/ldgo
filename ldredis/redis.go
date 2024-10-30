@@ -7,7 +7,7 @@ package ldredis
 import (
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldredis/internal"
+	"github.com/distroy/ldgo/v3/ldredis/internal"
 	redis "github.com/redis/go-redis/v9"
 )
 

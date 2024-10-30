@@ -7,7 +7,7 @@ package ldref
 import (
 	"reflect"
 
-	"github.com/distroy/ldgo/v2/internal/cmp"
+	"github.com/distroy/ldgo/v3/internal/cmp"
 )
 
 func Compare(a, b interface{}) int {
