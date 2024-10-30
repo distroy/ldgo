@@ -8,7 +8,6 @@ import (
 	"fmt"
 
 	"github.com/distroy/ldgo/v3/ldconv"
-	"github.com/distroy/ldgo/v3/ldmath"
 	"github.com/distroy/ldgo/v3/ldptr"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -41,9 +40,9 @@ var (
 
 func bytes2str(d []byte) string { return ldconv.BytesToStrUnsafe(d) }
 
-func SetBriefStringLen(n int) { briefStringLen = ldmath.MaxInt(n, minBriefStringLen) }
-func SetBriefArrayLen(n int)  { briefArrayLen = ldmath.MaxInt(n, minBriefArrayLen) }
-func SetBriefMapLen(n int)    { briefMapLen = ldmath.MaxInt(n, minBriefMapLen) }
+func SetBriefStringLen(n int) { briefStringLen = max(n, minBriefStringLen) }
+func SetBriefArrayLen(n int)  { briefArrayLen = max(n, minBriefArrayLen) }
+func SetBriefMapLen(n int)    { briefMapLen = max(n, minBriefMapLen) }
 
 func AddStr2Log(enc ObjectEncoder, k, s string) error {
 	oe := &objectEncoder{
