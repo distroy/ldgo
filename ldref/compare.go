@@ -11,7 +11,7 @@ import (
 )
 
 func Compare(a, b interface{}) int {
-	return cmp.CompareInterface(a, b)
+	return cmp.Compare(a, b)
 }
 
 func CompareReflect(a, b reflect.Value) int {

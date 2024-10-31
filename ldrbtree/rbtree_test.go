@@ -88,7 +88,7 @@ func TestRBTree_Insert(t *testing.T) {
 			rbtree := &RBTree[[2]int]{
 				Compare: func(a, b [2]int) int {
 					aa, bb := a, b
-					return ldcmp.CompareInt(aa[0], bb[0])
+					return ldcmp.CompareComparable(aa[0], bb[0])
 				},
 			}
 			c.So(rbtree.Len(), convey.ShouldEqual, 0)
