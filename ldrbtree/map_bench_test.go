@@ -27,7 +27,7 @@ func benchmarkMap_Insert(b *testing.B, size int) {
 		b.RunParallel(func(p *testing.PB) {
 			for p.Next() {
 				rbtree := &Map[int, int]{
-					KeyCompare: func(a, b int) int { return ldcmp.CompareInt(a, b) },
+					KeyCompare: func(a, b int) int { return ldcmp.CompareComparable(a, b) },
 				}
 				for i := 0; i < size; i++ {
 					rbtree.Insert(ldrand.Int(), 0)
@@ -41,7 +41,7 @@ func benchmarkMap_Insert(b *testing.B, size int) {
 
 func benchmarkMap_Search(b *testing.B, size int) {
 	rbtree := &Map[int, int]{
-		KeyCompare: func(a, b int) int { return ldcmp.CompareInt(a, b) },
+		KeyCompare: func(a, b int) int { return ldcmp.CompareComparable(a, b) },
 	}
 	for i := 0; i < size; i++ {
 		rbtree.Insert(ldrand.Int(), 0)

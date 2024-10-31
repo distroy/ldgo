@@ -9,5 +9,5 @@ import (
 )
 
 func DefaultCompare[T any](a, b T) int {
-	return ldcmp.CompareInterface(a, b)
+	return ldcmp.Compare(a, b)
 }

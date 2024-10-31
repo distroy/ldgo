@@ -4,11 +4,13 @@
 
 package ldslice
 
-import "github.com/distroy/ldgo/v3/internal/cmp"
+import (
+	"github.com/distroy/ldgo/v3/internal/cmp"
+)
 
 func Index[S ~[]V, V any](s S, v V) int {
 	for i := range s {
-		if cmp.CompareInterface(s[i], v) == 0 {
+		if cmp.Compare(s[i], v) == 0 {
 			return i
 		}
 	}

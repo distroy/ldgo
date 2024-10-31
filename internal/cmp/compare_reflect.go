@@ -90,12 +90,12 @@ func CompareReflect(a, b reflect.Value) int {
 	case reflect.UnsafePointer:
 		aa := a.Pointer()
 		bb := b.Pointer()
-		return CompareOrderable(aa, bb)
+		return CompareComparable(aa, bb)
 
 	case reflect.Chan, reflect.Func:
 		aa := a.Pointer()
 		bb := b.Pointer()
-		return CompareOrderable(aa, bb)
+		return CompareComparable(aa, bb)
 
 	case reflect.Map:
 		return compareReflectMap(a, b)
@@ -150,7 +150,7 @@ func compareReflectType(a, b reflect.Value) int {
 	}
 
 	if aKind != kindOrthers || bKind != kindOrthers {
-		return CompareOrderable(aKind, bKind)
+		return CompareComparable(aKind, bKind)
 	}
 
 	aType := a.Type()
@@ -162,7 +162,7 @@ func compareReflectType(a, b reflect.Value) int {
 
 	aName := aType.String()
 	bName := bType.String()
-	if r := CompareOrderable(len(aName), len(bName)); r != 0 {
+	if r := CompareComparable(len(aName), len(bName)); r != 0 {
 		return r
 	}
 
@@ -237,7 +237,7 @@ func getComparerTypeInfo(typ reflect.Type) typeInfo {
 func compareReflectPointer(a, b reflect.Value) int {
 	aa := a.Pointer()
 	bb := b.Pointer()
-	if r := CompareOrderable(aa, bb); r == 0 || aa == 0 || bb == 0 {
+	if r := CompareComparable(aa, bb); r == 0 || aa == 0 || bb == 0 {
 		return r
 	}
 	return CompareReflect(a.Elem(), b.Elem())
@@ -296,14 +296,14 @@ func compareReflectMap(a, b reflect.Value) int {
 	}
 
 	// return 0
-	return CompareOrderable(al, bl)
+	return CompareComparable(al, bl)
 }
 
 func compareReflectSlice(a, b reflect.Value) int {
 	al := a.Len()
 	bl := b.Len()
 	if al == 0 || bl == 0 || a.Index(0).UnsafeAddr() == b.Index(0).UnsafeAddr() {
-		return CompareOrderable(al, bl)
+		return CompareComparable(al, bl)
 	}
 	if a.Kind() == reflect.Uint8 {
 		return CompareBytes(a.Bytes(), b.Bytes())
@@ -319,7 +319,7 @@ func compareReflectSlice(a, b reflect.Value) int {
 			return r
 		}
 	}
-	return CompareOrderable(al, bl)
+	return CompareComparable(al, bl)
 }
 
 func compareReflectIface(a, b reflect.Value) int {
@@ -341,7 +341,7 @@ func compareReflectNumberLeftInt(aa int64, b reflect.Value) int {
 	}
 
 	bb := b.Int()
-	return CompareOrderable(aa, bb)
+	return CompareComparable(aa, bb)
 }
 
 func compareReflectNumberLeftUint(aa uint64, b reflect.Value) int {
@@ -356,7 +356,7 @@ func compareReflectNumberLeftUint(aa uint64, b reflect.Value) int {
 	}
 
 	bb := b.Uint()
-	return CompareOrderable(aa, bb)
+	return CompareComparable(aa, bb)
 }
 
 func compareReflectNumberLeftFloat(aa float64, b reflect.Value) int {
@@ -371,7 +371,7 @@ func compareReflectNumberLeftFloat(aa float64, b reflect.Value) int {
 	}
 
 	bb := b.Float()
-	return CompareOrderable(aa, bb)
+	return CompareComparable(aa, bb)
 }
 
 func compareIntAndFloat(a int64, b float64) int {
@@ -382,7 +382,7 @@ func compareIntAndFloat(a int64, b float64) int {
 	}
 
 	bb := int64(b)
-	r := CompareOrderable(a, bb)
+	r := CompareComparable(a, bb)
 	if r != 0 {
 		return r
 	}
@@ -400,7 +400,7 @@ func compareIntAndUint(a int64, b uint64) int {
 	if a < 0 {
 		return -1
 	}
-	return CompareOrderable(uint64(a), b)
+	return CompareComparable(uint64(a), b)
 }
 
 func compareUintAndFloat(a uint64, b float64) int {
@@ -411,7 +411,7 @@ func compareUintAndFloat(a uint64, b float64) int {
 	}
 
 	bb := uint64(b)
-	r := CompareOrderable(a, bb)
+	r := CompareComparable(a, bb)
 	if r != 0 {
 		return r
 	}
