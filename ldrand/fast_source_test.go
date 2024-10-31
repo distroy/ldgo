@@ -48,17 +48,17 @@ type testFastSource struct {
 	Mod, Scale, Diff int
 }
 
-func maxInt(a []int) int { return ldmath.MaxInt(a[0], a[1:]...) }
-func minInt(a []int) int { return ldmath.MinInt(a[0], a[1:]...) }
+func maxInt(a []int) int { return ldmath.Max(a[0], a[1:]...) }
+func minInt(a []int) int { return ldmath.Min(a[0], a[1:]...) }
 
 func diffRatio(a []int) float64 {
-	sum := ldmath.SumInt(a...)
+	sum := ldmath.Sum2[int64](a...)
 	cnt := int64(len(a))
 	avg := (sum + cnt/2) / cnt
 
 	diff := int64(0)
 	for _, n := range a {
-		diff += ldmath.AbsInt64(avg - int64(n))
+		diff += ldmath.Abs(avg - int64(n))
 	}
 
 	return float64(diff) / float64(sum)

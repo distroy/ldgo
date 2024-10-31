@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/distroy/ldgo/v3/ldmath"
 	"github.com/distroy/ldgo/v3/ldrand"
 	"github.com/distroy/ldgo/v3/ldsort"
 	"github.com/smartystreets/goconvey/convey"
@@ -30,7 +29,7 @@ func TestTopkInts(t *testing.T) {
 			ldsort.SortInts(origin)
 			ldsort.SortInts(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
@@ -58,7 +57,7 @@ func TestTopkInt64s(t *testing.T) {
 			ldsort.SortInt64s(origin)
 			ldsort.SortInt64s(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
@@ -86,7 +85,7 @@ func TestTopkInt32s(t *testing.T) {
 			ldsort.SortInt32s(origin)
 			ldsort.SortInt32s(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
@@ -114,7 +113,7 @@ func TestTopkInt16s(t *testing.T) {
 			ldsort.SortInt16s(origin)
 			ldsort.SortInt16s(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
@@ -142,7 +141,7 @@ func TestTopkInt8s(t *testing.T) {
 			ldsort.SortInt8s(origin)
 			ldsort.SortInt8s(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
@@ -170,7 +169,7 @@ func TestTopkUints(t *testing.T) {
 			ldsort.SortUints(origin)
 			ldsort.SortUints(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
@@ -198,7 +197,7 @@ func TestTopkUint64s(t *testing.T) {
 			ldsort.SortUint64s(origin)
 			ldsort.SortUint64s(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
@@ -226,7 +225,7 @@ func TestTopkUint32s(t *testing.T) {
 			ldsort.SortUint32s(origin)
 			ldsort.SortUint32s(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
@@ -254,7 +253,7 @@ func TestTopkUint16s(t *testing.T) {
 			ldsort.SortUint16s(origin)
 			ldsort.SortUint16s(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
@@ -282,7 +281,7 @@ func TestTopkUint8s(t *testing.T) {
 			ldsort.SortUint8s(origin)
 			ldsort.SortUint8s(topk)
 
-			size := ldmath.MinInt(n, k)
+			size := min(n, k)
 			origin = origin[:size]
 			convey.So(topk, convey.ShouldResemble, origin)
 		})
