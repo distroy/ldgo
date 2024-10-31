@@ -50,7 +50,6 @@ type FlagSet struct {
 	flagMap   map[string]*Flag
 	args      *Flag
 	model     reflect.Value
-	noDefault bool
 }
 
 func NewFlagSet() *FlagSet {
@@ -69,18 +68,11 @@ func (s *FlagSet) init() {
 	s.name = name
 	s.flagMap = make(map[string]*Flag)
 	s.command.Usage = s.printUsage
-	s.noDefault = false
 }
 
 func (s *FlagSet) Args() []string {
 	s.init()
 	return s.command.Args()
-}
-
-// Deprecated
-func (s *FlagSet) EnableDefault(on bool) {
-	s.init()
-	s.noDefault = !on
 }
 
 func (s *FlagSet) SetOutput(w io.Writer) {
@@ -253,7 +245,7 @@ func (s *FlagSet) parse(args []string) error {
 	// log.Printf(" === %#v", s.args)
 	if s.args != nil {
 		args := s.command.Args()
-		if !s.noDefault && len(args) == 0 && s.args.Default != "" {
+		if len(args) == 0 && s.args.Default != "" {
 			args = []string{s.args.Default}
 		}
 		// log.Printf(" === %v", args)
@@ -296,7 +288,7 @@ func (s *FlagSet) addFlag(f *Flag) {
 	}
 	f.Value = v
 
-	if !s.noDefault && f.Default != "" && (val.Kind() != reflect.Slice || val.Len() == 0) {
+	if f.Default != "" && (val.Kind() != reflect.Slice || val.Len() == 0) {
 		v.Set(f.Default)
 	}
 
