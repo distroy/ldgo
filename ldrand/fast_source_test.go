@@ -52,7 +52,7 @@ func maxInt(a []int) int { return ldmath.Max(a[0], a[1:]...) }
 func minInt(a []int) int { return ldmath.Min(a[0], a[1:]...) }
 
 func diffRatio(a []int) float64 {
-	sum := ldmath.SumInt(a...)
+	sum := ldmath.Sum2[int64](a...)
 	cnt := int64(len(a))
 	avg := (sum + cnt/2) / cnt
 
