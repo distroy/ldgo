@@ -7,13 +7,13 @@ package ldtopk
 import (
 	"sync"
 
-	"github.com/distroy/ldgo/v2/ldcmp"
+	"github.com/distroy/ldgo/v3/ldcmp"
 )
 
 type LessFunc[T any] func(a, b T) bool
 
 func defaultLess[T any](a, b T) bool {
-	return ldcmp.CompareInterface(a, b) < 0
+	return ldcmp.Compare(a, b) < 0
 }
 
 func New[T any](k int, less func(a, b T) bool) *Topk[T] {

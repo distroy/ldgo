@@ -5,19 +5,20 @@
 package ldlog
 
 import (
+	"github.com/distroy/ldgo/v3/ldatomic"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 var (
-	defLogger = New()
+	defLogger = ldatomic.NewAny(New())
 	console   = New()
 	discard   = newDiscard()
 )
 
-func SetDefault(l *Logger) { defLogger = l }
+func SetDefault(l *Logger) { defLogger.Store(l) }
 
-func Default() *Logger { return defLogger }
+func Default() *Logger { return defLogger.Load() }
 func Console() *Logger { return console }
 func Discard() *Logger { return discard }
 

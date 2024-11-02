@@ -8,10 +8,10 @@ import (
 	"context"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldatomic"
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/lderr"
-	"github.com/distroy/ldgo/v2/ldmath"
+	"github.com/distroy/ldgo/v3/ldatomic"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldmath"
 	"go.uber.org/zap"
 	"golang.org/x/time/rate"
 )

@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/distroy/ldgo/v2/ldref"
+	"github.com/distroy/ldgo/v3/ldref"
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
 )

@@ -9,10 +9,10 @@ import (
 	"encoding/hex"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/ldlog"
-	"github.com/distroy/ldgo/v2/ldrand"
-	"github.com/distroy/ldgo/v2/ldredis/internal"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/ldlog"
+	"github.com/distroy/ldgo/v3/ldrand"
+	"github.com/distroy/ldgo/v3/ldredis/internal"
 	redis "github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )

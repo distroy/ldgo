@@ -7,7 +7,7 @@ package ldrediscodec
 import (
 	"context"
 
-	"github.com/distroy/ldgo/v2/ldredis"
+	"github.com/distroy/ldgo/v3/ldredis"
 )
 
 type SetCmdable[T comparable] interface {

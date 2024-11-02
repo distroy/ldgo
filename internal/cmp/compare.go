@@ -7,10 +7,10 @@ package cmp
 import (
 	"bytes"
 
-	"github.com/distroy/ldgo/v2/ldconv"
+	"github.com/distroy/ldgo/v3/ldconv"
 )
 
-func CompareInterface(a, b interface{}) int {
+func Compare(a, b interface{}) int {
 	aa := reflectValueOf(a)
 	bb := reflectValueOf(b)
 	return CompareReflect(aa, bb)
@@ -29,10 +29,10 @@ func CompareBool[T ~bool](a, b T) int {
 
 func CompareComplex[T ~complex64 | ~complex128](aa, bb T) int {
 	a, b := complex128(aa), complex128(bb)
-	if r := CompareOrderable(real(a), real(b)); r != 0 {
+	if r := CompareComparable(real(a), real(b)); r != 0 {
 		return r
 	}
-	return CompareOrderable(imag(a), imag(b))
+	return CompareComparable(imag(a), imag(b))
 }
 
 func CompareString[T ~string](a, b T) int {

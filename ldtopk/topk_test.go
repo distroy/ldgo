@@ -8,9 +8,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/distroy/ldgo/v2/ldmath"
-	"github.com/distroy/ldgo/v2/ldrand"
-	"github.com/distroy/ldgo/v2/ldsort"
+	"github.com/distroy/ldgo/v3/ldrand"
+	"github.com/distroy/ldgo/v3/ldsort"
 	"github.com/smartystreets/goconvey/convey"
 )
 
@@ -32,7 +31,7 @@ func testTopk(c convey.C, n, k int) {
 		ldsort.SortInts(origin)
 		ldsort.SortInts(topk.Data())
 
-		size := ldmath.MinInt(n, k)
+		size := min(n, k)
 		origin = origin[:size]
 		c.So(topk.Data(), convey.ShouldResemble, origin)
 	})

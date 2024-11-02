@@ -8,12 +8,9 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
-	"time"
 )
 
 func main() {
-	rand.Seed(time.Now().UnixNano())
-
 	buf := [16]byte{}
 	xor := [16]uint64{}
 

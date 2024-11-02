@@ -8,7 +8,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/distroy/ldgo/v2/ldsync"
+	"github.com/distroy/ldgo/v3/ldsync"
 )
 
 const (

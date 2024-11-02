@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldatomic"
-	"github.com/distroy/ldgo/v2/ldsync"
+	"github.com/distroy/ldgo/v3/ldatomic"
+	"github.com/distroy/ldgo/v3/ldsync"
 	"go.uber.org/zap"
 )
 

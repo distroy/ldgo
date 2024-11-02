@@ -8,8 +8,8 @@ import (
 	"reflect"
 	"unsafe"
 
-	"github.com/distroy/ldgo/v2/ldredis/internal"
-	"github.com/distroy/ldgo/v2/ldref"
+	"github.com/distroy/ldgo/v3/ldredis/internal"
+	"github.com/distroy/ldgo/v3/ldref"
 	redis "github.com/redis/go-redis/v9"
 )
 

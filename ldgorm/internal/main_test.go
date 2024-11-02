@@ -4,7 +4,7 @@
 
 package internal
 
-import "github.com/distroy/ldgo/v2/ldlog"
+import "github.com/distroy/ldgo/v3/ldlog"
 
 type testTable struct {
 	ProjectId int64 `gorm:"column:project_id;primary_key"`

@@ -10,10 +10,10 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/ldlog"
-	"github.com/distroy/ldgo/v2/ldredis"
-	"github.com/distroy/ldgo/v2/ldredis/ldrediscodec"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/ldlog"
+	"github.com/distroy/ldgo/v3/ldredis"
+	"github.com/distroy/ldgo/v3/ldredis/ldrediscodec"
 	"go.uber.org/zap"
 )
 

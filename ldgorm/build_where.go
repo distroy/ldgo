@@ -12,8 +12,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/distroy/ldgo/v2/ldconv"
-	"github.com/distroy/ldgo/v2/ldtagmap"
+	"github.com/distroy/ldgo/v3/ldconv"
+	"github.com/distroy/ldgo/v3/ldtagmap"
 )
 
 const _WHERE_TAG = "ldgormwhere"
