@@ -6,8 +6,6 @@ package ldbyte
 
 import (
 	"io"
-
-	"github.com/distroy/ldgo/v3/ldmath"
 )
 
 var (
@@ -69,21 +67,21 @@ func (b *RingBuffer) Write(d []byte) (int, error) {
 	pos := b.end
 	if b.end < b.begin {
 		n := b.begin - pos
-		n = ldmath.Min(n, len(d))
+		n = min(n, len(d))
 		copy(b.data[pos:], d[:n])
 		addEndPos(n)
 		return n, nil
 	}
 
 	n := capacity - pos
-	n = ldmath.Min(n, len(d))
+	n = min(n, len(d))
 	copy(b.data[pos:], d[:n])
 	if n >= len(d) || b.begin == 0 {
 		addEndPos(n)
 		return n, nil
 	}
 
-	n1 := ldmath.Min(b.begin, len(d)-n)
+	n1 := min(b.begin, len(d)-n)
 	copy(b.data[:n1], d[n:n+n1])
 	addEndPos(n + n1)
 	return n + n1, nil
@@ -112,13 +110,13 @@ func (b *RingBuffer) Read(d []byte) (int, error) {
 	pos := b.begin
 	n := len(d)
 	if b.begin < b.end {
-		n = ldmath.Min(n, b.end-b.begin)
+		n = min(n, b.end-b.begin)
 		copy(d, b.data[pos:pos+n])
 		addBeginPos(n)
 		return n, nil
 	}
 
-	n = ldmath.Min(n, capacity-pos)
+	n = min(n, capacity-pos)
 	copy(d, b.data[pos:pos+n])
 	if n >= len(d) || b.end == 0 {
 		addBeginPos(n)
@@ -126,7 +124,7 @@ func (b *RingBuffer) Read(d []byte) (int, error) {
 	}
 
 	n1 := len(d) - n
-	n1 = ldmath.Min(n1, b.end)
+	n1 = min(n1, b.end)
 	copy(d[n:], b.data[:n1])
 	addBeginPos(n + n1)
 	return n + n1, nil
