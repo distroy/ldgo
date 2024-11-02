@@ -6,6 +6,8 @@ package ldbyte
 
 import (
 	"io"
+
+	"github.com/distroy/ldgo/v3/internal/buffer"
 )
 
 var (
@@ -16,116 +18,47 @@ func NewRingBuffer(n int) *RingBuffer {
 	if n <= 0 {
 		n = 1024
 	}
+	buf := make([]byte, n, n)
 	return &RingBuffer{
-		data: make([]byte, n, n),
+		buf: buffer.MakeRing(buf),
 	}
 }
 
 type RingBuffer struct {
-	data   []byte
-	begin  int
-	end    int
-	closed bool
-	full   bool
+	buf buffer.Ring[byte]
 }
 
-func (b *RingBuffer) Close() error {
-	b.closed = true
-	return nil
+func (b *RingBuffer) Close() error { return b.buf.Close() }
+func (b *RingBuffer) Closed() bool { return b.buf.Closed() }
+
+func (b *RingBuffer) Cap() int  { return b.buf.Cap() }
+func (b *RingBuffer) Size() int { return b.buf.Size() }
+
+func (b *RingBuffer) Write(d []byte) (int, error) { return b.buf.Write(d) }
+func (b *RingBuffer) Read(d []byte) (int, error)  { return b.buf.Read(d) }
+
+func NewBlockingRingBuffer(n int) *BlockingRingBuffer {
+	if n <= 0 {
+		n = 1024
+	}
+	buf := make([]byte, n, n)
+	b := &BlockingRingBuffer{
+		buf: buffer.BlockingRing[byte]{
+			Buf: buffer.MakeRing(buf),
+		},
+	}
+	return b
 }
 
-func (b *RingBuffer) Size() int {
-	capacity := len(b.data)
-	if b.begin == b.end {
-		if b.full {
-			return capacity
-		}
-		return 0
-	}
-	if b.end > b.begin {
-		return b.end - b.begin
-	}
-	return b.end + capacity - b.begin
+type BlockingRingBuffer struct {
+	buf buffer.BlockingRing[byte]
 }
 
-func (b *RingBuffer) Write(d []byte) (int, error) {
-	if b.closed || len(d) == 0 || b.full {
-		return 0, nil
-	}
+func (b *BlockingRingBuffer) Close() error { return b.buf.Close() }
+func (b *BlockingRingBuffer) Closed() bool { return b.buf.Closed() }
 
-	capacity := len(b.data)
-	addEndPos := func(n int) {
-		b.end += n
-		if b.end >= capacity {
-			b.end -= capacity
-		}
-		if b.end == b.begin {
-			b.full = true
-		}
-	}
+func (b *BlockingRingBuffer) Cap() int  { return b.buf.Cap() }
+func (b *BlockingRingBuffer) Size() int { return b.buf.Size() }
 
-	pos := b.end
-	if b.end < b.begin {
-		n := b.begin - pos
-		n = min(n, len(d))
-		copy(b.data[pos:], d[:n])
-		addEndPos(n)
-		return n, nil
-	}
-
-	n := capacity - pos
-	n = min(n, len(d))
-	copy(b.data[pos:], d[:n])
-	if n >= len(d) || b.begin == 0 {
-		addEndPos(n)
-		return n, nil
-	}
-
-	n1 := min(b.begin, len(d)-n)
-	copy(b.data[:n1], d[n:n+n1])
-	addEndPos(n + n1)
-	return n + n1, nil
-}
-
-func (b *RingBuffer) Read(d []byte) (int, error) {
-	if b.end == b.begin && !b.full {
-		if b.closed {
-			return 0, io.EOF
-		}
-		return 0, nil
-	}
-	if len(d) == 0 {
-		return 0, nil
-	}
-
-	capacity := len(b.data)
-	addBeginPos := func(n int) {
-		b.begin += n
-		if b.begin >= capacity {
-			b.begin -= capacity
-		}
-		b.full = false
-	}
-
-	pos := b.begin
-	n := len(d)
-	if b.begin < b.end {
-		n = min(n, b.end-b.begin)
-		copy(d, b.data[pos:pos+n])
-		addBeginPos(n)
-		return n, nil
-	}
-
-	n = min(n, capacity-pos)
-	copy(d, b.data[pos:pos+n])
-	if n >= len(d) || b.end == 0 {
-		addBeginPos(n)
-		return n, nil
-	}
-
-	n1 := len(d) - n
-	n1 = min(n1, b.end)
-	copy(d[n:], b.data[:n1])
-	addBeginPos(n + n1)
-	return n + n1, nil
-}
+func (b *BlockingRingBuffer) Write(d []byte) (int, error) { return b.buf.Write(d) }
+func (b *BlockingRingBuffer) Read(d []byte) (int, error)  { return b.buf.Read(d) }
