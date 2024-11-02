@@ -45,13 +45,6 @@ func newDefaultFlagSet() *FlagSet {
 	return s
 }
 
-// Deprecated
-func EnableDefault(on bool) {
-	defaultOptions = append(defaultOptions, func(s *FlagSet) {
-		s.EnableDefault(on)
-	})
-}
-
 func MustParse(v interface{}, args ...[]string) {
 	s := newDefaultFlagSet()
 	s.Model(v)

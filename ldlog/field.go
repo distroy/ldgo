@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldlog/internal/field"
+	"github.com/distroy/ldgo/v3/ldlog/internal/field"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

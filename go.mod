@@ -1,6 +1,6 @@
-module github.com/distroy/ldgo/v2
+module github.com/distroy/ldgo/v3
 
-go 1.20
+go 1.23
 
 require (
 	github.com/agiledragon/gomonkey/v2 v2.11.0

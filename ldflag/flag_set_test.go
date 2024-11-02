@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/distroy/ldgo/v2/ldptr"
+	"github.com/distroy/ldgo/v3/ldptr"
 	"github.com/smartystreets/goconvey/convey"
 )
 
@@ -301,30 +301,8 @@ func TestFlagSet_Parse(t *testing.T) {
 				Pathes   []string `ldflag:"args; meta:path; default:."`
 			}
 
-			c.Convey("no set default", func(c convey.C) {
-				flags := &Flags{}
-				s.EnableDefault(false)
-				s.Model(flags)
-
-				err := s.Parse([]string{
-					"-top", "5",
-					"-avg", "1",
-					"-debug-log",
-				})
-				c.So(err, convey.ShouldBeNil)
-				c.So(flags, convey.ShouldResemble, &Flags{
-					Top:      5,
-					Avg:      true,
-					DebugLog: true,
-					Rate:     0,
-					Branch:   "",
-					Pathes:   []string{},
-				})
-			})
-
 			c.Convey("set default", func(c convey.C) {
 				flags := &Flags{}
-				s.EnableDefault(true)
 				s.Model(flags)
 
 				err := s.Parse([]string{
@@ -355,31 +333,8 @@ func TestFlagSet_Parse(t *testing.T) {
 				Pathes   []string `ldflag:"args; meta:path; default:."`
 			}
 
-			c.Convey("no set default", func(c convey.C) {
-				flags := &Flags{}
-				s.EnableDefault(false)
-				s.Model(flags)
-
-				err := s.Parse([]string{
-					"-top", "5",
-					"-avg", "1",
-					"-debug-log",
-				})
-				c.So(err, convey.ShouldBeNil)
-				c.So(flags, convey.ShouldResemble, &Flags{
-					Over:     nil,
-					Top:      ldptr.New(5),
-					Avg:      ldptr.New(true),
-					DebugLog: ldptr.New(true),
-					Rate:     nil,
-					Branch:   nil,
-					Pathes:   []string{},
-				})
-			})
-
 			c.Convey("set default", func(c convey.C) {
 				flags := &Flags{}
-				s.EnableDefault(true)
 				s.Model(flags)
 
 				err := s.Parse([]string{
@@ -407,7 +362,6 @@ func TestFlagSet_Parse(t *testing.T) {
 
 			c.Convey("succ", func(c convey.C) {
 				flags := &Flags{}
-				s.EnableDefault(false)
 				s.Model(flags)
 
 				err := s.Parse([]string{
@@ -421,7 +375,6 @@ func TestFlagSet_Parse(t *testing.T) {
 
 			c.Convey("fail", func(c convey.C) {
 				flags := &Flags{}
-				s.EnableDefault(true)
 				s.Model(flags)
 
 				err := s.Parse([]string{
@@ -438,7 +391,6 @@ func TestFlagSet_Parse(t *testing.T) {
 
 			c.Convey("succ", func(c convey.C) {
 				flags := &Flags{}
-				s.EnableDefault(true)
 				s.Model(flags)
 
 				err := s.Parse([]string{})
@@ -450,7 +402,6 @@ func TestFlagSet_Parse(t *testing.T) {
 
 			c.Convey("fail", func(c convey.C) {
 				flags := &Flags{}
-				s.EnableDefault(true)
 				s.Model(flags)
 
 				err := s.Parse([]string{

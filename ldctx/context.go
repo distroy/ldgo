@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/distroy/ldgo/v2/lderr"
-	"github.com/distroy/ldgo/v2/ldlog"
+	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldlog"
 )
 
 type (

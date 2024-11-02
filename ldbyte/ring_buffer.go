@@ -7,7 +7,7 @@ package ldbyte
 import (
 	"io"
 
-	"github.com/distroy/ldgo/v2/internal/buffer"
+	"github.com/distroy/ldgo/v3/internal/buffer"
 )
 
 var (

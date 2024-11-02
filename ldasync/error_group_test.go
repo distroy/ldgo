@@ -43,8 +43,13 @@ func TestErrGroup(t *testing.T) {
 				panic(11)
 			}
 
+			var errByOn error
+
 			p := &ErrGroup{}
 			p.Start(10)
+			p.OnError(func(err error) {
+				errByOn = err
+			})
 
 			p.Reset(5)
 			p.Async() <- fn
@@ -52,6 +57,7 @@ func TestErrGroup(t *testing.T) {
 			p.Close()
 			err := p.Wait()
 			c.So(err, convey.ShouldNotBeNil)
+			c.So(err, convey.ShouldEqual, errByOn)
 		})
 
 		c.Convey("size", func(c convey.C) {
