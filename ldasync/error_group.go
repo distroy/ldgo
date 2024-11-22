@@ -6,7 +6,6 @@ package ldasync
 
 import (
 	"fmt"
-	"log"
 	"runtime/debug"
 
 	"github.com/distroy/ldgo/v3/ldatomic"
@@ -24,6 +23,8 @@ func (p *ErrGroup) Reset(concurrency int) { p.asyncBase.reset(concurrency, p.doW
 
 func (p *ErrGroup) Capacity() int { return p.asyncBase.getCap() }
 func (p *ErrGroup) Running() int  { return p.asyncBase.getLen() }
+
+func (p *ErrGroup) SetLogger(l Logger) { p.asyncBase.setLogger(l) }
 
 func (p *ErrGroup) init() { p.asyncBase.init(p.doWithRecover) }
 
@@ -57,7 +58,7 @@ func (p *ErrGroup) doWithRecover(fn func() error) {
 	defer func() {
 		if err := recover(); err != nil {
 			buf := debug.Stack()
-			log.Printf("[error group] do async func panic. err:%v, stack:\n%s", err, buf)
+			p.getLogger().Printf("[error group] do async func panic. err:%v, stack:\n%s", err, buf)
 			err := fmt.Errorf("async func panic. err:%v", err)
 			p.setError(err)
 		}
