@@ -4,7 +4,24 @@
 
 package ldenum
 
-import "github.com/distroy/ldgo/v2/ldptr"
+import (
+	"fmt"
+
+	"github.com/distroy/ldgo/v2/ldptr"
+)
+
+type EnumString[T ~int] struct {
+	Name string
+	Map  map[T]string
+}
+
+func (x *EnumString[T]) EnumToString(n int) string {
+	s := x.Map[T(n)]
+	if s != "" {
+		return s
+	}
+	return fmt.Sprintf("%s[%d]", x.Name, n)
+}
 
 type Enum[T interface{ EnumToString(n int) string }] int
 
