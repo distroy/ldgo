@@ -27,6 +27,9 @@ func (v *Any[T]) CompareAndSwap(old, new T) (swapped bool) {
 	return v.compareAndSwap(v.pack(old), v.pack(new))
 }
 
+func (v Any[T]) MarshalJSON() ([]byte, error)  { return marshalJSON[T](&v) }
+func (v *Any[T]) UnmarshalJSON(b []byte) error { return unmarshalJSON[T](v, b) }
+
 func (v *Any[T]) pack(d T) anyData[T] { return anyData[T]{Data: d} }
 
 func (v *Any[T]) load() anyData[T] {
