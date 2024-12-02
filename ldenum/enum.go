@@ -6,16 +6,33 @@ package ldenum
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/distroy/ldgo/v2/ldptr"
 )
+
+var enumStringMap = &sync.Map{}
+
+func NewEnumString[T ~int](name string, m map[T]string) *EnumString[T] {
+	var k *EnumString[T]
+	p := &EnumString[T]{
+		Name: name,
+		Map:  m,
+	}
+
+	enumStringMap.Store(k, p)
+	return p
+}
 
 type EnumString[T ~int] struct {
 	Name string
 	Map  map[T]string
 }
 
-func (x *EnumString[T]) EnumToString(n int) string {
+func (_ *EnumString[T]) EnumToString(n int) string {
+	var k *EnumString[T]
+	i, _ := enumStringMap.Load(k)
+	x := i.(*EnumString[T])
 	s := x.Map[T(n)]
 	if s != "" {
 		return s
