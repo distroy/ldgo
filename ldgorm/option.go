@@ -6,8 +6,6 @@ package ldgorm
 
 import (
 	"fmt"
-
-	"github.com/distroy/ldgo/v3/ldmath"
 )
 
 type Option interface {
@@ -33,7 +31,7 @@ func (p pagingOption) String() string {
 
 func (p pagingOption) buildGorm(db *GormDb) *GormDb {
 	if p.Pagesize > 0 {
-		p.Page = ldmath.MaxInt(1, p.Page)
+		p.Page = max(1, p.Page)
 		offset := (p.Page - 1) * p.Pagesize
 		db = db.Offset(offset).Limit(p.Pagesize)
 	}

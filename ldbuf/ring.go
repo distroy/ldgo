@@ -6,11 +6,10 @@ package ldbuf
 
 import (
 	"github.com/distroy/ldgo/v3/internal/buffer"
-	"github.com/distroy/ldgo/v3/ldmath"
 )
 
 func NewRing[T any](n int) *Ring[T] {
-	n = ldmath.Max(n, 1)
+	n = max(n, 1)
 	buf := make([]T, n, n)
 	return &Ring[T]{
 		buf: buffer.MakeRing(buf),
@@ -41,7 +40,7 @@ func (b *Ring[T]) put(d T) bool {
 }
 
 func NewBlockingRing[T any](n int) *BlockingRing[T] {
-	n = ldmath.Max(n, 1)
+	n = max(n, 1)
 	buf := make([]T, n, n)
 	b := &BlockingRing[T]{
 		buf: buffer.BlockingRing[T]{

@@ -9,7 +9,6 @@ import (
 	"fmt"
 
 	"github.com/distroy/ldgo/v3/ldflag"
-	"github.com/distroy/ldgo/v3/ldmath"
 	"github.com/distroy/ldgo/v3/ldrand"
 )
 
@@ -22,8 +21,8 @@ func main() {
 	flags := &Flags{}
 	ldflag.MustParse(flags)
 
-	flags.Count = ldmath.MaxInt(flags.Count, 1)
-	flags.Size = ldmath.MaxInt(flags.Size, 1)
+	flags.Count = max(flags.Count, 1)
+	flags.Size = max(flags.Size, 1)
 
 	buf := make([]byte, flags.Size)
 
