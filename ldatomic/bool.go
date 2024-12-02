@@ -40,5 +40,5 @@ func (p *Bool) toBool(d uint32) bool {
 	return d != 0
 }
 
-func (v Bool) MarshalJSON() ([]byte, error)  { return marshalJSON(&v) }
-func (v *Bool) UnmarshalJSON(b []byte) error { return unmarshalJSON(v, b) }
+func (v Bool) MarshalJSON() ([]byte, error)  { return marshalJSON[bool](&v) }
+func (v *Bool) UnmarshalJSON(b []byte) error { return unmarshalJSON[bool](v, b) }
