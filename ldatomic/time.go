@@ -43,8 +43,8 @@ func (p *Time) Change(change func(old time.Time) (new time.Time)) (new time.Time
 	return new, p.d.CompareAndSwap(old, new)
 }
 
-func (v Time) MarshalJSON() ([]byte, error)  { return marshalJSON(&v) }
-func (v *Time) UnmarshalJSON(b []byte) error { return unmarshalJSON(v, b) }
+func (v Time) MarshalJSON() ([]byte, error)  { return marshalJSON[time.Time](&v) }
+func (v *Time) UnmarshalJSON(b []byte) error { return unmarshalJSON[time.Time](v, b) }
 
 func marshalJSON[T any, L Loader[T]](v L) ([]byte, error) { return json.Marshal(v.Load()) }
 func unmarshalJSON[T any, S Storer[T]](v S, b []byte) error {
