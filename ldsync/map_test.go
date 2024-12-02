@@ -39,7 +39,7 @@ func TestMap(t *testing.T) {
 		})
 
 		c.Convey("new map by map", func(c convey.C) {
-			m := NewMap[int, int](map[int]int{
+			m := NewMap(map[int]int{
 				1000: 1234,
 				2000: 1234,
 			})
@@ -91,6 +91,29 @@ func TestMap(t *testing.T) {
 			c.So(keys, convey.ShouldResemble, []int{
 				123, 1000, 2000,
 			})
+
+			{
+				v, loaded := m.LoadOrStore(123, 100)
+				c.So(loaded, convey.ShouldBeTrue)
+				c.So(v, convey.ShouldEqual, 200)
+				c.So(m.Size(), convey.ShouldEqual, 3)
+				c.So(m.Map(), convey.ShouldResemble, map[int]int{
+					1000: 1234,
+					2000: 1234,
+					123:  200,
+				})
+
+				v, loaded = m.LoadOrStore(234, 100)
+				c.So(loaded, convey.ShouldBeFalse)
+				c.So(v, convey.ShouldEqual, 100)
+				c.So(m.Size(), convey.ShouldEqual, 4)
+				c.So(m.Map(), convey.ShouldResemble, map[int]int{
+					1000: 1234,
+					2000: 1234,
+					123:  200,
+					234:  100,
+				})
+			}
 		})
 	})
 }

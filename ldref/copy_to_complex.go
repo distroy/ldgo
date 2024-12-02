@@ -4,7 +4,10 @@
 
 package ldref
 
-import "reflect"
+import (
+	"reflect"
+	"strconv"
+)
 
 func init() {
 	registerCopyFunc(map[copyPair]copyFuncType{
@@ -25,7 +28,7 @@ func init() {
 		{To: reflect.Complex64, From: reflect.Uint32}:     copyReflectToComplexFromUint,
 		{To: reflect.Complex64, From: reflect.Uint64}:     copyReflectToComplexFromUint,
 		{To: reflect.Complex64, From: reflect.Uintptr}:    copyReflectToComplexFromUint,
-		// {To: reflect.Complex64, From: reflect.String}:     copyReflectToComplexFromString,
+		{To: reflect.Complex64, From: reflect.String}:     copyReflectToComplexFromString,
 
 		{To: reflect.Complex128, From: reflect.Invalid}:    copyReflectToComplexFromInvalid,
 		{To: reflect.Complex128, From: reflect.Bool}:       copyReflectToComplexFromBool,
@@ -44,7 +47,7 @@ func init() {
 		{To: reflect.Complex128, From: reflect.Uint32}:     copyReflectToComplexFromUint,
 		{To: reflect.Complex128, From: reflect.Uint64}:     copyReflectToComplexFromUint,
 		{To: reflect.Complex128, From: reflect.Uintptr}:    copyReflectToComplexFromUint,
-		// {To: reflect.Complex128, From: reflect.String}:     copyReflectToComplexFromString,
+		{To: reflect.Complex128, From: reflect.String}:     copyReflectToComplexFromString,
 	})
 }
 
@@ -98,25 +101,16 @@ func copyReflectToComplexFromUint(c *copyContext, target, source reflect.Value) 
 	return true
 }
 
-// func copyReflectToComplexFromString(c *context, target, source reflect.Value) bool {
-// 	s := source.String()
-// 	if x, err := strconv.ParseComplex(s, 128); err == nil {
-// 		target.SetComplex(x)
-// 		if target.OverflowComplex(x) {
-// 			c.AddErrorf("%s(%s) overflow", target.Type().String(), s)
-// 		}
-// 		return true
-// 	}
-//
-// 	if n, err := strconv.ParseFloat(s, 64); err == nil {
-// 		x := complex(n, 0)
-// 		target.SetComplex(x)
-// 		if target.OverflowComplex(x) {
-// 			c.AddErrorf("%s(%s) overflow", target.Type().String(), s)
-// 		}
-// 		return true
-// 	}
-//
-// 	c.AddErrorf("can not convert to %s, %q", target.Type().String(), s)
-// 	return true
-// }
+func copyReflectToComplexFromString(c *copyContext, target, source reflect.Value) bool {
+	s := source.String()
+	x, err := strconv.ParseComplex(s, 128)
+	if err != nil {
+		c.AddErrorf("can not convert to %s, %q", target.Type().String(), s)
+		return false
+	}
+	target.SetComplex(x)
+	if target.OverflowComplex(x) {
+		c.AddErrorf("%s(%s) overflow", target.Type().String(), s)
+	}
+	return true
+}

@@ -49,61 +49,61 @@ func WithLogger(c context.Context, log *ldlog.Logger, fields ...ldlog.Field) con
 	if log == nil {
 		return WithLogField(c, fields...)
 	}
-	log = log.With(fields...)
-	return ctxWithLogger(c, log)
+	return ctxWithLogger(c, func(_ *ldlog.Logger) *ldlog.Logger {
+		return log.With(fields...)
+	})
 }
 
 func WithLogField(c context.Context, fields ...ldlog.Field) context.Context {
 	if len(fields) == 0 {
 		return c
 	}
-	log := GetLogger(c)
-	log = log.With(fields...)
-	return ctxWithLogger(c, log)
+	return ctxWithLogger(c, func(log *ldlog.Logger) *ldlog.Logger {
+		return log.With(fields...)
+	})
 }
 
 func WithLogEnabler(c context.Context, enabler ldlog.Enabler) context.Context {
-	log := GetLogger(c)
-	if enabler == log.Enabler() {
-		return c
-	}
-	log = log.WithEnabler(enabler)
-	return ctxWithLogger(c, log)
+	return ctxWithLogger(c, func(log *ldlog.Logger) *ldlog.Logger {
+		return log.WithEnabler(enabler)
+	})
 }
 
 // Log based on probability(rate). rate should be in [0, 1.0]
 //
 // Deprecated: use `WithLogEnabler` instead.
 func WithLogRate(c context.Context, rate float64) context.Context {
-	log := GetLogger(c)
-	log = log.WithRate(rate)
-	return ctxWithLogger(c, log)
+	return ctxWithLogger(c, func(log *ldlog.Logger) *ldlog.Logger {
+		return log.WithRate(rate)
+	})
 }
 
 // Log based on time interval.
 //
 // Deprecated: use `WithLogEnabler` instead.
 func WithLogInterval(c context.Context, interval time.Duration) context.Context {
-	log := GetLogger(c)
-	log = log.WithInterval(interval)
-	return ctxWithLogger(c, log)
+	return ctxWithLogger(c, func(log *ldlog.Logger) *ldlog.Logger {
+		return log.WithInterval(interval)
+	})
 }
 
 func WithSequence(c context.Context, seq string) context.Context {
 	if seq == "" {
 		return c
 	}
-	log := GetLogger(c)
-	if log.GetSequence() == seq {
-		return c
-	}
-	log = log.WithSequence(seq)
-	return ctxWithLogger(c, log)
+	return ctxWithLogger(c, func(log *ldlog.Logger) *ldlog.Logger {
+		return log.WithSequence(seq)
+	})
 }
 
 func GetSequence(c context.Context) string { return GetLogger(c).GetSequence() }
 
-func ctxWithLogger(c context.Context, log *ldlog.Logger) context.Context {
+func ctxWithLogger(c context.Context, fnLog func(log *ldlog.Logger) *ldlog.Logger) context.Context {
+	old := GetLogger(c)
+	log := fnLog(old)
+	if old == log {
+		return c
+	}
 	return WithValue(c, ctxKeyLogger, log)
 }
 

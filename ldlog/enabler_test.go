@@ -148,3 +148,56 @@ func Test_intervalEnabler_Enable(t *testing.T) {
 		})
 	})
 }
+
+func TestEnablerByNameAndInterval(t *testing.T) {
+	convey.Convey(t.Name(), t, func(c convey.C) {
+		const (
+			name0 = "test0"
+			name1 = "test1"
+		)
+		c.Convey("0ms", func(c convey.C) {
+			interval := time.Duration(0)
+
+			e00 := EnablerByNameAndInterval(name0, interval)
+			e01 := EnablerByNameAndInterval(name0, interval)
+			e02 := EnablerByNameAndInterval(name0, interval)
+
+			e10 := EnablerByNameAndInterval(name1, interval)
+			e11 := EnablerByNameAndInterval(name1, interval)
+			e12 := EnablerByNameAndInterval(name1, interval)
+
+			c.So(e00, convey.ShouldResemble, defaultEnabler{})
+			c.So(e01, convey.ShouldResemble, defaultEnabler{})
+			c.So(e02, convey.ShouldResemble, defaultEnabler{})
+
+			c.So(e10, convey.ShouldResemble, defaultEnabler{})
+			c.So(e11, convey.ShouldResemble, defaultEnabler{})
+			c.So(e12, convey.ShouldResemble, defaultEnabler{})
+		})
+		c.Convey("50ms", func(c convey.C) {
+			interval := time.Millisecond * 50
+
+			e00 := EnablerByNameAndInterval(name0, interval)
+			e01 := EnablerByNameAndInterval(name0, interval)
+			e02 := EnablerByNameAndInterval(name0, interval)
+
+			e10 := EnablerByNameAndInterval(name1, interval)
+			e11 := EnablerByNameAndInterval(name1, interval)
+			e12 := EnablerByNameAndInterval(name1, interval)
+
+			time.Sleep(interval)
+			e03 := EnablerByNameAndInterval(name0, interval)
+			e13 := EnablerByNameAndInterval(name1, interval)
+
+			c.So(e00, convey.ShouldResemble, defaultEnabler{})
+			c.So(e01, convey.ShouldResemble, falseEnabler{})
+			c.So(e02, convey.ShouldResemble, falseEnabler{})
+			c.So(e03, convey.ShouldResemble, defaultEnabler{})
+
+			c.So(e10, convey.ShouldResemble, defaultEnabler{})
+			c.So(e11, convey.ShouldResemble, falseEnabler{})
+			c.So(e12, convey.ShouldResemble, falseEnabler{})
+			c.So(e13, convey.ShouldResemble, defaultEnabler{})
+		})
+	})
+}

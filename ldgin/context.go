@@ -12,10 +12,8 @@ import (
 
 	"github.com/distroy/ldgo/v2/ldctx"
 	"github.com/distroy/ldgo/v2/lderr"
-	"github.com/distroy/ldgo/v2/ldlog"
 	"github.com/distroy/ldgo/v2/ldrand"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 var (
@@ -109,7 +107,7 @@ func newContext(g *gin.Context) *Context {
 	now := time.Now()
 	seq := newSequence(g)
 
-	ctx := ldctx.WithLogger(g, nil, zap.String(ldlog.GetSequenceKey(), seq))
+	ctx := ldctx.WithSequence(g, seq)
 
 	c := &Context{
 		ginCtx:    g,
@@ -175,15 +173,21 @@ func (c *Context) AbortWithErrorData(err error, data interface{}) {
 		data = struct{}{}
 	}
 
-	response := &CommResponse{
-		Sequence: c.sequence,
-		Cost:     time.Since(c.beginTime).String(),
-		ErrCode:  lderr.GetCode(err),
-		ErrMsg:   lderr.GetMessage(err),
-		Data:     data,
-	}
+	latency := time.Since(c.beginTime).String()
+	c.Header(GinHeaderLatency, latency)
 
-	response.ErrDetails = lderr.GetDetails(err)
+	response := &CommResponse{
+		Error: CommResponseError{
+			Code:    lderr.GetCode(err),
+			Message: lderr.GetMessage(err),
+			Details: lderr.GetDetails(err),
+		},
+		Tracker: CommResponseTracker{
+			Sequence: c.sequence,
+			Latency:  latency,
+		},
+		Data: data,
+	}
 
 	c.setError(err)
 	c.setResponce(response)

@@ -7,6 +7,8 @@ package ldref
 import (
 	"reflect"
 	"strconv"
+
+	"github.com/distroy/ldgo/v2/ldconv"
 )
 
 func typeNameOfReflect(v reflect.Value) string {
@@ -36,8 +38,9 @@ func init() {
 		{To: reflect.String, From: reflect.String}:  copyReflectToStringFromString,
 		{To: reflect.String, From: reflect.Array}:   copyReflectToStringFromArray,
 		{To: reflect.String, From: reflect.Slice}:   copyReflectToStringFromSlice,
-		// {To: reflect.String, From: reflect.Complex64}:  copyReflectToStringFromComplex,
-		// {To: reflect.String, From: reflect.Complex128}: copyReflectToStringFromComplex,
+
+		{To: reflect.String, From: reflect.Complex64}:  copyReflectToStringFromComplex,
+		{To: reflect.String, From: reflect.Complex128}: copyReflectToStringFromComplex,
 	})
 }
 
@@ -62,11 +65,11 @@ func copyReflectToStringFromFloat(c *copyContext, target, source reflect.Value) 
 	return true
 }
 
-// func copyReflectToStringFromComplex(c *context, target, source reflect.Value) bool {
-// 	n := source.Complex()
-// 	target.SetString(strconv.FormatComplex(n, 'f', -1, 128))
-// 	return true
-// }
+func copyReflectToStringFromComplex(c *copyContext, target, source reflect.Value) bool {
+	n := source.Complex()
+	target.SetString(strconv.FormatComplex(n, 'f', -1, 128))
+	return true
+}
 
 func copyReflectToStringFromInt(c *copyContext, target, source reflect.Value) bool {
 	n := source.Int()
@@ -87,8 +90,20 @@ func copyReflectToStringFromString(c *copyContext, target, source reflect.Value)
 }
 
 func copyReflectToStringFromArray(c *copyContext, target, source reflect.Value) bool {
-	sVal := source.Slice(0, source.Len())
-	return copyReflectToStringFromSlice(c, target, sVal)
+	// sVal := source.Slice(0, source.Len())
+	sVal := reflectArrayToSlice(source)
+	// return copyReflectToStringFromSlice(c, target, sVal)
+	switch ss := sVal.Interface().(type) {
+	default:
+		return false
+
+	case []byte:
+		target.SetString(ldconv.BytesToStrUnsafe(ss))
+
+	case []rune:
+		target.SetString(string(ss))
+	}
+	return true
 }
 
 func copyReflectToStringFromSlice(c *copyContext, target, source reflect.Value) bool {

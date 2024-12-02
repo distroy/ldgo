@@ -17,8 +17,6 @@ import (
 	"github.com/smartystreets/goconvey/convey"
 )
 
-type Error = lderr.Error
-
 type testReaderForChunked struct {
 	Error error
 	Lines []string
@@ -57,7 +55,7 @@ func TestReaderRenderer_Render(t *testing.T) {
 		c.Convey("chunked", func(c convey.C) {
 			c.Convey("render succ", func(c convey.C) {
 				c.Convey("only reader", func(c convey.C) {
-					handler := WrapHandler(func(c *Context) (ReaderRenderer, Error) {
+					handler := WrapHandler(func(c *Context) (ReaderRenderer, lderr.Error) {
 						renderer := ReaderRenderer{
 							Reader: &testReaderForChunked{
 								Lines: []string{
@@ -89,7 +87,7 @@ func TestReaderRenderer_Render(t *testing.T) {
 				})
 
 				c.Convey("other options", func(c convey.C) {
-					handler := WrapHandler(func(c *Context) (ReaderRenderer, Error) {
+					handler := WrapHandler(func(c *Context) (ReaderRenderer, lderr.Error) {
 						renderer := ReaderRenderer{
 							Code:        220,
 							ContentType: "text/html; charset=utf-8",
@@ -122,7 +120,7 @@ func TestReaderRenderer_Render(t *testing.T) {
 				})
 
 				c.Convey("chunked with content length", func(c convey.C) {
-					handler := WrapHandler(func(c *Context) (ReaderRenderer, Error) {
+					handler := WrapHandler(func(c *Context) (ReaderRenderer, lderr.Error) {
 						renderer := ReaderRenderer{
 							Code:          220,
 							ContentType:   "text/html; charset=utf-8",
@@ -158,7 +156,7 @@ func TestReaderRenderer_Render(t *testing.T) {
 			})
 
 			c.Convey("read fail", func(c convey.C) {
-				handler := WrapHandler(func(c *Context) (ReaderRenderer, Error) {
+				handler := WrapHandler(func(c *Context) (ReaderRenderer, lderr.Error) {
 					renderer := ReaderRenderer{
 						Reader: &testReaderForChunked{
 							Error: fmt.Errorf("test error"),

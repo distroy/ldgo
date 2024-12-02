@@ -32,7 +32,7 @@ func copyReflectToMapFromInvalid(c *copyContext, target, source reflect.Value) b
 }
 
 func copyReflectToMapFromArray(c *copyContext, target, source reflect.Value) bool {
-	source = source.Slice(0, source.Len())
+	// source = source.Slice(0, source.Len())
 	return copyReflectToMapFromSlice(c, target, source)
 }
 
@@ -57,9 +57,12 @@ func copyReflectToMapFromStruct(c *copyContext, target, source reflect.Value) bo
 		return false
 	}
 
-	// if target.IsNil() {
-	target.Set(reflect.MakeMap(target.Type()))
-	// }
+	if target.IsNil() {
+		if !target.CanAddr() {
+			return false
+		}
+		target.Set(reflect.MakeMap(target.Type()))
+	}
 
 	sInfo := getCopyTypeInfo(source.Type(), c.SourceTag)
 	for _, sFieldInfo := range sInfo.Fields {

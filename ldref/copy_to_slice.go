@@ -41,8 +41,9 @@ func copyReflectToSliceFromString(c *copyContext, target, source reflect.Value) 
 }
 
 func copyReflectToSliceFromArray(c *copyContext, target, source reflect.Value) bool {
-	sVal := source.Slice(0, source.Len())
-	return copyReflectToSliceFromSlice(c, target, sVal)
+	// sVal := source.Slice(0, source.Len())
+	// return copyReflectToSliceFromSlice(c, target, sVal)
+	return copyReflectToSliceFromSlice(c, target, source)
 }
 
 func copyReflectToSliceFromSlice(c *copyContext, target, source reflect.Value) bool {
@@ -53,7 +54,10 @@ func copyReflectToSliceFromSlice(c *copyContext, target, source reflect.Value) b
 		return true
 	}
 
-	if source.Kind() != reflect.Slice || !isCopyTypeConvertible(tTyp.Elem(), sTyp.Elem()) {
+	if sTyp.Kind() != reflect.Slice && sTyp.Kind() != reflect.Array {
+		return false
+	}
+	if !isCopyTypeConvertible(tTyp.Elem(), sTyp.Elem()) {
 		return false
 	}
 

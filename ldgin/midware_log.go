@@ -54,8 +54,8 @@ func logMidwareFunc(g *gin.Context) {
 	errMsg := ""
 	rspDataField := zap.Skip()
 	if rsp := GetResponse(c); rsp != nil {
-		bizCode = rsp.ErrCode
-		errMsg = rsp.ErrMsg
+		bizCode = rsp.Error.Code
+		errMsg = rsp.Error.Message
 		rspDataField = zap.Reflect("rspData", rsp.Data)
 	}
 

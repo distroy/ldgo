@@ -19,6 +19,7 @@ const (
 
 const (
 	GinHeaderSequence = "x-ldgin-sequence"
+	GinHeaderLatency  = "x-ldgin-latency"
 )
 
 const (

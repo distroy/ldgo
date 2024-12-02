@@ -223,37 +223,75 @@ func TestBrief(t *testing.T) {
 				})
 			})
 			c.Convey("map", func(c convey.C) {
-				c.Convey("without brief string & array", func(c convey.C) {
-					log.Info("test", BriefReflect("key", map[string]interface{}{
-						"bool":    true,
-						"string":  `0123456789`,
-						"int":     1001,
-						"uint":    uint(1002),
-						"float":   float64(1003),
-						"complex": complex(1004, 1005),
-						"array":   []interface{}{},
-						"map":     map[string]interface{}{},
-						"struct":  &testStruct{},
-					}))
-					s := getLogString()
-					s = testRemoveLogPrefix(s)
-					c.So(s, convey.ShouldEqual, `{"key": {"array": [], "bool": true, "complex": "1004+1005i", "float": 1003, "int": 1001, "map": {}, "string": "0123456789", "struct": {}, "uint": 1002}}`)
+				c.Convey("map len 10", func(c convey.C) {
+					SetBriefMapLen(10)
+					c.Convey("without brief string & array", func(c convey.C) {
+						log.Info("test", BriefReflect("key", map[string]interface{}{
+							"bool":    true,
+							"string":  `0123456789`,
+							"int":     1001,
+							"uint":    uint(1002),
+							"float":   float64(1003),
+							"complex": complex(1004, 1005),
+							"array":   []interface{}{},
+							"map":     map[string]interface{}{},
+							"struct":  &testStruct{},
+						}))
+						s := getLogString()
+						s = testRemoveLogPrefix(s)
+						c.So(s, convey.ShouldEqual, `{"key": {"array": [], "bool": true, "complex": "1004+1005i", "float": 1003, "int": 1001, "map": {}, "string": "0123456789", "struct": {}, "uint": 1002}}`)
+					})
+					c.Convey("with brief string & array", func(c convey.C) {
+						log.Info("test", BriefReflect("key", map[string]interface{}{
+							"bool":    true,
+							"string":  `012345678901234`,
+							"int":     1001,
+							"uint":    uint(1002),
+							"float":   float64(1003),
+							"complex": complex(1004, 1005),
+							"array":   []interface{}{123456789, 123456789, 123456789},
+							"map":     map[string]interface{}{},
+							"struct":  &testStruct{},
+						}))
+						s := getLogString()
+						s = testRemoveLogPrefix(s)
+						c.So(s, convey.ShouldEqual, `{"key": {"array": {"<len>": 3, "<type>": "array", "<brief>": [123456789]}, "bool": true, "complex": "1004+1005i", "float": 1003, "int": 1001, "map": {}, "string": {"<len>": 15, "<type>": "string", "<brief>": "0123456789"}, "struct": {}, "uint": 1002}}`)
+					})
 				})
-				c.Convey("with brief string & array", func(c convey.C) {
-					log.Info("test", BriefReflect("key", map[string]interface{}{
-						"bool":    true,
-						"string":  `012345678901234`,
-						"int":     1001,
-						"uint":    uint(1002),
-						"float":   float64(1003),
-						"complex": complex(1004, 1005),
-						"array":   []interface{}{123456789, 123456789, 123456789},
-						"map":     map[string]interface{}{},
-						"struct":  &testStruct{},
-					}))
-					s := getLogString()
-					s = testRemoveLogPrefix(s)
-					c.So(s, convey.ShouldEqual, `{"key": {"array": {"<len>": 3, "<type>": "array", "<brief>": [123456789]}, "bool": true, "complex": "1004+1005i", "float": 1003, "int": 1001, "map": {}, "string": {"<len>": 15, "<type>": "string", "<brief>": "0123456789"}, "struct": {}, "uint": 1002}}`)
+				c.Convey("map len 5", func(c convey.C) {
+					SetBriefMapLen(5)
+					c.Convey("without brief string & array", func(c convey.C) {
+						log.Info("test", BriefReflect("key", map[string]interface{}{
+							"bool":    true,
+							"string":  `0123456789`,
+							"int":     1001,
+							"uint":    uint(1002),
+							"float":   float64(1003),
+							"complex": complex(1004, 1005),
+							"array":   []interface{}{},
+							"map":     map[string]interface{}{},
+							"struct":  &testStruct{},
+						}))
+						s := getLogString()
+						s = testRemoveLogPrefix(s)
+						c.So(s, convey.ShouldEqual, `{"key": {"<len>": 9, "<type>": "map", "<brief>": {"array": [], "bool": true, "complex": "1004+1005i", "float": 1003, "int": 1001}}}`)
+					})
+					c.Convey("with brief string & array", func(c convey.C) {
+						log.Info("test", BriefReflect("key", map[string]interface{}{
+							"bool":    true,
+							"string":  `012345678901234`,
+							"int":     1001,
+							"uint":    uint(1002),
+							"float":   float64(1003),
+							"complex": complex(1004, 1005),
+							"array":   []interface{}{123456789, 123456789, 123456789},
+							"map":     map[string]interface{}{},
+							"struct":  &testStruct{},
+						}))
+						s := getLogString()
+						s = testRemoveLogPrefix(s)
+						c.So(s, convey.ShouldEqual, `{"key": {"<len>": 9, "<type>": "map", "<brief>": {"array": {"<len>": 3, "<type>": "array", "<brief>": [123456789]}, "bool": true, "complex": "1004+1005i", "float": 1003, "int": 1001}}}`)
+					})
 				})
 			})
 			c.Convey("struct", func(c convey.C) {

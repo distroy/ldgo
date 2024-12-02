@@ -26,19 +26,20 @@ func copyReflectToArrayFromInvalid(c *copyContext, target, source reflect.Value)
 
 func copyReflectToArrayFromString(c *copyContext, target, source reflect.Value) bool {
 	tTyp := target.Type()
-	sTyp := source.Type()
 
 	sVal := source
-	switch target.Type() {
+	switch tTyp.Elem().Kind() {
 	default:
 		return false
 
-	case typeOfByteSlice:
+	// case typeOfByteSlice:
+	case reflect.Uint8:
 		sVal = reflect.ValueOf([]byte(sVal.String()))
 
-	case typeOfRuneSlice:
+	case reflect.Int32:
 		sVal = reflect.ValueOf([]rune(sVal.String()))
 	}
+	sTyp := sVal.Type()
 
 	l := sVal.Len()
 	if l > target.Len() {
@@ -56,8 +57,9 @@ func copyReflectToArrayFromString(c *copyContext, target, source reflect.Value) 
 }
 
 func copyReflectToArrayFromArray(c *copyContext, target, source reflect.Value) bool {
-	sVal := source.Slice(0, source.Len())
-	return copyReflectToArrayFromSlice(c, target, sVal)
+	// sVal := source.Slice(0, source.Len())
+	// return copyReflectToArrayFromSlice(c, target, sVal)
+	return copyReflectToArrayFromSlice(c, target, source)
 }
 
 func copyReflectToArrayFromSlice(c *copyContext, target, source reflect.Value) bool {
@@ -68,7 +70,10 @@ func copyReflectToArrayFromSlice(c *copyContext, target, source reflect.Value) b
 		return true
 	}
 
-	if source.Kind() != reflect.Slice || !isCopyTypeConvertible(tTyp.Elem(), sTyp.Elem()) {
+	if sTyp.Kind() != reflect.Slice && sTyp.Kind() != reflect.Array {
+		return false
+	}
+	if !isCopyTypeConvertible(tTyp.Elem(), sTyp.Elem()) {
 		return false
 	}
 

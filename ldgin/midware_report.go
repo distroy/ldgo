@@ -61,8 +61,8 @@ func (m reportMidware) do(g *gin.Context) {
 	bizCode := 0
 	errMsg := ""
 	if rsp := GetResponse(c); rsp != nil {
-		bizCode = rsp.ErrCode
-		errMsg = rsp.ErrMsg
+		bizCode = rsp.Error.Code
+		errMsg = rsp.Error.Message
 	}
 
 	if err := c.GetError(); lderr.IsSuccess(err) {

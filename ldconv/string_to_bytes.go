@@ -19,9 +19,9 @@ func StrToBytes(s string) []byte {
 
 // BytesToStrUnsafe the source bytes cannot free
 func BytesToStrUnsafe(b []byte) string {
-	if b == nil {
-		return ""
-	}
+	// if b == nil {
+	// 	return ""
+	// }
 	return unsafe.String(unsafe.SliceData(b), len(b))
 }
 

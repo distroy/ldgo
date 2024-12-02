@@ -24,24 +24,26 @@ type (
 )
 
 const (
-	tagNil   = "<null>"
 	tagLen   = "<len>"
 	tagType  = "<type>"
 	tagBrief = "<brief>"
 
 	minBriefStringLen = 10
 	minBriefArrayLen  = 1
+	minBriefMapLen    = 3
 )
 
 var (
 	briefStringLen = 100
 	briefArrayLen  = 1
+	briefMapLen    = 10
 )
 
 func bytes2str(d []byte) string { return ldconv.BytesToStrUnsafe(d) }
 
 func SetBriefStringLen(n int) { briefStringLen = ldmath.MaxInt(n, minBriefStringLen) }
 func SetBriefArrayLen(n int)  { briefArrayLen = ldmath.MaxInt(n, minBriefArrayLen) }
+func SetBriefMapLen(n int)    { briefMapLen = ldmath.MaxInt(n, minBriefMapLen) }
 
 func AddStr2Log(enc ObjectEncoder, k, s string) error {
 	oe := &objectEncoder{
@@ -58,7 +60,7 @@ func AppendStr2Log(enc ArrayEncoder, v string) error {
 		enc.AppendString(v)
 		return nil
 	}
-	return enc.AppendObject(briefStringerType{Len: l, Str: v[:n]})
+	return enc.AppendObject(&briefStringerType{Len: l, Str: v[:n]})
 }
 
 func AddStrs2Log(enc ObjectEncoder, k string, v StringArray) error {
@@ -73,9 +75,9 @@ func AppendStrs2Log(enc ArrayEncoder, v StringArray) error {
 	n := briefArrayLen
 	l := v.Len()
 	if l <= n {
-		return enc.AppendArray(briefStringArrayType{Len: l, Val: v})
+		return enc.AppendArray(&briefStringArrayType{Len: l, Val: v})
 	}
-	return enc.AppendObject(briefStringArrayType{Len: n, Val: v})
+	return enc.AppendObject(&briefStringArrayType{Len: n, Val: v})
 }
 
 type String string
@@ -91,7 +93,7 @@ type BriefStringerType struct {
 	Val fmt.Stringer
 }
 
-func (p BriefStringerType) MarshalLogObject(enc ObjectEncoder) error {
+func (p *BriefStringerType) MarshalLogObject(enc ObjectEncoder) error {
 	return AddStr2Log(enc, p.Key, p.Val.String())
 }
 
@@ -100,7 +102,7 @@ type briefStringerType struct {
 	Str string
 }
 
-func (p briefStringerType) MarshalLogObject(enc ObjectEncoder) error {
+func (p *briefStringerType) MarshalLogObject(enc ObjectEncoder) error {
 	enc.AddInt(tagLen, p.Len)
 	enc.AddString(tagType, "string")
 	enc.AddString(tagBrief, p.Str)
@@ -117,7 +119,7 @@ type BriefStringersType struct {
 	Val StringArray
 }
 
-func (p BriefStringersType) MarshalLogObject(enc ObjectEncoder) error {
+func (p *BriefStringersType) MarshalLogObject(enc ObjectEncoder) error {
 	return AddStrs2Log(enc, p.Key, p.Val)
 }
 
@@ -126,7 +128,7 @@ type briefStringArrayType struct {
 	Val StringArray
 }
 
-func (p briefStringArrayType) MarshalLogArray(enc ArrayEncoder) error {
+func (p *briefStringArrayType) MarshalLogArray(enc ArrayEncoder) error {
 	for i := 0; i < p.Len; i++ {
 		v := p.Val.Get(i)
 		err := AppendStr2Log(enc, v)
@@ -137,7 +139,7 @@ func (p briefStringArrayType) MarshalLogArray(enc ArrayEncoder) error {
 	return nil
 }
 
-func (p briefStringArrayType) MarshalLogObject(enc ObjectEncoder) error {
+func (p *briefStringArrayType) MarshalLogObject(enc ObjectEncoder) error {
 	enc.AddInt(tagLen, p.Val.Len())
 	enc.AddString(tagType, "array")
 	return enc.AddArray(tagBrief, p)
@@ -161,7 +163,7 @@ func (p Stringers[T]) Get(i int) string { return p[i].String() }
 func BriefString(key, val string) Field            { return BriefStringer(key, String(val)) }
 func BriefByteString(key string, val []byte) Field { return BriefString(key, bytes2str(val)) }
 func BriefStringer(key string, val fmt.Stringer) Field {
-	return zap.Inline(BriefStringerType{Key: key, Val: val})
+	return zap.Inline(&BriefStringerType{Key: key, Val: val})
 }
 
 func BriefStringp(key string, val *string) Field      { return BriefStringer(key, (*StringPtr)(val)) }
@@ -172,5 +174,5 @@ func BriefStringers[T fmt.Stringer](key string, val []T) Field {
 }
 
 func briefStrings(key string, val StringArray) Field {
-	return zap.Inline(BriefStringersType{Key: key, Val: val})
+	return zap.Inline(&BriefStringersType{Key: key, Val: val})
 }

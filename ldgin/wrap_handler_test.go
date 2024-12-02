@@ -63,7 +63,7 @@ func TestWrapHandler(t *testing.T) {
 
 			rsp := response
 			convey.So(json.Unmarshal(w.Body.Bytes(), rsp), convey.ShouldBeNil)
-			convey.So(rsp.ErrCode, convey.ShouldEqual, lderr.ErrUnauthorized.Code())
+			convey.So(rsp.Error.Code, convey.ShouldEqual, lderr.ErrUnauthorized.Code())
 		})
 
 		convey.Convey("func (*gin.Context) error", func() {
@@ -82,7 +82,7 @@ func TestWrapHandler(t *testing.T) {
 
 		convey.Convey("func (*gin.Context, Request) Error", func() {
 			convey.Convey("Request --> interface{}", func() {
-				handler := WrapHandler(func(g *gin.Context, req *testRequest) Error {
+				handler := WrapHandler(func(g *gin.Context, req *testRequest) lderr.Error {
 					request = req
 					return nil
 				})
@@ -102,13 +102,13 @@ func TestWrapHandler(t *testing.T) {
 
 				rsp := GetResponse(g)
 				convey.So(rsp, convey.ShouldNotBeNil)
-				convey.So(rsp.ErrCode, convey.ShouldEqual, 0)
+				convey.So(rsp.Error.Code, convey.ShouldEqual, 0)
 			})
 		})
 
 		convey.Convey("func (*gin.Context) (Response, Error)", func() {
 			convey.Convey("Response --> Renderer", func() {
-				handler := WrapHandler(func(g *gin.Context) (*testRenderer, Error) {
+				handler := WrapHandler(func(g *gin.Context) (*testRenderer, lderr.Error) {
 					return &testRenderer{str: "succ"}, nil
 				})
 
@@ -127,7 +127,7 @@ func TestWrapHandler(t *testing.T) {
 		convey.Convey("func (*gin.Context, Request) (Response, Error)", func() {
 			convey.Convey("Request --> GinParser: fail", func() {
 				convey.Convey("Response --> interface{}", func() {
-					handler := WrapHandler(func(g *gin.Context, req *testGinParserFail) (*testResponse, Error) {
+					handler := WrapHandler(func(g *gin.Context, req *testGinParserFail) (*testResponse, lderr.Error) {
 						return &testResponse{
 							UserId: 301,
 							ShopId: 401,
@@ -142,7 +142,7 @@ func TestWrapHandler(t *testing.T) {
 				})
 				convey.Convey("Request --> GinParser: succ", func() {
 					convey.Convey("Response --> interface{}", func() {
-						handler := WrapHandler(func(g *gin.Context, req *testGinParser) (*testResponse, Error) {
+						handler := WrapHandler(func(g *gin.Context, req *testGinParser) (*testResponse, lderr.Error) {
 							request = req
 							return &testResponse{
 								UserId: 301,
@@ -165,7 +165,7 @@ func TestWrapHandler(t *testing.T) {
 
 						rsp := GetResponse(g)
 						convey.So(rsp, convey.ShouldNotBeNil)
-						convey.So(rsp.ErrCode, convey.ShouldEqual, 0)
+						convey.So(rsp.Error.Code, convey.ShouldEqual, 0)
 						convey.So(rsp.Data, convey.ShouldResemble, &testResponse{
 							UserId: 301,
 							ShopId: 401,
@@ -185,11 +185,11 @@ func TestWrapHandler(t *testing.T) {
 
 			rsp := response
 			convey.So(json.Unmarshal(w.Body.Bytes(), rsp), convey.ShouldBeNil)
-			convey.So(rsp.ErrCode, convey.ShouldEqual, lderr.ErrServicePanic.Code())
+			convey.So(rsp.Error.Code, convey.ShouldEqual, lderr.ErrServicePanic.Code())
 		})
 
 		convey.Convey("func (*Context) Error", func() {
-			handler := WrapHandler(func(c *Context) Error {
+			handler := WrapHandler(func(c *Context) lderr.Error {
 				return lderr.ErrHttpInvalidStatus
 			})
 
@@ -204,7 +204,7 @@ func TestWrapHandler(t *testing.T) {
 
 		convey.Convey("func (*Context, Request) Error", func() {
 			convey.Convey("Request --> GinValidator: fail", func() {
-				handler := WrapHandler(func(g *gin.Context, req *testGinValidatorFail) Error {
+				handler := WrapHandler(func(g *gin.Context, req *testGinValidatorFail) lderr.Error {
 					return nil
 				})
 
@@ -216,7 +216,7 @@ func TestWrapHandler(t *testing.T) {
 				// convey.So(GetResponse(g), convey.ShouldBeNil)
 			})
 			convey.Convey("Request --> GinValidator: succ", func() {
-				handler := WrapHandler(func(g *gin.Context, req *testGinValidator) Error {
+				handler := WrapHandler(func(g *gin.Context, req *testGinValidator) lderr.Error {
 					request = req
 					return nil
 				})
@@ -237,7 +237,7 @@ func TestWrapHandler(t *testing.T) {
 		})
 		convey.Convey("func (*Context) (Response, Error)", func() {
 			convey.Convey("Response --> GinRenderer", func() {
-				handler := WrapHandler(func(c *Context) (*testGinRenderer, Error) {
+				handler := WrapHandler(func(c *Context) (*testGinRenderer, lderr.Error) {
 					return &testGinRenderer{str: "succ"}, nil
 				})
 
@@ -255,7 +255,7 @@ func TestWrapHandler(t *testing.T) {
 		convey.Convey("func (*Context, Request) (Response, Error)", func() {
 			convey.Convey("Request --> Parser: fail", func() {
 				convey.Convey("Response --> interface{}", func() {
-					handler := WrapHandler(func(c *Context, req *testParserFail) (*testResponse, Error) {
+					handler := WrapHandler(func(c *Context, req *testParserFail) (*testResponse, lderr.Error) {
 						return &testResponse{
 							UserId: 301,
 							ShopId: 401,
@@ -270,7 +270,7 @@ func TestWrapHandler(t *testing.T) {
 			})
 			convey.Convey("Request --> ParseValidator: succ", func() {
 				convey.Convey("Response --> interface{}", func() {
-					handler := WrapHandler(func(c *Context, req *testParseValidator) (*testResponse, Error) {
+					handler := WrapHandler(func(c *Context, req *testParseValidator) (*testResponse, lderr.Error) {
 						request = req
 						return &testResponse{
 							UserId: 301,
@@ -290,7 +290,7 @@ func TestWrapHandler(t *testing.T) {
 
 					rsp := GetResponse(g)
 					convey.So(rsp, convey.ShouldNotBeNil)
-					convey.So(rsp.ErrCode, convey.ShouldEqual, 0)
+					convey.So(rsp.Error.Code, convey.ShouldEqual, 0)
 					convey.So(rsp.Data, convey.ShouldResemble, &testResponse{
 						UserId: 301,
 						ShopId: 401,

@@ -79,13 +79,21 @@ type Handler interface{}
 // func (*Context, Request) error
 type Midware interface{}
 
+type CommResponseError struct {
+	Code    int      `json:"code"`
+	Message string   `json:"message"`
+	Details []string `json:"details,omitempty"`
+}
+
+type CommResponseTracker struct {
+	Sequence string `json:"sequence"`
+	Latency  string `json:"latency"`
+}
+
 type CommResponse struct {
-	ErrCode    int         `json:"code"`
-	ErrMsg     string      `json:"msg"`
-	ErrDetails []string    `json:"details,omitempty"`
-	Cost       string      `json:"cost"`
-	Sequence   string      `json:"sequence"`
-	Data       interface{} `json:"data"`
+	Error   CommResponseError   `json:"error"`
+	Tracker CommResponseTracker `json:"tracker"`
+	Data    interface{}         `json:"data"`
 }
 
 type (

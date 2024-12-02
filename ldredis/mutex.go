@@ -199,7 +199,7 @@ func (m *Mutex) Lock(ctx ldctx.Context, key string) error {
 	token := hex.EncodeToString(ldrand.Bytes(16))
 
 	ctx, cancel := ldctx.WithCancel(ctx)
-	ctx = ldctx.WithLogger(ctx, nil, zap.String("key", key), zap.String("token", token))
+	ctx = ldctx.WithLogField(ctx, zap.String("key", key), zap.String("token", token))
 
 	if err := m.internalLockOrLockForce(ctx, key, token); err != nil {
 		return err
@@ -306,7 +306,7 @@ func (m *Mutex) unlock(ctx ldctx.Context) error {
 	key := mc.key
 	val := mc.token
 
-	ctx = ldctx.WithLogger(ctx, nil, zap.String("key", key), zap.String("token", val))
+	ctx = ldctx.WithLogField(ctx, zap.String("key", key), zap.String("token", val))
 
 	if ok := mc.lockTime.CompareAndSwap(lockTime, 0); !ok {
 		ldctx.LogW(ctx, "redis mutex has been unlocked by another goroutine", getCallerField(m.redis))

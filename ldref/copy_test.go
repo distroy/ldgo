@@ -163,6 +163,86 @@ func TestCopy(t *testing.T) {
 				c.So(target, convey.ShouldEqual, source)
 				c.So(target, convey.ShouldResemble, source)
 			})
+
+			c.Convey("struct to *interface{}", func(c convey.C) {
+				var (
+					target interface{}
+					source interface{} = &testCopyStruct{
+						Id:     100,
+						Ignore: true,
+						Name:   "abc",
+						Age:    23,
+						Female: true,
+						Ptr:    testNewInt(1234),
+					}
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldResemble, map[string]interface{}{
+					`id`:     int64(100),
+					`Name`:   "abc",
+					`Age`:    int64(23),
+					`Female`: true,
+					`Ptr`:    testNewInt(1234),
+				})
+			})
+
+			c.Convey("[]struct to *interface{}", func(c convey.C) {
+				var (
+					target interface{}
+					source = []*testCopyStruct{
+						{
+							Id:     100,
+							Ignore: true,
+							Name:   "abc",
+							Age:    23,
+							Female: true,
+							Ptr:    testNewInt(1234),
+						},
+					}
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldResemble, []interface{}{
+					map[string]interface{}{
+						`id`:     int64(100),
+						`Name`:   "abc",
+						`Age`:    int64(23),
+						`Female`: true,
+						`Ptr`:    testNewInt(1234),
+					},
+				})
+			})
+
+			c.Convey("[...]struct to *interface{}", func(c convey.C) {
+				var (
+					target interface{}
+					source = [...]*testCopyStruct{
+						{
+							Id:     100,
+							Ignore: true,
+							Name:   "abc",
+							Age:    23,
+							Female: true,
+							Ptr:    testNewInt(1234),
+						},
+					}
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldResemble, []interface{}{
+					map[string]interface{}{
+						`id`:     int64(100),
+						`Name`:   "abc",
+						`Age`:    int64(23),
+						`Female`: true,
+						`Ptr`:    testNewInt(1234),
+					},
+				})
+			})
 		})
 
 		c.Convey("to **int", func(c convey.C) {
@@ -599,16 +679,16 @@ func TestCopy(t *testing.T) {
 				c.So(target, convey.ShouldEqual, "100")
 			})
 
-			// c.Convey("complex128 to *string", func (c convey.C) {
-			// 	var (
-			// 		target string
-			// 		source complex128 = 100
-			// 	)
-			//
-			// 	err := Copy(&target, source)
-			// 	c.So(err, convey.ShouldBeNil)
-			// 	c.So(target, convey.ShouldEqual, "(100+0i)")
-			// })
+			c.Convey("complex128 to *string", func(c convey.C) {
+				var (
+					target string
+					source complex128 = 100
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldEqual, "(100+0i)")
+			})
 		})
 
 		c.Convey("string to *number", func(c convey.C) {
@@ -653,16 +733,16 @@ func TestCopy(t *testing.T) {
 				c.So(target, convey.ShouldEqual, 100)
 			})
 
-			// c.Convey("string to *complex128", func (c convey.C) {
-			// 	var (
-			// 		target complex128
-			// 		source string = "100"
-			// 	)
-			//
-			// 	err := Copy(&target, source)
-			// 	c.So(err, convey.ShouldBeNil)
-			// 	c.So(target, convey.ShouldEqual, complex128(100))
-			// })
+			c.Convey("string to *complex128", func(c convey.C) {
+				var (
+					target complex128
+					source string = "100"
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldEqual, complex128(100))
+			})
 		})
 
 		c.Convey("string/[]byte/[]rune", func(c convey.C) {
@@ -681,6 +761,28 @@ func TestCopy(t *testing.T) {
 				var (
 					target string
 					source []rune = []rune("100")
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldEqual, "100")
+			})
+
+			c.Convey("[...]byte to *string", func(c convey.C) {
+				var (
+					target string
+					source = [3]byte([]byte("100"))
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldEqual, "100")
+			})
+
+			c.Convey("[...]rune to *string", func(c convey.C) {
+				var (
+					target string
+					source = [3]rune([]rune("100"))
 				)
 
 				err := Copy(&target, source)
@@ -708,6 +810,51 @@ func TestCopy(t *testing.T) {
 				err := Copy(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, []rune(source))
+			})
+
+			c.Convey("string to *[...]byte", func(c convey.C) {
+				c.Convey("bytes's len == string's len", func(c convey.C) {
+					var (
+						target [3]byte
+						source string = "100"
+					)
+
+					err := Copy(&target, source)
+					c.So(err, convey.ShouldBeNil)
+					c.So(target, convey.ShouldResemble, [3]byte([]byte(source)))
+				})
+				c.Convey("bytes's len < string's len", func(c convey.C) {
+					var (
+						target [2]byte
+						source string = "100"
+					)
+
+					err := Copy(&target, source)
+					c.So(err, convey.ShouldNotBeNil)
+					c.So(target, convey.ShouldResemble, [2]byte([]byte(source[:2])))
+				})
+				c.Convey("bytes's len > string's len", func(c convey.C) {
+					var (
+						target [10]byte
+						source string = "100"
+					)
+
+					err := Copy(&target, source)
+					c.So(err, convey.ShouldBeNil)
+					c.So(target[:3], convey.ShouldResemble, []byte(source))
+					c.So(target[3:], convey.ShouldResemble, make([]byte, 7))
+				})
+			})
+
+			c.Convey("string to *[...]rune", func(c convey.C) {
+				var (
+					target [3]rune
+					source string = "100"
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldResemble, [3]rune([]rune(source)))
 			})
 		})
 
@@ -815,6 +962,24 @@ func TestCopy(t *testing.T) {
 					"zzz": {},
 				})
 			})
+
+			c.Convey("[...]string to *map[string]struct{}", func(c convey.C) {
+				var (
+					target map[string]struct{}
+					source = [...]string{
+						"abc", "xyz", "123", "zzz",
+					}
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldResemble, map[string]struct{}{
+					"abc": {},
+					"xyz": {},
+					"123": {},
+					"zzz": {},
+				})
+			})
 		})
 
 		c.Convey("to *slice", func(c convey.C) {
@@ -827,17 +992,6 @@ func TestCopy(t *testing.T) {
 				err := Copy(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldBeNil)
-			})
-
-			c.Convey("nil to *[2]string", func(c convey.C) {
-				var (
-					target [2]string
-					source interface{}
-				)
-
-				err := Copy(&target, source)
-				c.So(err, convey.ShouldBeNil)
-				c.So(target, convey.ShouldResemble, [2]string{})
 			})
 
 			c.Convey("[]int64 to *[]complex128", func(c convey.C) {
@@ -1081,6 +1235,79 @@ func TestCopy(t *testing.T) {
 				})
 			})
 
+		})
+
+		c.Convey("to *array", func(c convey.C) {
+			c.Convey("nil to *[2]string", func(c convey.C) {
+				var (
+					target [2]string
+					source interface{}
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldResemble, [2]string{})
+			})
+
+			c.Convey("[]int64 to *[10]complex128", func(c convey.C) {
+				var (
+					target [100]complex128
+					source []int64 = []int64{
+						2, -100, 356,
+					}
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldResemble, [100]complex128{
+					2, -100, 356,
+				})
+			})
+
+			c.Convey("map[string]struct{} to *[3]string", func(c convey.C) {
+				var (
+					target [3]string
+					source map[string]struct{} = map[string]struct{}{
+						"abc": {},
+						"xyz": {},
+						"AAA": {},
+						"123": {},
+					}
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldNotBeNil)
+
+				// sort.Strings(target[:])
+				res := []string{
+					"123", "AAA", "abc", "xyz",
+				}
+				c.So(target[:], convey.ShouldHaveLength, 3)
+				c.So(target[0], convey.ShouldBeIn, res)
+				c.So(target[1], convey.ShouldBeIn, res)
+				c.So(target[2], convey.ShouldBeIn, res)
+			})
+			c.Convey("[4]int to *[3]string", func(c convey.C) {
+				var (
+					target [3]string
+					source = [...]int{123, 234, 345, 456}
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldNotBeNil)
+				c.So(target, convey.ShouldResemble, [...]string{"123", "234", "345"})
+			})
+
+			c.Convey("[]int to *[5]string", func(c convey.C) {
+				var (
+					target [5]string
+					source = [...]int{123, 234, 345, 456}
+				)
+
+				err := Copy(&target, source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldResemble, [5]string{"123", "234", "345", "456"})
+			})
 		})
 	})
 }

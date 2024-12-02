@@ -8,6 +8,7 @@ import (
 	"math"
 	"testing"
 	"time"
+	"unsafe"
 
 	"github.com/smartystreets/goconvey/convey"
 )
@@ -36,6 +37,7 @@ func TestCompareInterface(t *testing.T) {
 			c.So(CompareInterface(uint64(math.MaxInt64+1), 100), convey.ShouldEqual, 1)
 			c.So(CompareInterface(200, int64(100)), convey.ShouldEqual, 1)
 			c.So(CompareInterface(200, uint64(200)), convey.ShouldEqual, 0)
+			c.So(CompareInterface(uint32(200), uint64(200)), convey.ShouldEqual, 0)
 			c.So(CompareInterface(int64(-200), 100), convey.ShouldEqual, -1)
 			c.So(CompareInterface(int64(-200), uint(100)), convey.ShouldEqual, -1)
 		})
@@ -125,6 +127,74 @@ func TestCompareInterface(t *testing.T) {
 				[]interface{}{100, float64(200), ""},
 			), convey.ShouldEqual, 0)
 		})
+
+		c.Convey("array", func(c convey.C) {
+			c.So(CompareInterface(
+				[...]interface{}{100, uint(200), float32(300)},
+				[...]interface{}{100, float64(200), ""},
+			), convey.ShouldEqual, -1)
+
+			c.So(CompareInterface(
+				[...]interface{}{100, uint(200), ""},
+				[...]interface{}{100, float64(200), ""},
+			), convey.ShouldEqual, 0)
+		})
+
+		c.Convey("pointer", func(c convey.C) {
+			aa := 1
+			bb := 2
+			cc := 1
+			c.So(CompareInterface(&aa, &aa), convey.ShouldEqual, 0)
+			c.So(CompareInterface(&aa, &bb), convey.ShouldEqual, -1)
+			c.So(CompareInterface(&aa, &cc), convey.ShouldEqual, 0)
+			c.So(CompareInterface(&aa, (*int)(nil)), convey.ShouldEqual, 1)
+		})
+		c.Convey("unsafe pointer", func(c convey.C) {
+			aa := 1
+			bb := 2
+			cc := 1
+			c.So(CompareInterface(unsafe.Pointer(&aa), unsafe.Pointer(&aa)), convey.ShouldEqual, 0)
+			c.So(CompareInterface(unsafe.Pointer(&aa), unsafe.Pointer(&bb)), convey.ShouldNotEqual, 0)
+			c.So(CompareInterface(unsafe.Pointer(&aa), unsafe.Pointer(&cc)), convey.ShouldNotEqual, 0)
+			c.So(CompareInterface(unsafe.Pointer(&aa), unsafe.Pointer(nil)), convey.ShouldEqual, 1)
+		})
+
+		c.Convey("chan", func(c convey.C) {
+			aa := make(chan struct{})
+			bb := make(chan struct{})
+			c.So(CompareInterface(aa, aa), convey.ShouldEqual, 0)
+			c.So(CompareInterface(aa, bb), convey.ShouldNotEqual, 0)
+			c.So(CompareInterface(aa, (chan struct{})(nil)), convey.ShouldEqual, 1)
+		})
+		c.Convey("func", func(c convey.C) {
+			aa := func() {}
+			bb := func() {}
+			c.So(CompareInterface(aa, aa), convey.ShouldEqual, 0)
+			c.So(CompareInterface(aa, bb), convey.ShouldNotEqual, 0)
+			c.So(CompareInterface(aa, (func())(nil)), convey.ShouldEqual, 1)
+			c.So(CompareInterface(aa, nil), convey.ShouldEqual, 1)
+		})
+
+		c.Convey("comparer", func(c convey.C) {
+			c.So(CompareInterface(time.Unix(0, 0), time.Unix(0, 0)), convey.ShouldEqual, 0)
+			c.So(CompareInterface(time.Unix(123, 0), time.Unix(123, 0)), convey.ShouldEqual, 0)
+			c.So(CompareInterface(time.Unix(123, 0).In(time.UTC), time.Unix(123, 0).In(time.Local)), convey.ShouldEqual, 0)
+			c.So(CompareInterface(time.Unix(0, 0), time.Unix(123, 0)), convey.ShouldEqual, -1)
+			c.So(CompareInterface(time.Unix(123, 0), time.Unix(0, 0)), convey.ShouldEqual, 1)
+		})
+
+		c.Convey("struct", func(c convey.C) {
+			type StructA struct {
+				Int int
+			}
+			type StructB struct {
+				Int int
+			}
+			c.So(CompareInterface(StructA{100}, StructB{100}), convey.ShouldEqual, -1)
+			c.So(CompareInterface(StructB{100}, StructA{100}), convey.ShouldEqual, +1)
+			c.So(CompareInterface(StructA{100}, StructA{100}), convey.ShouldEqual, +0)
+			c.So(CompareInterface(StructA{100}, StructA{99}), convey.ShouldEqual, +1)
+		})
 	})
 }
 
@@ -139,165 +209,165 @@ func TestCompareBool(t *testing.T) {
 
 func TestCompareByte(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareByte(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareByte(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareByte(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareByte(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[byte](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[byte](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[byte](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[byte](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareRune(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareRune(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareRune(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareRune(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareRune(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[rune](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[rune](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[rune](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[rune](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareInt(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareInt(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareInt(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareInt(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareInt(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(int(0), 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable(int(123), 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable(int(0), 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(int(123), 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareInt8(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareInt8(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareInt8(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareInt8(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareInt8(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[int8](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[int8](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[int8](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[int8](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareInt16(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareInt16(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareInt16(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareInt16(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareInt16(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[int16](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[int16](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[int16](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[int16](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareInt32(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareInt32(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareInt32(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareInt32(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareInt32(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[int32](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[int32](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[int32](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[int32](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareInt64(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareInt64(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareInt64(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareInt64(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareInt64(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[int64](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[int64](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[int64](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[int64](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareUint(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareUint(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareUint(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareUint(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareUint(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[uint](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[uint](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareUint8(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareUint8(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareUint8(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareUint8(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareUint8(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[uint8](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint8](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint8](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[uint8](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareUint16(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareUint16(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareUint16(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareUint16(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareUint16(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[uint16](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint16](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint16](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[uint16](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareUint32(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareUint32(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareUint32(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareUint32(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareUint32(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[uint32](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint32](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint32](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[uint32](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareUint64(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareUint64(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareUint64(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareUint64(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareUint64(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[uint32](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint32](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[uint32](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[uint32](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareFloat32(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareFloat32(float32(math.NaN()), float32(math.NaN())), convey.ShouldEqual, 0)
-		c.So(CompareFloat32(0, float32(math.NaN())), convey.ShouldEqual, 1)
-		c.So(CompareFloat32(float32(math.NaN()), 0), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(float32(math.NaN()), float32(math.NaN())), convey.ShouldEqual, 0)
+		c.So(CompareOrderable(0, float32(math.NaN())), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(float32(math.NaN()), 0), convey.ShouldEqual, -1)
 
-		c.So(CompareFloat32(float32(math.Inf(-1)), float32(math.NaN())), convey.ShouldEqual, 1)
-		c.So(CompareFloat32(float32(math.NaN()), float32(math.Inf(-1))), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(float32(math.Inf(-1)), float32(math.NaN())), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(float32(math.NaN()), float32(math.Inf(-1))), convey.ShouldEqual, -1)
 
-		c.So(CompareFloat32(float32(math.Inf(1)), float32(math.Inf(1))), convey.ShouldEqual, 0)
-		c.So(CompareFloat32(float32(math.Inf(-1)), float32(math.Inf(-1))), convey.ShouldEqual, 0)
+		c.So(CompareOrderable(float32(math.Inf(1)), float32(math.Inf(1))), convey.ShouldEqual, 0)
+		c.So(CompareOrderable(float32(math.Inf(-1)), float32(math.Inf(-1))), convey.ShouldEqual, 0)
 
-		c.So(CompareFloat32(float32(math.Inf(-1)), float32(math.Inf(1))), convey.ShouldEqual, -1)
-		c.So(CompareFloat32(float32(math.Inf(1)), float32(math.Inf(-1))), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(float32(math.Inf(-1)), float32(math.Inf(1))), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(float32(math.Inf(1)), float32(math.Inf(-1))), convey.ShouldEqual, 1)
 
-		c.So(CompareFloat32(float32(math.Inf(-1)), 0), convey.ShouldEqual, -1)
-		c.So(CompareFloat32(0, float32(math.Inf(-1))), convey.ShouldEqual, 1)
-		c.So(CompareFloat32(float32(math.Inf(1)), 0), convey.ShouldEqual, 1)
-		c.So(CompareFloat32(0, float32(math.Inf(1))), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(float32(math.Inf(-1)), 0), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(0, float32(math.Inf(-1))), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(float32(math.Inf(1)), 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(0, float32(math.Inf(1))), convey.ShouldEqual, -1)
 
-		c.So(CompareFloat32(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareFloat32(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareFloat32(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareFloat32(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[float32](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[float32](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[float32](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[float32](123, 0), convey.ShouldEqual, 1)
 	})
 }
 
 func TestCompareFloat64(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareFloat64(math.NaN(), math.NaN()), convey.ShouldEqual, 0)
-		c.So(CompareFloat64(0, math.NaN()), convey.ShouldEqual, 1)
-		c.So(CompareFloat64(math.NaN(), 0), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(math.NaN(), math.NaN()), convey.ShouldEqual, 0)
+		c.So(CompareOrderable(0, math.NaN()), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(math.NaN(), 0), convey.ShouldEqual, -1)
 
-		c.So(CompareFloat64(math.Inf(-1), math.NaN()), convey.ShouldEqual, 1)
-		c.So(CompareFloat64(math.NaN(), math.Inf(-1)), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(math.Inf(-1), math.NaN()), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(math.NaN(), math.Inf(-1)), convey.ShouldEqual, -1)
 
-		c.So(CompareFloat64(math.Inf(1), math.Inf(1)), convey.ShouldEqual, 0)
-		c.So(CompareFloat64(math.Inf(-1), math.Inf(-1)), convey.ShouldEqual, 0)
+		c.So(CompareOrderable(math.Inf(1), math.Inf(1)), convey.ShouldEqual, 0)
+		c.So(CompareOrderable(math.Inf(-1), math.Inf(-1)), convey.ShouldEqual, 0)
 
-		c.So(CompareFloat64(math.Inf(-1), math.Inf(1)), convey.ShouldEqual, -1)
-		c.So(CompareFloat64(math.Inf(1), math.Inf(-1)), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(math.Inf(-1), math.Inf(1)), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(math.Inf(1), math.Inf(-1)), convey.ShouldEqual, 1)
 
-		c.So(CompareFloat64(math.Inf(-1), 0), convey.ShouldEqual, -1)
-		c.So(CompareFloat64(0, math.Inf(-1)), convey.ShouldEqual, 1)
-		c.So(CompareFloat64(math.Inf(1), 0), convey.ShouldEqual, 1)
-		c.So(CompareFloat64(0, math.Inf(1)), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(math.Inf(-1), 0), convey.ShouldEqual, -1)
+		c.So(CompareOrderable(0, math.Inf(-1)), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(math.Inf(1), 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable(0, math.Inf(1)), convey.ShouldEqual, -1)
 
-		c.So(CompareFloat64(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareFloat64(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareFloat64(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareFloat64(123, 0), convey.ShouldEqual, 1)
+		c.So(CompareOrderable[float64](0, 0), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[float64](123, 123), convey.ShouldEqual, 0)
+		c.So(CompareOrderable[float64](0, 123), convey.ShouldEqual, -1)
+		c.So(CompareOrderable[float64](123, 0), convey.ShouldEqual, 1)
 
-		c.So(CompareFloat64(4503599627370496.1, 4503599627370496), convey.ShouldEqual, 0) // exceeds the precision of float64
+		c.So(CompareOrderable(float64(4503599627370496.1), 4503599627370496), convey.ShouldEqual, 0) // exceeds the precision of float64
 	})
 }
 
@@ -313,20 +383,12 @@ func TestString(t *testing.T) {
 	})
 }
 
-func TestCompareDuration(t *testing.T) {
-	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareDuration(0, 0), convey.ShouldEqual, 0)
-		c.So(CompareDuration(123, 123), convey.ShouldEqual, 0)
-		c.So(CompareDuration(0, 123), convey.ShouldEqual, -1)
-		c.So(CompareDuration(123, 0), convey.ShouldEqual, 1)
-	})
-}
-
 func TestCompareTime(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		c.So(CompareTime(time.Unix(0, 0), time.Unix(0, 0)), convey.ShouldEqual, 0)
-		c.So(CompareTime(time.Unix(123, 0), time.Unix(123, 0)), convey.ShouldEqual, 0)
-		c.So(CompareTime(time.Unix(0, 0), time.Unix(123, 0)), convey.ShouldEqual, -1)
-		c.So(CompareTime(time.Unix(123, 0), time.Unix(0, 0)), convey.ShouldEqual, 1)
+		c.So(CompareComparer(time.Unix(0, 0), time.Unix(0, 0)), convey.ShouldEqual, 0)
+		c.So(CompareComparer(time.Unix(123, 0).In(time.UTC), time.Unix(123, 0).In(time.Local)), convey.ShouldEqual, 0)
+		c.So(CompareComparer(time.Unix(123, 0), time.Unix(123, 0)), convey.ShouldEqual, 0)
+		c.So(CompareComparer(time.Unix(0, 0), time.Unix(123, 0)), convey.ShouldEqual, -1)
+		c.So(CompareComparer(time.Unix(123, 0), time.Unix(0, 0)), convey.ShouldEqual, 1)
 	})
 }

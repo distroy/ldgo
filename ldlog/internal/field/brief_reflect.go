@@ -19,7 +19,7 @@ func BriefReflect(key string, val interface{}) Field {
 	if val == nil {
 		return zap.Reflect(key, val)
 	}
-	return zap.Inline(BriefReflectType{Key: key, Val: val})
+	return zap.Inline(&BriefReflectType{Key: key, Val: val})
 }
 
 func mapkey2str(v reflect.Value) string {
@@ -166,15 +166,15 @@ func AppendRef2Log(enc ArrayEncoder, v reflect.Value) error {
 		n := briefArrayLen
 		l := v.Len()
 		if l <= n {
-			return enc.AppendArray(briefReflectArray{Val: v, Len: l})
+			return enc.AppendArray(&briefReflectArray{Val: v, Len: l})
 		}
-		return enc.AppendObject(briefReflectArray{Val: v, Len: n})
+		return enc.AppendObject(&briefReflectArray{Val: v, Len: n})
 
 	case reflect.Struct:
-		return enc.AppendObject(briefReflectStruct{Val: v})
+		return enc.AppendObject(&briefReflectStruct{Val: v})
 
 	case reflect.Map:
-		return enc.AppendObject(briefReflectMap{Val: v})
+		return enc.AppendObject(&briefReflectMap{Val: v})
 	}
 	return nil
 }
@@ -184,7 +184,7 @@ type BriefReflectType struct {
 	Val interface{}
 }
 
-func (p BriefReflectType) MarshalLogObject(enc ObjectEncoder) error {
+func (p *BriefReflectType) MarshalLogObject(enc ObjectEncoder) error {
 	vv := p.Val
 	v := reflect.ValueOf(vv)
 	return AddRef2Log(enc, p.Key, v)
@@ -192,9 +192,26 @@ func (p BriefReflectType) MarshalLogObject(enc ObjectEncoder) error {
 
 type briefReflectMap struct {
 	Val reflect.Value
+	Len int
 }
 
-func (p briefReflectMap) MarshalLogObject(enc ObjectEncoder) error {
+func (p *briefReflectMap) MarshalLogObject(enc ObjectEncoder) error {
+	if p.Len > 0 {
+		return p.marshalLogObject(enc, p.Len)
+	}
+
+	n := briefMapLen
+	l := p.Val.Len()
+	if l <= n {
+		return p.marshalLogObject(enc, l)
+	}
+
+	enc.AddInt(tagLen, l)
+	enc.AddString(tagType, "map")
+	return enc.AddObject(tagBrief, &briefReflectMap{Val: p.Val, Len: n})
+}
+
+func (p *briefReflectMap) marshalLogObject(enc ObjectEncoder, n int) error {
 	type data struct {
 		Key string
 		Val reflect.Value
@@ -207,7 +224,7 @@ func (p briefReflectMap) MarshalLogObject(enc ObjectEncoder) error {
 	}
 
 	ldsort.Sort(l, func(a, b data) int { return ldcmp.CompareString(a.Key, b.Key) })
-	for i := 0; i < len(l); i++ {
+	for i := 0; i < n; i++ {
 		d := &l[i]
 		err := AddRef2Log(enc, d.Key, d.Val)
 		if err != nil {
@@ -222,13 +239,13 @@ type briefReflectArray struct {
 	Len int
 }
 
-func (p briefReflectArray) MarshalLogObject(enc ObjectEncoder) error {
+func (p *briefReflectArray) MarshalLogObject(enc ObjectEncoder) error {
 	enc.AddInt(tagLen, p.Val.Len())
 	enc.AddString(tagType, "array")
 	return enc.AddArray(tagBrief, p)
 }
 
-func (p briefReflectArray) MarshalLogArray(enc ArrayEncoder) error {
+func (p *briefReflectArray) MarshalLogArray(enc ArrayEncoder) error {
 	for i := 0; i < p.Len; i++ {
 		v := p.Val.Index(i)
 		err := AppendRef2Log(enc, v)
@@ -243,7 +260,7 @@ type briefReflectStruct struct {
 	Val reflect.Value
 }
 
-func (p briefReflectStruct) MarshalLogObject(enc ObjectEncoder) error {
+func (p *briefReflectStruct) MarshalLogObject(enc ObjectEncoder) error {
 	return marshalReflectStruct(enc, p.Val)
 }
 

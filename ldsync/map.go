@@ -54,7 +54,6 @@ func (p *Map[K, V]) swap(key K, val V) (previous any, loaded bool) {
 	if !loaded {
 		p.size.Add(1)
 	}
-
 	return i, loaded
 }
 
@@ -71,6 +70,14 @@ func (p *Map[K, V]) loadAndDelete(key K) (val any, loaded bool) {
 	i, loaded := p.data.LoadAndDelete(key)
 	if loaded {
 		p.size.Add(-1)
+	}
+	return i, loaded
+}
+
+func (p *Map[K, V]) loadOrStore(key K, val V) (actual any, loaded bool) {
+	i, loaded := p.data.LoadOrStore(key, val)
+	if !loaded {
+		p.size.Add(1)
 	}
 	return i, loaded
 }
@@ -110,4 +117,21 @@ func (p *Map[K, V]) Keys() []K {
 		return true
 	})
 	return keys
+}
+
+// LoadAndDelete deletes the value for a key, returning the previous value if any.
+// The loaded result reports whether the key was present.
+func (p *Map[K, V]) LoadAndDelete(key K) (val V, loaded bool) {
+	i, loaded := p.loadAndDelete(key)
+	v, _ := i.(V)
+	return v, loaded
+}
+
+// LoadOrStore returns the existing value for the key if present.
+// Otherwise, it stores and returns the given value.
+// The loaded result is true if the value was loaded, false if stored.
+func (p *Map[K, V]) LoadOrStore(key K, val V) (actual V, loaded bool) {
+	i, loaded := p.loadOrStore(key, val)
+	v, _ := i.(V)
+	return v, loaded
 }

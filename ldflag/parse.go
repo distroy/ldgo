@@ -22,6 +22,14 @@ var (
 	defaultOptions = ([]func(s *FlagSet))(nil)
 )
 
+func Default() *FlagSet {
+	s := defaultFlagSet
+	if s == nil {
+		s = newDefaultFlagSet()
+	}
+	return s
+}
+
 func init() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 }
@@ -37,6 +45,7 @@ func newDefaultFlagSet() *FlagSet {
 	return s
 }
 
+// Deprecated
 func EnableDefault(on bool) {
 	defaultOptions = append(defaultOptions, func(s *FlagSet) {
 		s.EnableDefault(on)
@@ -80,7 +89,7 @@ func splitStringWord(s string, sep rune) string {
 		}
 
 		if i > 0 {
-			res = append(res, '-')
+			res = append(res, sep)
 		}
 
 		last := curr
@@ -94,7 +103,7 @@ func splitStringWord(s string, sep rune) string {
 			}
 
 			if j > i+1 {
-				res = append(res, '-')
+				res = append(res, sep)
 			}
 			res = append(res, last)
 			last = curr

@@ -28,6 +28,19 @@ type Flag struct {
 	Usage   string
 	IsArgs  bool
 	Bool    bool
+	Options []string
+}
+
+func (f *Flag) inOptions(s string) bool {
+	if f.Default != "" && s == f.Default {
+		return true
+	}
+	for _, v := range f.Options {
+		if v == s {
+			return true
+		}
+	}
+	return false
 }
 
 type FlagSet struct {
@@ -59,6 +72,12 @@ func (s *FlagSet) init() {
 	s.noDefault = false
 }
 
+func (s *FlagSet) Args() []string {
+	s.init()
+	return s.command.Args()
+}
+
+// Deprecated
 func (s *FlagSet) EnableDefault(on bool) {
 	s.init()
 	s.noDefault = !on
@@ -216,6 +235,21 @@ func (s *FlagSet) parse(args []string) error {
 		return err
 	}
 
+	for _, f := range s.flagSlice {
+		if len(f.Options) == 0 {
+			continue
+		}
+		value := f.Value.String()
+		if f.inOptions(value) {
+			continue
+		}
+		// msg := fmt.Sprintf("invalid value %q for flag -%s", value, f.Name)
+		msg := fmt.Sprintf("the value of flag -%s should be %v", f.Name, f.Options)
+		fmt.Fprintln(s.command.Output(), msg)
+		s.printUsage()
+		return fmt.Errorf("%s", msg)
+	}
+
 	// log.Printf(" === %#v", s.args)
 	if s.args != nil {
 		args := s.command.Args()
@@ -352,6 +386,10 @@ func (s *FlagSet) parseFieldFlag(lvl int, val reflect.Value, field reflect.Struc
 		return
 	}
 
+	if tag == "-" {
+		return
+	}
+
 	tags := ldtagmap.Parse(tag)
 	// if tags.Has("-") {
 	// 	return
@@ -365,9 +403,14 @@ func (s *FlagSet) parseFieldFlag(lvl int, val reflect.Value, field reflect.Struc
 		Name:    tags.Get("name"),
 		Meta:    tags.Get("meta"),
 		Usage:   tags.Get("usage"),
-		Default: tags.Get("default"),
+		Default: strings.TrimSpace(tags.Get("default")),
 		IsArgs:  tags.Has("args"),
 		Bool:    tags.Has("bool"),
+		Options: s.parseOptions(tags.Get("options")),
+	}
+
+	if f.Default == "" && len(f.Options) > 0 {
+		f.Default = f.Options[0]
 	}
 
 	if len(f.Name) == 0 {
@@ -377,6 +420,22 @@ func (s *FlagSet) parseFieldFlag(lvl int, val reflect.Value, field reflect.Struc
 
 	s.addFlag(f)
 	return
+}
+
+func (s *FlagSet) parseOptions(str string) []string {
+	str = strings.TrimSpace(str)
+	if str == "" {
+		return nil
+	}
+	slice := strings.Split(str, ",")
+	opts := make([]string, 0, len(slice))
+	for _, v := range slice {
+		v = strings.TrimSpace(v)
+		if v != "" {
+			opts = append(opts, v)
+		}
+	}
+	return opts
 }
 
 func (s *FlagSet) parseStructField(lvl int, fVal reflect.Value, field reflect.StructField) {

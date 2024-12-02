@@ -5,6 +5,7 @@
 package ldatomic
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/smartystreets/goconvey/convey"
@@ -71,6 +72,32 @@ func TestAny(t *testing.T) {
 
 			c.So(v.CompareAndSwap(v.Load(), map[string]string{"b": "2"}), convey.ShouldEqual, true)
 			c.So(v.Load(), convey.ShouldResemble, map[string]string{"b": "2"})
+		})
+
+		c.Convey("error", func(c convey.C) {
+			v := &Any[error]{}
+			c.So(v.Load(), convey.ShouldBeNil)
+
+			var (
+				error1 = fmt.Errorf("error1")
+				error2 = fmt.Errorf("error2")
+				error3 = fmt.Errorf("error3")
+			)
+
+			c.So(v.CompareAndSwap(nil, error1), convey.ShouldEqual, true)
+			c.So(v.Load(), convey.ShouldResemble, error1)
+
+			c.So(v.CompareAndSwap(nil, error2), convey.ShouldEqual, false)
+			c.So(v.Load(), convey.ShouldResemble, error1)
+
+			c.So(v.CompareAndSwap(error1, error3), convey.ShouldEqual, true)
+			c.So(v.Load(), convey.ShouldResemble, error3)
+
+			c.So(v.CompareAndSwap(fmt.Errorf("error3"), error2), convey.ShouldEqual, false)
+			c.So(v.Load(), convey.ShouldResemble, error3)
+
+			c.So(v.CompareAndSwap(v.Load(), error2), convey.ShouldEqual, true)
+			c.So(v.Load(), convey.ShouldResemble, error2)
 		})
 	})
 }

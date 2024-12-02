@@ -265,7 +265,7 @@ func mergeReflectStruct(c *mergeContext, target, source reflect.Value) {
 	}
 }
 
-func mergeReflectNormal(c *mergeContext, target, source reflect.Value) {
+func mergeReflectNormal(_ *mergeContext, target, source reflect.Value) {
 	if IsValZero(target) {
 		target.Set(source)
 	}

@@ -16,18 +16,27 @@ type Orderable interface {
 }
 
 func CompareOrderable[T Orderable](a, b T) int {
-	switch {
-	case isNaN(a):
-		if isNaN(b) {
-			return 0
-		}
-		return -1 // No good answer if b is a NaN so don't bother checking.
-	case isNaN(b):
-		return 1
-	case a < b:
+	aNaN := isNaN(a)
+	bNaN := isNaN(b)
+	if aNaN && bNaN {
+		return 0
+	}
+
+	if aNaN || a < b {
 		return -1
-	case a > b:
-		return 1
+	}
+	if bNaN || a > b {
+		return +1
 	}
 	return 0
+}
+
+type Comparer[T any] interface {
+	Compare(b T) int
+}
+
+type Integer interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 |
+		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 |
+		~uintptr
 }
