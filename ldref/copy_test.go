@@ -323,7 +323,7 @@ func TestCopy(t *testing.T) {
 				err := Copy(&target, source)
 				c.So(err.Error(), convey.ShouldEqual, "func(interface {}) bool can not copy to *string")
 				// c.So(err, convey.ShouldBeNil)
-				// c.So(target, convey.ShouldEqual, "github.com/distroy/ldgo/v2/ldref.IsZero")
+				// c.So(target, convey.ShouldEqual, "github.com/distroy/ldgo/v3/ldref.IsZero")
 			})
 
 			c.Convey("func to unsafe.Pointer", func(c convey.C) {

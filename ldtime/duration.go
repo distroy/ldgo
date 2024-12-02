@@ -5,10 +5,9 @@
 package ldtime
 
 import (
-	"fmt"
-	"strconv"
 	"time"
-	"unsafe"
+
+	"github.com/distroy/ldgo/v3/internal/timeinternal"
 )
 
 type Duration time.Duration
@@ -28,40 +27,11 @@ func (d Duration) Seconds() float64             { return d.get().Seconds() }
 func (d Duration) String() string               { return d.get().String() }
 func (d Duration) Truncate(m Duration) Duration { return Duration(d.get().Truncate(m.get())) }
 
-func (d Duration) MarshalJSON() ([]byte, error) {
-	s := d.String()
-	buf := make([]byte, 0, len(s)+4)
-	buf = strconv.AppendQuote(buf, s)
-	return buf, nil
-}
-
+func (d Duration) MarshalJSON() ([]byte, error) { return timeinternal.DurationMarshalJSON(d.get()) }
 func (d *Duration) UnmarshalJSON(b []byte) error {
-	if len(b) == 0 {
-		return fmt.Errorf("unexpected end of JSON input")
+	dur, err := timeinternal.DurationUnmarshalJSON(b)
+	if err == nil {
+		*d.ptr() = dur
 	}
-
-	str := unsafe.String(unsafe.SliceData(b), len(b))
-	switch b[0] {
-	case '"', '\'', '`':
-		vv, err := strconv.Unquote(str)
-		if err != nil {
-			return fmt.Errorf("invalid duration: %s", b)
-		}
-		*d.ptr(), err = time.ParseDuration(vv)
-		if err != nil {
-			return fmt.Errorf("invalid duration: %s", b)
-		}
-		return nil
-
-	}
-
-	if i64, err := strconv.ParseInt(str, 10, 64); err == nil {
-		*d = Duration(i64)
-		return nil
-	}
-	// if f64, err := strconv.ParseFloat(str, 64); err != nil {
-	// 	*d = Duration(f64)
-	// 	return nil
-	// }
-	return fmt.Errorf("invalid duration: %s", b)
+	return err
 }
