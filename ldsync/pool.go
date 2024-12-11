@@ -5,6 +5,7 @@
 package ldsync
 
 import (
+	"reflect"
 	"sync"
 )
 
@@ -36,8 +37,8 @@ func (p *Pool[T]) Put(v T) {
 var pools = &sync.Map{}
 
 func GetPool[T any](fnNew func() T) *Pool[T] {
-	var key T
-	// typ := reflect.TypeOf(d)
+	var d T
+	key := reflect.TypeOf(d)
 	if i, _ := pools.Load(key); i != nil {
 		return i.(*Pool[T])
 	}
