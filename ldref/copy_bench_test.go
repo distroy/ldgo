@@ -8,8 +8,8 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/distroy/ldgo/v2/ldref/internal/copybenchstruct1"
-	"github.com/distroy/ldgo/v2/ldref/internal/copybenchstruct2"
+	"github.com/distroy/ldgo/v3/ldref/internal/copybenchstruct1"
+	"github.com/distroy/ldgo/v3/ldref/internal/copybenchstruct2"
 )
 
 /*
