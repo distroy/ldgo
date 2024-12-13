@@ -15,11 +15,19 @@ func init() {
 		{To: reflect.Func, From: reflect.Func}:    copyReflectToFuncFromFunc,
 		// {To: reflect.Func, From: reflect.UnsafePointer}: copyReflectToFuncFromUnsafePointer,
 	})
+	registerGetCopyFunc(map[copyPair]getCopyFuncType{
+		{To: reflect.Func, From: reflect.Invalid}: getCopyFuncToFuncFromInvalid,
+		{To: reflect.Func, From: reflect.Func}:    getCopyFuncToFuncFromFunc,
+		// {To: reflect.Func, From: reflect.UnsafePointer}: copyReflectToFuncFromUnsafePointer,
+	})
 }
 
 func copyReflectToFuncFromInvalid(c *copyContext, target, source reflect.Value) bool {
 	target.Set(reflect.Zero(target.Type()))
 	return true
+}
+func getCopyFuncToFuncFromInvalid(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return getCopyFuncSetZero(c, tTyp, sTyp)
 }
 
 func copyReflectToFuncFromFunc(c *copyContext, target, source reflect.Value) bool {
@@ -29,6 +37,16 @@ func copyReflectToFuncFromFunc(c *copyContext, target, source reflect.Value) boo
 
 	target.Set(source)
 	return true
+}
+func getCopyFuncToFuncFromFunc(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	if tTyp != sTyp {
+		return func(c *copyContext, target, source reflect.Value) (end bool) { return false }
+	}
+
+	return func(c *copyContext, target, source reflect.Value) (end bool) {
+		target.Set(source)
+		return true
+	}
 }
 
 func copyReflectToFuncFromUnsafePointer(c *copyContext, target, source reflect.Value) bool {
