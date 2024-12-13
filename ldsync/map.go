@@ -7,7 +7,7 @@ package ldsync
 import (
 	"sync"
 
-	"github.com/distroy/ldgo/v2/ldatomic"
+	"github.com/distroy/ldgo/v3/ldatomic"
 )
 
 func NewMap[K comparable, V any](m map[K]V) *Map[K, V] {

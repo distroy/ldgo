@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/lderr"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/lderr"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -54,8 +54,8 @@ func logMidwareFunc(g *gin.Context) {
 	errMsg := ""
 	rspDataField := zap.Skip()
 	if rsp := GetResponse(c); rsp != nil {
-		bizCode = rsp.ErrCode
-		errMsg = rsp.ErrMsg
+		bizCode = rsp.Error.Code
+		errMsg = rsp.Error.Message
 		rspDataField = zap.Reflect("rspData", rsp.Data)
 	}
 

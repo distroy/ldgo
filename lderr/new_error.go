@@ -130,7 +130,8 @@ func (e commError) Is(target error) bool {
 	if err, _ := target.(interface{ Code() int }); err != nil && e.Code() == err.Code() {
 		return true
 	}
-	return Is(e.error, target)
+	// return Is(e.error, target)
+	return false
 }
 
 type strError string
@@ -196,5 +197,6 @@ func (e *detailsError) Is(target error) bool {
 	if err, _ := target.(interface{ Code() int }); err != nil && e.Code() == err.Code() {
 		return true
 	}
-	return Is(e.commError, target)
+	// return Is(e.commError, target)
+	return false
 }

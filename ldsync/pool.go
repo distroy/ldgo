@@ -4,7 +4,10 @@
 
 package ldsync
 
-import "sync"
+import (
+	"reflect"
+	"sync"
+)
 
 type Pool[T any] struct {
 	d sync.Pool
@@ -29,4 +32,18 @@ func (p *Pool[T]) Get() T {
 
 func (p *Pool[T]) Put(v T) {
 	p.d.Put(v)
+}
+
+var pools = &sync.Map{}
+
+func GetPool[T any](fnNew func() T) *Pool[T] {
+	var d T
+	key := reflect.TypeOf(d)
+	if i, _ := pools.Load(key); i != nil {
+		return i.(*Pool[T])
+	}
+
+	p := &Pool[T]{New: fnNew}
+	i, _ := pools.LoadOrStore(key, p)
+	return i.(*Pool[T])
 }

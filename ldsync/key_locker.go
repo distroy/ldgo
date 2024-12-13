@@ -6,51 +6,111 @@ package ldsync
 
 import "sync"
 
-var keyLockerDataPool = &Pool[*keyLockerData]{
-	New: func() *keyLockerData { return &keyLockerData{} },
+var (
+	_ Locker = (*lockerPoolLocker)(nil)
+)
+
+var lockerPoolDataPool = &Pool[*lockerPoolData]{
+	New: func() *lockerPoolData { return &lockerPoolData{} },
 }
 
-func NewKeyLocker() *KeyLocker {
-	return &KeyLocker{}
+func NewLockerPool() *LockerPool {
+	return &LockerPool{}
 }
 
-type keyLockerData struct {
+type lockerPoolData struct {
 	locker sync.Mutex
 	count  int64
 }
 
-type KeyLocker struct {
+type LockerPool struct {
 	locker sync.Mutex
-	keys   map[interface{}]*keyLockerData
+	keys   map[interface{}]*lockerPoolData
 }
 
-func (kl *KeyLocker) init() {
+func (kl *LockerPool) init() {
 	if kl.keys == nil {
-		kl.keys = make(map[interface{}]*keyLockerData, 1)
+		kl.keys = make(map[interface{}]*lockerPoolData, 1)
 	}
 }
 
-func (kl *KeyLocker) Lock(key interface{}) {
+func (kl *LockerPool) Get(key interface{}) Locker {
+	var l Locker = &lockerPoolLocker{
+		pool: kl,
+		key:  key,
+	}
+	// l = AutoLock(l)
+	return l
+}
+
+func (kl *LockerPool) get(key interface{}) *lockerPoolData {
+	kl.init()
+	return kl.keys[key]
+}
+
+func (kl *LockerPool) new(key interface{}) *lockerPoolData {
+	d := lockerPoolDataPool.Get()
+	d.count = 0
+	kl.keys[key] = d
+	return d
+}
+
+type lockerPoolLocker struct {
+	pool *LockerPool
+	key  interface{}
+	data *lockerPoolData
+}
+
+func (l *lockerPoolLocker) Lock() {
+	kl := l.pool
+	key := l.key
+
+	if l.data != nil {
+		return
+	}
+
 	kl.locker.Lock()
-	d := kl.getAndAdd(key)
+	d := kl.get(key)
+	if d == nil {
+		d = kl.new(key)
+	}
+	d.count++
 	kl.locker.Unlock()
 
 	d.locker.Lock()
+	l.data = d
 }
 
-func (kl *KeyLocker) Unlock(key interface{}) {
-	kl.locker.Lock()
-	d := kl.getAndSub(key)
-	kl.locker.Unlock()
+func (l *lockerPoolLocker) Unlock() {
+	kl := l.pool
+	key := l.key
+	d := l.data
 
 	if d == nil {
 		return
 	}
 
+	kl.locker.Lock()
+	// d := kl.getAndSub(key)
+	d.count--
+	if d.count <= 0 {
+		delete(kl.keys, key)
+		lockerPoolDataPool.Put(d)
+	}
+	kl.locker.Unlock()
+
 	d.locker.Unlock()
+	l.data = nil
 }
 
-func (kl *KeyLocker) TryLock(key interface{}) bool {
+func (l *lockerPoolLocker) TryLock() bool {
+	kl := l.pool
+	key := l.key
+
+	if l.data != nil {
+		return true
+	}
+
 	kl.locker.Lock()
 
 	if d := kl.get(key); d != nil {
@@ -62,42 +122,6 @@ func (kl *KeyLocker) TryLock(key interface{}) bool {
 	d.count++
 	kl.locker.Unlock()
 
+	l.data = d
 	return d.locker.TryLock()
-}
-
-func (kl *KeyLocker) get(key interface{}) *keyLockerData {
-	kl.init()
-	return kl.keys[key]
-}
-
-func (kl *KeyLocker) new(key interface{}) *keyLockerData {
-	d := keyLockerDataPool.Get()
-	d.count = 0
-	kl.keys[key] = d
-	return d
-}
-
-func (kl *KeyLocker) getAndAdd(key interface{}) *keyLockerData {
-	d := kl.get(key)
-	if d == nil {
-		d = kl.new(key)
-	}
-
-	d.count++
-	return d
-}
-
-func (kl *KeyLocker) getAndSub(key interface{}) *keyLockerData {
-	d := kl.get(key)
-	if d == nil {
-		return nil
-	}
-
-	d.count--
-	if d.count <= 0 {
-		delete(kl.keys, key)
-		keyLockerDataPool.Put(d)
-	}
-
-	return d
 }

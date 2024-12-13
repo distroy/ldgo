@@ -10,16 +10,15 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"strings"
 
-	"github.com/distroy/ldgo/v2/ldconv"
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/lderr"
-	"github.com/distroy/ldgo/v2/ldgin"
+	"github.com/distroy/ldgo/v3/ldconv"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldgin"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
@@ -111,7 +110,7 @@ func testMultipart(c *ldgin.Context, req *testMultipartReq) (*testMultipartRsp, 
 	}
 	defer f.Close()
 
-	buf, err := ioutil.ReadAll(f)
+	buf, err := io.ReadAll(f)
 	if err != nil {
 		return nil, lderr.WithDetail(lderr.ErrParseRequest, "read multipart file fail")
 	}

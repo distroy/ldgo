@@ -9,10 +9,10 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/distroy/ldgo/v2/ldatomic"
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/lderr"
-	"github.com/distroy/ldgo/v2/ldrand"
+	"github.com/distroy/ldgo/v3/ldatomic"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldrand"
 	"go.uber.org/zap"
 )
 

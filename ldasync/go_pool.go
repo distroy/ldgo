@@ -8,8 +8,13 @@ import (
 	"log"
 	"runtime/debug"
 
-	"github.com/distroy/ldgo/v2/ldsync"
+	"github.com/distroy/ldgo/v3/ldatomic"
+	"github.com/distroy/ldgo/v3/ldsync"
 )
+
+type Logger interface {
+	Printf(fmt string, args ...interface{})
+}
 
 func Go(fn func()) *GoPool { return GoN(1, fn) }
 func GoN(n int, fn func()) *GoPool {
@@ -19,7 +24,17 @@ func GoN(n int, fn func()) *GoPool {
 }
 
 type GoPool struct {
-	wg ldsync.WaitGroup
+	log ldatomic.Any[Logger]
+	wg  ldsync.WaitGroup
+}
+
+func (p *GoPool) SetLogger(l Logger) { p.log.Store(l) }
+func (p *GoPool) getLogger() Logger {
+	l := p.log.Load()
+	if l == nil {
+		l = log.Default()
+	}
+	return l
 }
 
 func (p *GoPool) Wait()        { p.wg.Wait() }
@@ -38,7 +53,7 @@ func (p *GoPool) GoN(n int, fn func()) {
 				buf := debug.Stack()
 
 				// log.Println(err, ldconv.BytesToStrUnsafe(buf))
-				log.Printf("[go pool] go func panic. err:%v, stack:\n%s", err, buf)
+				p.getLogger().Printf("[go pool] go func panic. err:%v, stack:\n%s", err, buf)
 			}
 		}()
 

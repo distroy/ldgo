@@ -69,11 +69,19 @@ func Test_BytesToStrUnsafe(t *testing.T) {
 	fn := BytesToStrUnsafe
 
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		b := []byte("123456789")
-		s := fn(b)
-		c.So(s, convey.ShouldEqual, "123456789")
-		copy(b, []byte("abcd"))
-		c.So(s, convey.ShouldEqual, "abcd56789")
+		c.Convey("nil", func(c convey.C) {
+			c.So(fn(nil), convey.ShouldEqual, "")
+		})
+		c.Convey("empty", func(c convey.C) {
+			c.So(fn([]byte{}), convey.ShouldEqual, "")
+		})
+		c.Convey("conv and change", func(c convey.C) {
+			b := []byte("123456789")
+			s := fn(b)
+			c.So(s, convey.ShouldEqual, "123456789")
+			copy(b, []byte("abcd"))
+			c.So(s, convey.ShouldEqual, "abcd56789")
+		})
 	})
 }
 

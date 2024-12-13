@@ -4,143 +4,69 @@
 
 package lditer
 
-type Iterable[Iter comparable] interface {
-	comparable
+import (
+	"iter"
+)
 
-	Prev() Iter
-	Next() Iter
-}
-
-type ConstIterator[Data any] interface {
-	Get() Data
-	Prev() ConstIterator[Data]
-	Next() ConstIterator[Data]
-}
-
-type Iterator[Data any] interface {
-	Set(d Data)
-	Get() Data
-	Prev() Iterator[Data]
-	Next() Iterator[Data]
-}
-
-type Rangable interface {
-	comparable
-
-	HasNext() bool
-	Next()
-}
-
-type ConstRange[Data any] interface {
-	Get() Data
-	HasNext() bool
-	Next()
-}
-
-type Range[Data any] interface {
-	ConstRange[Data]
-
-	Set(d Data)
-}
-
-type constIterable[Data any, Iter comparable] interface {
-	Iterable[Iter]
-
-	Get() Data
-}
-
-type iterable[Data any, Iter comparable] interface {
-	constIterable[Data, Iter]
-
-	Set(d Data)
-}
-
-func Iter[Data any, Iter iterable[Data, Iter]](iter Iter) Iterator[Data] {
-	return iterator[Data, Iter]{iter: iter}
-}
-
-func makeIter[Data any, Iter iterable[Data, Iter]](iter Iter) Iterator[Data] {
-	return iterator[Data, Iter]{iter: iter}
-}
-
-func ConstIter[Data any, Iter constIterable[Data, Iter]](iter Iter) ConstIterator[Data] {
-	return constIterator[Data, Iter]{iter: iter}
-}
-
-func MakeRange[Data any, Iter iterable[Data, Iter]](begin, end Iter) Range[Data] {
-	var zero Iter
-	if begin == zero {
-		return &_range[Data, Iter]{}
-	}
-	return &_range[Data, Iter]{
-		begin: begin,
-		end:   end,
+func ToSeq2[Seq ~func(yield func(V) bool), V any](fn Seq) iter.Seq2[int, V] {
+	return func(yield func(i int, v V) bool) {
+		x := 0
+		fn(func(vv V) bool {
+			i := x
+			x++
+			return yield(i, vv)
+		})
 	}
 }
 
-func MakeConstRange[Data any, Iter constIterable[Data, Iter]](begin, end Iter) ConstRange[Data] {
-	var zero Iter
-	if begin == zero {
-		return &_constRange[Data, Iter]{}
-	}
-	return &_constRange[Data, Iter]{
-		begin: begin,
-		end:   end,
+func ToSeqByKey[Seq2 ~func(yield func(k K, v V) bool), K, V any](fn Seq2) iter.Seq[K] {
+	return func(yield func(K) bool) {
+		fn(func(k K, v V) bool { return yield(k) })
 	}
 }
 
-// iterator begin
-
-type iterator[Data any, Iter iterable[Data, Iter]] struct {
-	iter Iter
+func ToSeqByValue[Seq2 ~func(yield func(k K, v V) bool), K, V any](fn Seq2) iter.Seq[V] {
+	return func(yield func(V) bool) {
+		fn(func(k K, v V) bool { return yield(v) })
+	}
 }
 
-func (i iterator[Data, Iter]) Set(d Data)           { i.iter.Set(d) }
-func (i iterator[Data, Iter]) Get() Data            { return i.iter.Get() }
-func (i iterator[Data, Iter]) Prev() Iterator[Data] { return makeIter[Data](i.iter.Prev()) }
-func (i iterator[Data, Iter]) Next() Iterator[Data] { return makeIter[Data](i.iter.Next()) }
-
-// iterator end
-
-// const iterator begin
-
-type constIterator[Data any, Iter constIterable[Data, Iter]] struct {
-	iter Iter
+func Chan[C interface{ ~<-chan V | ~chan V }, V any](ch C) iter.Seq[V] {
+	return func(yield func(V) bool) {
+		for v := range ch {
+			if !yield(v) {
+				break
+			}
+		}
+	}
 }
 
-func (i constIterator[Data, Iter]) Get() Data { return i.iter.Get() }
-func (i constIterator[Data, Iter]) Prev() ConstIterator[Data] {
-	return ConstIter[Data](i.iter.Prev())
-}
-func (i constIterator[Data, Iter]) Next() ConstIterator[Data] {
-	return ConstIter[Data](i.iter.Next())
-}
-
-// const iterator end
-
-// range begin
-
-type _range[Data any, Iter iterable[Data, Iter]] struct {
-	begin Iter
-	end   Iter
+func Slice[S ~[]V, V any](s S) iter.Seq2[int, V] {
+	return func(yield func(int, V) bool) {
+		for i, v := range s {
+			if !yield(i, v) {
+				break
+			}
+		}
+	}
 }
 
-func (r *_range[Data, Iter]) Set(d Data)    { r.begin.Set(d) }
-func (r *_range[Data, Iter]) Get() Data     { return r.begin.Get() }
-func (r *_range[Data, Iter]) HasNext() bool { return r.begin != r.end }
-func (r *_range[Data, Iter]) Next()         { r.begin = r.begin.Next() }
-
-// range end
-
-// const range begin
-
-type _constRange[Data any, Iter constIterable[Data, Iter]] struct {
-	begin Iter
-	end   Iter
+func SliceBackward[S ~[]V, V any](s S) iter.Seq2[int, V] {
+	return func(yield func(int, V) bool) {
+		for i := len(s) - 1; i >= 0; i-- {
+			if !yield(i, s[i]) {
+				return
+			}
+		}
+	}
 }
 
-func (r *_constRange[Data, Iter]) Get() Data     { return r.begin.Get() }
-func (r *_constRange[Data, Iter]) HasNext() bool { return r.begin != r.end }
-func (r *_constRange[Data, Iter]) Next()         { r.begin = r.begin.Next() }
-
-// const range end
+func Map[M ~map[K]V, K comparable, V any](m M) iter.Seq2[K, V] {
+	return func(yield func(K, V) bool) {
+		for k, v := range m {
+			if !yield(k, v) {
+				break
+			}
+		}
+	}
+}

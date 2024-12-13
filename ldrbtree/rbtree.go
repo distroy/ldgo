@@ -23,7 +23,7 @@ func (rbt *RBTree[T]) Insert(d T) RBTreeIterator[T] {
 
 	root := &rbt.root
 
-	node := getRBTreeNode[T](rbt.sentinel)
+	node := getRBTreeNode(rbt.sentinel)
 	node.Data = d
 	it := RBTreeIterator[T]{
 		tree: rbt,

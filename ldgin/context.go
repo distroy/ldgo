@@ -10,9 +10,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/lderr"
-	"github.com/distroy/ldgo/v2/ldrand"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldrand"
 	"github.com/gin-gonic/gin"
 )
 
@@ -173,15 +173,21 @@ func (c *Context) AbortWithErrorData(err error, data interface{}) {
 		data = struct{}{}
 	}
 
-	response := &CommResponse{
-		Sequence: c.sequence,
-		Cost:     time.Since(c.beginTime).String(),
-		ErrCode:  lderr.GetCode(err),
-		ErrMsg:   lderr.GetMessage(err),
-		Data:     data,
-	}
+	latency := time.Since(c.beginTime).String()
+	c.Header(GinHeaderLatency, latency)
 
-	response.ErrDetails = lderr.GetDetails(err)
+	response := &CommResponse{
+		Error: CommResponseError{
+			Code:    lderr.GetCode(err),
+			Message: lderr.GetMessage(err),
+			Details: lderr.GetDetails(err),
+		},
+		Tracker: CommResponseTracker{
+			Sequence: c.sequence,
+			Latency:  latency,
+		},
+		Data: data,
+	}
 
 	c.setError(err)
 	c.setResponce(response)

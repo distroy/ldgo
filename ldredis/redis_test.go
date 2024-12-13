@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/distroy/ldgo/v2/ldctx"
-	"github.com/distroy/ldgo/v2/ldhook"
+	"github.com/distroy/ldgo/v3/ldctx"
+	"github.com/distroy/ldgo/v3/ldhook"
 	redis "github.com/redis/go-redis/v9"
 	"github.com/smartystreets/goconvey/convey"
 )

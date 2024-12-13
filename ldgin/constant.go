@@ -7,7 +7,7 @@ package ldgin
 import (
 	"reflect"
 
-	"github.com/distroy/ldgo/v2/lderr"
+	"github.com/distroy/ldgo/v3/lderr"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,6 +19,7 @@ const (
 
 const (
 	GinHeaderSequence = "x-ldgin-sequence"
+	GinHeaderLatency  = "x-ldgin-latency"
 )
 
 const (

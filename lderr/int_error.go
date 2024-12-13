@@ -46,5 +46,6 @@ func (e intError) Is(target error) bool {
 	if err, _ := target.(interface{ Code() int }); err != nil && e.Code() == err.Code() {
 		return true
 	}
-	return Is(e.Unwrap(), target)
+	// return Is(e.Unwrap(), target)
+	return false
 }

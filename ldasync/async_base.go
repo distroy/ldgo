@@ -5,10 +5,12 @@
 package ldasync
 
 import (
+	"log"
 	"sync"
 	"sync/atomic"
 
-	"github.com/distroy/ldgo/v2/ldsync"
+	"github.com/distroy/ldgo/v3/ldatomic"
+	"github.com/distroy/ldgo/v3/ldsync"
 )
 
 const (
@@ -17,12 +19,22 @@ const (
 )
 
 type asyncBase[T any] struct {
+	log      ldatomic.Any[Logger]
 	wg       sync.WaitGroup
 	mu       sync.Mutex
 	nodes    *asyncNode
 	capacity int32
 	count    int32
 	ch       chan T
+}
+
+func (p *asyncBase[T]) setLogger(l Logger) { p.log.Store(l) }
+func (p *asyncBase[T]) getLogger() Logger {
+	l := p.log.Load()
+	if l == nil {
+		l = log.Default()
+	}
+	return l
 }
 
 func (p *asyncBase[T]) async() chan T { return p.ch }
