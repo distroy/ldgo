@@ -126,17 +126,138 @@ func init() {
 		{To: reflect.Uintptr, From: reflect.Uintptr}:    copyReflectToUintFromUint,
 		{To: reflect.Uintptr, From: reflect.String}:     copyReflectToUintFromString,
 	})
+	registerGetCopyFunc(map[copyPair]getCopyFuncType{
+		{To: reflect.Uint, From: reflect.Invalid}:    getCopyFuncToUintFromInvalid,
+		{To: reflect.Uint, From: reflect.Bool}:       getCopyFuncToUintFromBool,
+		{To: reflect.Uint, From: reflect.Complex64}:  getCopyFuncToUintFromComplex,
+		{To: reflect.Uint, From: reflect.Complex128}: getCopyFuncToUintFromComplex,
+		{To: reflect.Uint, From: reflect.Float32}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint, From: reflect.Float64}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint, From: reflect.Int}:        getCopyFuncToUintFromInt,
+		{To: reflect.Uint, From: reflect.Int8}:       getCopyFuncToUintFromInt,
+		{To: reflect.Uint, From: reflect.Int16}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint, From: reflect.Int32}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint, From: reflect.Int64}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint, From: reflect.Uint}:       getCopyFuncToUintFromUint,
+		{To: reflect.Uint, From: reflect.Uint8}:      getCopyFuncToUintFromUint,
+		{To: reflect.Uint, From: reflect.Uint16}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint, From: reflect.Uint32}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint, From: reflect.Uint64}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint, From: reflect.Uintptr}:    getCopyFuncToUintFromUint,
+		{To: reflect.Uint, From: reflect.String}:     getCopyFuncToUintFromString,
+
+		{To: reflect.Uint8, From: reflect.Invalid}:    getCopyFuncToUintFromInvalid,
+		{To: reflect.Uint8, From: reflect.Bool}:       getCopyFuncToUintFromBool,
+		{To: reflect.Uint8, From: reflect.Complex64}:  getCopyFuncToUintFromComplex,
+		{To: reflect.Uint8, From: reflect.Complex128}: getCopyFuncToUintFromComplex,
+		{To: reflect.Uint8, From: reflect.Float32}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint8, From: reflect.Float64}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint8, From: reflect.Int}:        getCopyFuncToUintFromInt,
+		{To: reflect.Uint8, From: reflect.Int8}:       getCopyFuncToUintFromInt,
+		{To: reflect.Uint8, From: reflect.Int16}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint8, From: reflect.Int32}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint8, From: reflect.Int64}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint8, From: reflect.Uint}:       getCopyFuncToUintFromUint,
+		{To: reflect.Uint8, From: reflect.Uint8}:      getCopyFuncToUintFromUint,
+		{To: reflect.Uint8, From: reflect.Uint16}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint8, From: reflect.Uint32}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint8, From: reflect.Uint64}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint8, From: reflect.Uintptr}:    getCopyFuncToUintFromUint,
+		{To: reflect.Uint8, From: reflect.String}:     getCopyFuncToUintFromString,
+
+		{To: reflect.Uint16, From: reflect.Invalid}:    getCopyFuncToUintFromInvalid,
+		{To: reflect.Uint16, From: reflect.Bool}:       getCopyFuncToUintFromBool,
+		{To: reflect.Uint16, From: reflect.Complex64}:  getCopyFuncToUintFromComplex,
+		{To: reflect.Uint16, From: reflect.Complex128}: getCopyFuncToUintFromComplex,
+		{To: reflect.Uint16, From: reflect.Float32}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint16, From: reflect.Float64}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint16, From: reflect.Int}:        getCopyFuncToUintFromInt,
+		{To: reflect.Uint16, From: reflect.Int8}:       getCopyFuncToUintFromInt,
+		{To: reflect.Uint16, From: reflect.Int16}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint16, From: reflect.Int32}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint16, From: reflect.Int64}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint16, From: reflect.Uint}:       getCopyFuncToUintFromUint,
+		{To: reflect.Uint16, From: reflect.Uint8}:      getCopyFuncToUintFromUint,
+		{To: reflect.Uint16, From: reflect.Uint16}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint16, From: reflect.Uint32}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint16, From: reflect.Uint64}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint16, From: reflect.Uintptr}:    getCopyFuncToUintFromUint,
+		{To: reflect.Uint16, From: reflect.String}:     getCopyFuncToUintFromString,
+
+		{To: reflect.Uint32, From: reflect.Invalid}:    getCopyFuncToUintFromInvalid,
+		{To: reflect.Uint32, From: reflect.Bool}:       getCopyFuncToUintFromBool,
+		{To: reflect.Uint32, From: reflect.Complex64}:  getCopyFuncToUintFromComplex,
+		{To: reflect.Uint32, From: reflect.Complex128}: getCopyFuncToUintFromComplex,
+		{To: reflect.Uint32, From: reflect.Float32}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint32, From: reflect.Float64}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint32, From: reflect.Int}:        getCopyFuncToUintFromInt,
+		{To: reflect.Uint32, From: reflect.Int8}:       getCopyFuncToUintFromInt,
+		{To: reflect.Uint32, From: reflect.Int16}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint32, From: reflect.Int32}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint32, From: reflect.Int64}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint32, From: reflect.Uint}:       getCopyFuncToUintFromUint,
+		{To: reflect.Uint32, From: reflect.Uint8}:      getCopyFuncToUintFromUint,
+		{To: reflect.Uint32, From: reflect.Uint16}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint32, From: reflect.Uint32}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint32, From: reflect.Uint64}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint32, From: reflect.Uintptr}:    getCopyFuncToUintFromUint,
+		{To: reflect.Uint32, From: reflect.String}:     getCopyFuncToUintFromString,
+
+		{To: reflect.Uint64, From: reflect.Invalid}:    getCopyFuncToUintFromInvalid,
+		{To: reflect.Uint64, From: reflect.Bool}:       getCopyFuncToUintFromBool,
+		{To: reflect.Uint64, From: reflect.Complex64}:  getCopyFuncToUintFromComplex,
+		{To: reflect.Uint64, From: reflect.Complex128}: getCopyFuncToUintFromComplex,
+		{To: reflect.Uint64, From: reflect.Float32}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint64, From: reflect.Float64}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uint64, From: reflect.Int}:        getCopyFuncToUintFromInt,
+		{To: reflect.Uint64, From: reflect.Int8}:       getCopyFuncToUintFromInt,
+		{To: reflect.Uint64, From: reflect.Int16}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint64, From: reflect.Int32}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint64, From: reflect.Int64}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uint64, From: reflect.Uint}:       getCopyFuncToUintFromUint,
+		{To: reflect.Uint64, From: reflect.Uint8}:      getCopyFuncToUintFromUint,
+		{To: reflect.Uint64, From: reflect.Uint16}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint64, From: reflect.Uint32}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint64, From: reflect.Uint64}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uint64, From: reflect.Uintptr}:    getCopyFuncToUintFromUint,
+		{To: reflect.Uint64, From: reflect.String}:     getCopyFuncToUintFromString,
+
+		{To: reflect.Uintptr, From: reflect.Invalid}:    getCopyFuncToUintFromInvalid,
+		{To: reflect.Uintptr, From: reflect.Bool}:       getCopyFuncToUintFromBool,
+		{To: reflect.Uintptr, From: reflect.Complex64}:  getCopyFuncToUintFromComplex,
+		{To: reflect.Uintptr, From: reflect.Complex128}: getCopyFuncToUintFromComplex,
+		{To: reflect.Uintptr, From: reflect.Float32}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uintptr, From: reflect.Float64}:    getCopyFuncToUintFromFloat,
+		{To: reflect.Uintptr, From: reflect.Int}:        getCopyFuncToUintFromInt,
+		{To: reflect.Uintptr, From: reflect.Int8}:       getCopyFuncToUintFromInt,
+		{To: reflect.Uintptr, From: reflect.Int16}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uintptr, From: reflect.Int32}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uintptr, From: reflect.Int64}:      getCopyFuncToUintFromInt,
+		{To: reflect.Uintptr, From: reflect.Uint}:       getCopyFuncToUintFromUint,
+		{To: reflect.Uintptr, From: reflect.Uint8}:      getCopyFuncToUintFromUint,
+		{To: reflect.Uintptr, From: reflect.Uint16}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uintptr, From: reflect.Uint32}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uintptr, From: reflect.Uint64}:     getCopyFuncToUintFromUint,
+		{To: reflect.Uintptr, From: reflect.Uintptr}:    getCopyFuncToUintFromUint,
+		{To: reflect.Uintptr, From: reflect.String}:     getCopyFuncToUintFromString,
+	})
 }
 
 func copyReflectToUintFromInvalid(c *copyContext, target, source reflect.Value) bool {
 	target.SetUint(0)
 	return true
 }
+func getCopyFuncToUintFromInvalid(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToUintFromInvalid
+}
 
 func copyReflectToUintFromBool(c *copyContext, target, source reflect.Value) bool {
 	b := source.Bool()
 	target.SetUint(uint64(bool2int(b)))
 	return true
+}
+func getCopyFuncToUintFromBool(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToUintFromBool
 }
 
 func copyReflectToUintFromFloat(c *copyContext, target, source reflect.Value) bool {
@@ -146,6 +267,9 @@ func copyReflectToUintFromFloat(c *copyContext, target, source reflect.Value) bo
 		c.AddErrorf("%s(%f) overflow", target.Type().String(), n)
 	}
 	return true
+}
+func getCopyFuncToUintFromFloat(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToUintFromFloat
 }
 
 func copyReflectToUintFromComplex(c *copyContext, target, source reflect.Value) bool {
@@ -157,6 +281,9 @@ func copyReflectToUintFromComplex(c *copyContext, target, source reflect.Value) 
 	}
 	return true
 }
+func getCopyFuncToUintFromComplex(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToUintFromComplex
+}
 
 func copyReflectToUintFromInt(c *copyContext, target, source reflect.Value) bool {
 	n := source.Int()
@@ -167,6 +294,9 @@ func copyReflectToUintFromInt(c *copyContext, target, source reflect.Value) bool
 
 	return true
 }
+func getCopyFuncToUintFromInt(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToUintFromInt
+}
 
 func copyReflectToUintFromUint(c *copyContext, target, source reflect.Value) bool {
 	n := source.Uint()
@@ -175,6 +305,9 @@ func copyReflectToUintFromUint(c *copyContext, target, source reflect.Value) boo
 		c.AddErrorf("%s(%d) overflow", target.Type().String(), n)
 	}
 	return true
+}
+func getCopyFuncToUintFromUint(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToUintFromUint
 }
 
 func copyReflectToUintFromString(c *copyContext, target, source reflect.Value) bool {
@@ -188,4 +321,7 @@ func copyReflectToUintFromString(c *copyContext, target, source reflect.Value) b
 		c.AddErrorf("%s(%s) overflow", target.Type().String(), s)
 	}
 	return true
+}
+func getCopyFuncToUintFromString(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToUintFromString
 }
