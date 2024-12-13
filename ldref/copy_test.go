@@ -36,7 +36,7 @@ type testCopyStruct2 struct {
 
 func testNewInt(v int) *int { return &v }
 
-func TestCopy(t *testing.T) {
+func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ...*CopyConfig) error) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
 		c.Convey("int to int", func(c convey.C) {
 			var (
@@ -44,7 +44,7 @@ func TestCopy(t *testing.T) {
 				source int = 100
 			)
 
-			err := Copy(target, source)
+			err := copyFunc(target, source)
 			c.So(err, convey.ShouldResemble, lderr.ErrReflectTargetNotPtr)
 			c.So(target, convey.ShouldEqual, 0)
 		})
@@ -56,7 +56,7 @@ func TestCopy(t *testing.T) {
 					source int           = 100
 				)
 
-				err := Copy(target, source)
+				err := copyFunc(target, source)
 				c.So(err, convey.ShouldResemble, lderr.ErrReflectTargetNotPtr)
 				c.So(target.Interface(), convey.ShouldEqual, 0)
 			})
@@ -68,7 +68,7 @@ func TestCopy(t *testing.T) {
 					source int           = 100
 				)
 
-				err := Copy(target, source)
+				err := copyFunc(target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target.Interface(), convey.ShouldResemble, &source)
 			})
@@ -80,7 +80,7 @@ func TestCopy(t *testing.T) {
 					source int           = 100
 				)
 
-				err := Copy(target, source)
+				err := copyFunc(target, source)
 				// c.So(err, convey.ShouldBeNil)
 				// c.So(target.Interface(), convey.ShouldEqual, 100)
 				c.So(err, convey.ShouldResemble, lderr.ErrReflectTargetNilPtr)
@@ -94,7 +94,7 @@ func TestCopy(t *testing.T) {
 					source int           = 100
 				)
 
-				err := Copy(target, source)
+				err := copyFunc(target, source)
 				// c.So(err, convey.ShouldBeNil)
 				// c.So(target.Interface(), convey.ShouldEqual, 100)
 				c.So(err, convey.ShouldBeNil)
@@ -108,7 +108,7 @@ func TestCopy(t *testing.T) {
 					source int           = 100
 				)
 
-				err := Copy(target, source)
+				err := copyFunc(target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(xxxx, convey.ShouldResemble, &source)
 			})
@@ -121,7 +121,7 @@ func TestCopy(t *testing.T) {
 					source interface{}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, nil)
 			})
@@ -132,7 +132,7 @@ func TestCopy(t *testing.T) {
 					source int = 100
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source)
 			})
@@ -144,7 +144,7 @@ func TestCopy(t *testing.T) {
 				)
 				*source = 100
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source)
 				c.So(target, convey.ShouldResemble, source)
@@ -158,7 +158,7 @@ func TestCopy(t *testing.T) {
 					source **int = &xxxx1
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source)
 				c.So(target, convey.ShouldResemble, source)
@@ -177,7 +177,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, map[string]interface{}{
 					`id`:     int64(100),
@@ -203,7 +203,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, []interface{}{
 					map[string]interface{}{
@@ -231,7 +231,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, []interface{}{
 					map[string]interface{}{
@@ -250,7 +250,7 @@ func TestCopy(t *testing.T) {
 				var target *int = new(int)
 				var source bool = true
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(*target, convey.ShouldEqual, 1)
 			})
@@ -262,7 +262,7 @@ func TestCopy(t *testing.T) {
 				)
 				*source = 100
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(*target, convey.ShouldEqual, *source)
 			})
@@ -274,7 +274,7 @@ func TestCopy(t *testing.T) {
 				)
 				*source = 100
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source)
 			})
@@ -285,7 +285,7 @@ func TestCopy(t *testing.T) {
 					source interface{}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, nil)
 			})
@@ -298,7 +298,7 @@ func TestCopy(t *testing.T) {
 					source func() = func() {}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source)
 			})
@@ -309,7 +309,7 @@ func TestCopy(t *testing.T) {
 					source func() = func() {}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err.Error(), convey.ShouldEqual, "func() can not copy to *int")
 				c.So(target, convey.ShouldEqual, 0)
 			})
@@ -320,7 +320,7 @@ func TestCopy(t *testing.T) {
 					source func(interface{}) bool = IsZero
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err.Error(), convey.ShouldEqual, "func(interface {}) bool can not copy to *string")
 				// c.So(err, convey.ShouldBeNil)
 				// c.So(target, convey.ShouldEqual, "github.com/distroy/ldgo/v2/ldref.IsZero")
@@ -332,14 +332,14 @@ func TestCopy(t *testing.T) {
 					source func(interface{}) bool = IsZero
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err.Error(), convey.ShouldEqual, "func(interface {}) bool can not copy to *unsafe.Pointer")
 
-				// err := Copy(&target, source)
+				// err := copyFunc(&target, source)
 				// c.So(err, convey.ShouldBeNil)
 				//
 				// var target1 func(interface{}) bool
-				// err = Copy(&target1, target)
+				// err = copyFunc(&target1, target)
 				// c.So(err, convey.ShouldBeNil)
 			})
 		})
@@ -351,7 +351,7 @@ func TestCopy(t *testing.T) {
 					source interface{}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, false)
 			})
@@ -362,7 +362,7 @@ func TestCopy(t *testing.T) {
 					source float64 = 100
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source != 0)
 			})
@@ -372,7 +372,7 @@ func TestCopy(t *testing.T) {
 					source int = 100
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source != 0)
 			})
@@ -382,7 +382,7 @@ func TestCopy(t *testing.T) {
 					source uint = 100
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source != 0)
 			})
@@ -392,7 +392,7 @@ func TestCopy(t *testing.T) {
 					source complex128 = 100
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source != 0)
 			})
@@ -406,7 +406,7 @@ func TestCopy(t *testing.T) {
 						source interface{}
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, 0)
 				})
@@ -417,7 +417,7 @@ func TestCopy(t *testing.T) {
 						source int = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -428,7 +428,7 @@ func TestCopy(t *testing.T) {
 						source uint = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -439,7 +439,7 @@ func TestCopy(t *testing.T) {
 						source float64 = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -450,7 +450,7 @@ func TestCopy(t *testing.T) {
 						source complex128 = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -462,7 +462,7 @@ func TestCopy(t *testing.T) {
 						source interface{}
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, 0)
 				})
@@ -473,7 +473,7 @@ func TestCopy(t *testing.T) {
 						source int = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -484,7 +484,7 @@ func TestCopy(t *testing.T) {
 						source uint = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -495,7 +495,7 @@ func TestCopy(t *testing.T) {
 						source float64 = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -506,7 +506,7 @@ func TestCopy(t *testing.T) {
 						source complex128 = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -518,7 +518,7 @@ func TestCopy(t *testing.T) {
 						source interface{}
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, 0)
 				})
@@ -529,7 +529,7 @@ func TestCopy(t *testing.T) {
 						source int = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -540,7 +540,7 @@ func TestCopy(t *testing.T) {
 						source uint = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -551,7 +551,7 @@ func TestCopy(t *testing.T) {
 						source float64 = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -562,7 +562,7 @@ func TestCopy(t *testing.T) {
 						source complex128 = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -574,7 +574,7 @@ func TestCopy(t *testing.T) {
 						source interface{}
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, 0)
 				})
@@ -585,7 +585,7 @@ func TestCopy(t *testing.T) {
 						source int = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -596,7 +596,7 @@ func TestCopy(t *testing.T) {
 						source uint = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -607,7 +607,7 @@ func TestCopy(t *testing.T) {
 						source float64 = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -618,7 +618,7 @@ func TestCopy(t *testing.T) {
 						source complex128 = 100
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, source)
 				})
@@ -632,7 +632,7 @@ func TestCopy(t *testing.T) {
 					source interface{}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "")
 			})
@@ -643,7 +643,7 @@ func TestCopy(t *testing.T) {
 					source bool = true
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "true")
 			})
@@ -654,7 +654,7 @@ func TestCopy(t *testing.T) {
 					source int = 100
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "100")
 			})
@@ -664,7 +664,7 @@ func TestCopy(t *testing.T) {
 					source uint = 100
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "100")
 			})
@@ -674,7 +674,7 @@ func TestCopy(t *testing.T) {
 					source float64 = 100
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "100")
 			})
@@ -685,7 +685,7 @@ func TestCopy(t *testing.T) {
 					source complex128 = 100
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "(100+0i)")
 			})
@@ -698,7 +698,7 @@ func TestCopy(t *testing.T) {
 					source string = "100"
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, 100)
 			})
@@ -708,7 +708,7 @@ func TestCopy(t *testing.T) {
 					source string = "100"
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, true)
 			})
@@ -718,7 +718,7 @@ func TestCopy(t *testing.T) {
 					source string = "100"
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, 100)
 			})
@@ -728,7 +728,7 @@ func TestCopy(t *testing.T) {
 					source string = "100"
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, 100)
 			})
@@ -739,7 +739,7 @@ func TestCopy(t *testing.T) {
 					source string = "100"
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, complex128(100))
 			})
@@ -752,7 +752,7 @@ func TestCopy(t *testing.T) {
 					source []byte = []byte("100")
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "100")
 			})
@@ -763,7 +763,7 @@ func TestCopy(t *testing.T) {
 					source []rune = []rune("100")
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "100")
 			})
@@ -774,7 +774,7 @@ func TestCopy(t *testing.T) {
 					source = [3]byte([]byte("100"))
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "100")
 			})
@@ -785,7 +785,7 @@ func TestCopy(t *testing.T) {
 					source = [3]rune([]rune("100"))
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, "100")
 			})
@@ -796,7 +796,7 @@ func TestCopy(t *testing.T) {
 					source string = "100"
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, []byte(source))
 			})
@@ -807,7 +807,7 @@ func TestCopy(t *testing.T) {
 					source string = "100"
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, []rune(source))
 			})
@@ -819,7 +819,7 @@ func TestCopy(t *testing.T) {
 						source string = "100"
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldResemble, [3]byte([]byte(source)))
 				})
@@ -829,7 +829,7 @@ func TestCopy(t *testing.T) {
 						source string = "100"
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldNotBeNil)
 					c.So(target, convey.ShouldResemble, [2]byte([]byte(source[:2])))
 				})
@@ -839,7 +839,7 @@ func TestCopy(t *testing.T) {
 						source string = "100"
 					)
 
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target[:3], convey.ShouldResemble, []byte(source))
 					c.So(target[3:], convey.ShouldResemble, make([]byte, 7))
@@ -852,7 +852,7 @@ func TestCopy(t *testing.T) {
 					source string = "100"
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, [3]rune([]rune(source)))
 			})
@@ -865,7 +865,7 @@ func TestCopy(t *testing.T) {
 					source interface{}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldBeNil)
 			})
@@ -879,7 +879,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, map[interface{}]interface{}{
 					1: "abc",
@@ -896,7 +896,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, map[int64][]byte{
 					1: []byte("abc"),
@@ -916,7 +916,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, map[string]string{
 					`id`:     "123",
@@ -934,7 +934,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err.Error(), convey.ShouldEqual, "[]string can not copy to *map[string]string")
 				// c.So(err, convey.ShouldBeNil)
 				// c.So(target, convey.ShouldResemble, map[string]string{
@@ -953,7 +953,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, map[string]struct{}{
 					"abc": {},
@@ -971,7 +971,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, map[string]struct{}{
 					"abc": {},
@@ -989,7 +989,7 @@ func TestCopy(t *testing.T) {
 					source interface{}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldBeNil)
 			})
@@ -1002,7 +1002,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, []complex128{
 					2, -100, 356,
@@ -1020,7 +1020,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 
 				sort.Strings(target)
@@ -1038,7 +1038,7 @@ func TestCopy(t *testing.T) {
 					source interface{}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err.Error(), convey.ShouldEqual, "nil can not copy to *ldref.testCopyStruct")
 				// c.So(err, convey.ShouldBeNil)
 				// c.So(&target, convey.ShouldResemble, &testCopyStruct{})
@@ -1057,7 +1057,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(&target, convey.ShouldResemble, &testCopyStruct{
 					Id:        100,
@@ -1081,7 +1081,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(&target, convey.ShouldResemble, &testCopyStruct{
 					Id:        100,
@@ -1106,7 +1106,7 @@ func TestCopy(t *testing.T) {
 				)
 
 				c.Convey("with tag name", func(c convey.C) {
-					err := Copy(&target, source, &CopyConfig{
+					err := copyFunc(&target, source, &CopyConfig{
 						TargetTag: "gorm",
 					})
 					c.So(err, convey.ShouldBeNil)
@@ -1120,7 +1120,7 @@ func TestCopy(t *testing.T) {
 				})
 
 				c.Convey("without tag name", func(c convey.C) {
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(&target, convey.ShouldNotResemble, &testCopyStruct2{
 						Id:        100,
@@ -1146,7 +1146,7 @@ func TestCopy(t *testing.T) {
 				)
 
 				c.Convey("with tag name", func(c convey.C) {
-					err := Copy(&target, source, &CopyConfig{
+					err := copyFunc(&target, source, &CopyConfig{
 						TargetTag: "gorm",
 					})
 					c.So(err, convey.ShouldBeNil)
@@ -1160,7 +1160,7 @@ func TestCopy(t *testing.T) {
 				})
 
 				c.Convey("without tag name", func(c convey.C) {
-					err := Copy(&target, source)
+					err := copyFunc(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(&target, convey.ShouldNotResemble, &testCopyStruct2{
 						Id:        100,
@@ -1184,7 +1184,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, &source)
+				err := copyFunc(&target, &source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(&target, convey.ShouldResemble, &testCopyStruct{
 					Id:     100,
@@ -1206,7 +1206,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, &source)
+				err := copyFunc(&target, &source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, source)
 			})
@@ -1224,7 +1224,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, &source)
+				err := copyFunc(&target, &source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(&target, convey.ShouldResemble, &testCopyStruct{
 					Id:     100,
@@ -1244,7 +1244,7 @@ func TestCopy(t *testing.T) {
 					source interface{}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, [2]string{})
 			})
@@ -1257,7 +1257,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, [100]complex128{
 					2, -100, 356,
@@ -1275,7 +1275,7 @@ func TestCopy(t *testing.T) {
 					}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldNotBeNil)
 
 				// sort.Strings(target[:])
@@ -1293,7 +1293,7 @@ func TestCopy(t *testing.T) {
 					source = [...]int{123, 234, 345, 456}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldNotBeNil)
 				c.So(target, convey.ShouldResemble, [...]string{"123", "234", "345"})
 			})
@@ -1304,10 +1304,21 @@ func TestCopy(t *testing.T) {
 					source = [...]int{123, 234, 345, 456}
 				)
 
-				err := Copy(&target, source)
+				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, [5]string{"123", "234", "345", "456"})
 			})
 		})
 	})
+}
+
+func TestCopy(t *testing.T) {
+	testCopyFunc(t, Copy)
+}
+
+func Test_copyV1(t *testing.T) {
+	testCopyFunc(t, copyV1)
+}
+func Test_copyV2(t *testing.T) {
+	testCopyFunc(t, copyV2)
 }

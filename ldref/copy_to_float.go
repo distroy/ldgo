@@ -49,17 +49,65 @@ func init() {
 		{To: reflect.Float64, From: reflect.Uintptr}:    copyReflectToFloatFromUint,
 		{To: reflect.Float64, From: reflect.String}:     copyReflectToFloatFromString,
 	})
+	registerGetCopyFunc(map[copyPair]getCopyFuncType{
+		{To: reflect.Float32, From: reflect.Invalid}:    getCopyFuncToFloatFromInvalid,
+		{To: reflect.Float32, From: reflect.Bool}:       getCopyFuncToFloatFromBool,
+		{To: reflect.Float32, From: reflect.Complex64}:  getCopyFuncToFloatFromComplex,
+		{To: reflect.Float32, From: reflect.Complex128}: getCopyFuncToFloatFromComplex,
+		{To: reflect.Float32, From: reflect.Float32}:    getCopyFuncToFloatFromFloat,
+		{To: reflect.Float32, From: reflect.Float64}:    getCopyFuncToFloatFromFloat,
+		{To: reflect.Float32, From: reflect.Int}:        getCopyFuncToFloatFromInt,
+		{To: reflect.Float32, From: reflect.Int8}:       getCopyFuncToFloatFromInt,
+		{To: reflect.Float32, From: reflect.Int16}:      getCopyFuncToFloatFromInt,
+		{To: reflect.Float32, From: reflect.Int32}:      getCopyFuncToFloatFromInt,
+		{To: reflect.Float32, From: reflect.Int64}:      getCopyFuncToFloatFromInt,
+		{To: reflect.Float32, From: reflect.Uint}:       getCopyFuncToFloatFromUint,
+		{To: reflect.Float32, From: reflect.Uint8}:      getCopyFuncToFloatFromUint,
+		{To: reflect.Float32, From: reflect.Uint16}:     getCopyFuncToFloatFromUint,
+		{To: reflect.Float32, From: reflect.Uint32}:     getCopyFuncToFloatFromUint,
+		{To: reflect.Float32, From: reflect.Uint64}:     getCopyFuncToFloatFromUint,
+		{To: reflect.Float32, From: reflect.Uintptr}:    getCopyFuncToFloatFromUint,
+		{To: reflect.Float32, From: reflect.String}:     getCopyFuncToFloatFromString,
+
+		{To: reflect.Float64, From: reflect.Invalid}:    getCopyFuncToFloatFromInvalid,
+		{To: reflect.Float64, From: reflect.Bool}:       getCopyFuncToFloatFromBool,
+		{To: reflect.Float64, From: reflect.Complex64}:  getCopyFuncToFloatFromComplex,
+		{To: reflect.Float64, From: reflect.Complex128}: getCopyFuncToFloatFromComplex,
+		{To: reflect.Float64, From: reflect.Float32}:    getCopyFuncToFloatFromFloat,
+		{To: reflect.Float64, From: reflect.Float64}:    getCopyFuncToFloatFromFloat,
+		{To: reflect.Float64, From: reflect.Int}:        getCopyFuncToFloatFromInt,
+		{To: reflect.Float64, From: reflect.Int8}:       getCopyFuncToFloatFromInt,
+		{To: reflect.Float64, From: reflect.Int16}:      getCopyFuncToFloatFromInt,
+		{To: reflect.Float64, From: reflect.Int32}:      getCopyFuncToFloatFromInt,
+		{To: reflect.Float64, From: reflect.Int64}:      getCopyFuncToFloatFromInt,
+		{To: reflect.Float64, From: reflect.Uint}:       getCopyFuncToFloatFromUint,
+		{To: reflect.Float64, From: reflect.Uint8}:      getCopyFuncToFloatFromUint,
+		{To: reflect.Float64, From: reflect.Uint16}:     getCopyFuncToFloatFromUint,
+		{To: reflect.Float64, From: reflect.Uint32}:     getCopyFuncToFloatFromUint,
+		{To: reflect.Float64, From: reflect.Uint64}:     getCopyFuncToFloatFromUint,
+		{To: reflect.Float64, From: reflect.Uintptr}:    getCopyFuncToFloatFromUint,
+		{To: reflect.Float64, From: reflect.String}:     getCopyFuncToFloatFromString,
+	})
 }
 
 func copyReflectToFloatFromInvalid(c *copyContext, target, source reflect.Value) bool {
 	target.SetFloat(0)
 	return true
 }
+func getCopyFuncToFloatFromInvalid(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return func(c *copyContext, target, source reflect.Value) (end bool) {
+		target.SetFloat(0)
+		return true
+	}
+}
 
 func copyReflectToFloatFromBool(c *copyContext, target, source reflect.Value) bool {
 	b := source.Bool()
 	target.SetFloat(float64(bool2int(b)))
 	return true
+}
+func getCopyFuncToFloatFromBool(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToFloatFromBool
 }
 
 func copyReflectToFloatFromFloat(c *copyContext, target, source reflect.Value) bool {
@@ -69,6 +117,9 @@ func copyReflectToFloatFromFloat(c *copyContext, target, source reflect.Value) b
 		c.AddErrorf("%s(%f) overflow", target.Type().String(), n)
 	}
 	return true
+}
+func getCopyFuncToFloatFromFloat(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToFloatFromFloat
 }
 
 func copyReflectToFloatFromComplex(c *copyContext, target, source reflect.Value) bool {
@@ -80,6 +131,9 @@ func copyReflectToFloatFromComplex(c *copyContext, target, source reflect.Value)
 	}
 	return true
 }
+func getCopyFuncToFloatFromComplex(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToFloatFromComplex
+}
 
 func copyReflectToFloatFromInt(c *copyContext, target, source reflect.Value) bool {
 	n := source.Int()
@@ -89,6 +143,9 @@ func copyReflectToFloatFromInt(c *copyContext, target, source reflect.Value) boo
 	}
 	return true
 }
+func getCopyFuncToFloatFromInt(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToFloatFromInt
+}
 
 func copyReflectToFloatFromUint(c *copyContext, target, source reflect.Value) bool {
 	n := source.Uint()
@@ -97,6 +154,9 @@ func copyReflectToFloatFromUint(c *copyContext, target, source reflect.Value) bo
 		c.AddErrorf("%s(%d) overflow", target.Type().String(), n)
 	}
 	return true
+}
+func getCopyFuncToFloatFromUint(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToFloatFromUint
 }
 
 func copyReflectToFloatFromString(c *copyContext, target, source reflect.Value) bool {
@@ -110,4 +170,7 @@ func copyReflectToFloatFromString(c *copyContext, target, source reflect.Value) 
 		c.AddErrorf("%s(%s) overflow", target.Type().String(), s)
 	}
 	return true
+}
+func getCopyFuncToFloatFromString(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return copyReflectToFloatFromString
 }

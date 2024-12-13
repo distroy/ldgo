@@ -1,0 +1,3072 @@
+{
+    "card_set": {
+        "layout_id": 3,
+        "element_toggle": {
+            "atc_button": false,
+            "feedback_button": false
+        },
+        "card_set_name": "RCMD for You"
+    },
+    "item_cards": [{
+        "item_card_displayed_asset": {
+            "name": "[9 Flavors]Hai Di Lao Self-Heating Hotpot  / Instant hot pot海底捞自热火锅/自嗨锅  番茄/麻辣小酥肉 老成都 香辣肉丸 麻辣嫩牛 番茄牛腩",
+            "image": "sg-11134207-7rccw-lsaxvr1zgqbfb4",
+            "images": ["sg-11134207-7rccw-lsaxvr1zgqbfb4", "sg-11134207-7rbm9-llt37vlh5vfd12", "sg-11134207-7rcdn-lsaxvr1zi4vv53", "sg-11134207-7rbl3-llt37vlh1nq151", "sg-11134207-7rbmd-llt37vlh32ah8a", "sg-11134207-7rd59-lusk4g6s97jtcc", "sg-11134207-7rd6d-lusk4g6settlc7", "sg-11134207-7rd40-lusk4g6sam49a3", "sg-11134207-7rd3q-lusk4g6s6eex14"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_NonCCB_12%",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7req6-m2tdxlcy7jt20d",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": {
+                "name": "PREFERRED",
+                "image_flag": {
+                    "hash": "sg-11134258-7rdy4-lyan1mv3ncw641",
+                    "width": 44,
+                    "height": 12
+                }
+            },
+            "promotion_label_list": [{
+                "type": "RATING_STAR",
+                "style": "filled+border",
+                "specs": {
+                    "text_color": "#000000",
+                    "border_color": "#FFBB00",
+                    "background_color": "#FFF8E4",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": {
+                        "md5": "sg-11134258-7rdyn-m0h123bcdnum38",
+                        "width": 12,
+                        "height": 12,
+                        "background_color": null,
+                        "top_offset": null
+                    },
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "4.9",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }, {
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$0.5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": {
+                "discount_text": "-47%"
+            },
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 2.4k"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 638000,
+                "strikethrough_price": 1200000,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 20284273359,
+            "shopid": 1065556442,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 20284273359,
+                "model_id": 222037732012,
+                "promotion_type": 301,
+                "promotion_id": 533726409015296,
+                "price": 638000,
+                "strikethrough_price": 1200000,
+                "discount": 47,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 2308,
+                "monthly_sold_count": 261,
+                "historical_sold_count_text": "已售 2.4k",
+                "monthly_sold_count_text": "月销量 261"
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [844931064601283, 822059734999051, 843079680351338, 298488324, 298628334, 1688617, 700445044, 840681033054223, 1718087960, 1428713, 1007622, 837903335771681, 298788312, 998031006, 997776051, 1400290027, 997971070, 700635046, 997971068],
+            "catid": 100629,
+            "shopee_verified": true,
+            "liked_count": 308,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "GogoMart",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1695031440,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100629, 100645, 100783]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 4.916666666666667,
+                "rating_count": [144, 0, 2, 2, 2, 138]
+            },
+            "global_brand": {
+                "brand_id": 1801328,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.16000081716947490.mp4",
+                "thumb_url": "sg-11110105-7rd5y-lvv59dec7zhr85",
+                "duration": 22,
+                "version": 2,
+                "vid": "sg-11110105-6khyq-lvv590huz43q1d",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.16000081716947490.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.16000081716947490.mp4",
+                    "width": 720,
+                    "height": 1280
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.default.mp4",
+                    "width": 540,
+                    "height": 960
+                },
+                "mms_data": "{\"vid\":\"sg-11110105-6khyq-lvv590huz43q1d\",\"biz\":107,\"duration\":21804,\"create_time\":1716947488,\"update_time\":1716947492,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110105-7rd5y-lvv59dec7zhr85\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.16000081716947490.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.16000081716947490.mp4\",\"width\":720,\"height\":1280,\"bitrate\":1089508,\"abitrate\":128326,\"duration\":21781,\"size\":3327031,\"fps\":25.04604,\"update_time\":1716947503,\"codec\":\"H264\"}],\"extend_formats\":{\"H265\":[{\"format\":1600307,\"defn\":\"V540P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.16003071716984011.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.16003071716984011.mp4\",\"width\":540,\"height\":960,\"bitrate\":576744,\"abitrate\":128326,\"duration\":21781,\"size\":1937862,\"fps\":25.04604,\"update_time\":1716984032,\"codec\":\"H265\"},{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.16003091716947517.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.16003091716947517.mp4\",\"width\":720,\"height\":1280,\"bitrate\":896929,\"abitrate\":128326,\"duration\":21781,\"size\":2807183,\"fps\":25.04604,\"update_time\":1716947548,\"codec\":\"H265\"}]},\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khyq-lvv590huz43q1d.default.mp4\",\"width\":540,\"height\":960,\"bitrate\":450987,\"abitrate\":128292,\"duration\":21781,\"size\":1591745,\"fps\":25.04604,\"update_time\":1716947526,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "Flavours",
+                "options": ["Mala Crispy Chicken", "Tomato Crispy Chicke", "Old Chengdu style", "Spicy Meatballs", "Mala Beef", "Tomato Brisket", "Crispy Tripe", "Red Sour Beef Soup", "Spicy Chicken Feet"],
+                "images": ["sg-11134207-7rd6u-lusk4g6sc0op6c", "sg-11134207-7rd5b-lusk4g6sdf95cc", "sg-11134207-7rd3x-lusk4g6sg8e10b", "sg-11134207-7rd5q-lulf644f0dja8a", "sg-11134207-7rd53-lvyae4k2pk221d", "sg-11134207-7rd4v-lvyae4k2qymi99", "sg-11134207-7rdwe-m1exlh2tlbga98", "sg-11134207-7rdyr-m1exlppuzk4597", "sg-11134207-7rdx5-m1exlyknzm6w5e"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "Hai Fu Sheng Instant Porridge Ready-to-Eat Congee Breakfast Night Snacks海富盛冻干粥 懒人冲泡即食",
+            "image": "sg-11134207-7rd4i-lu7nme86owmx45",
+            "images": ["sg-11134207-7rd4i-lu7nme86owmx45", "sg-11134207-7rd71-lu7nme86qbka7b", "sg-11134207-7rd67-lu7nme86rprt3b", "sg-11134207-7rd5q-lu7nme86t4c9ba", "sg-11134207-7rd3q-lu7nme86qb7d31", "sg-11134207-7rd6g-lu7nme86owuq6e", "sg-11134207-7rd4g-lu7nme86owio66", "sg-11134207-7rd3r-lu7nme86uiwp84", "sg-11134207-7rd4c-lu7nme86vxh56a"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": null,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "RATING_STAR",
+                "style": "filled+border",
+                "specs": {
+                    "text_color": "#000000",
+                    "border_color": "#FFBB00",
+                    "background_color": "#FFF8E4",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": {
+                        "md5": "sg-11134258-7rdyn-m0h123bcdnum38",
+                        "width": 12,
+                        "height": 12,
+                        "background_color": null,
+                        "top_offset": null
+                    },
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "4.8",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }, {
+                "type": "BUNDLE_DEAL",
+                "style": "outline",
+                "specs": {
+                    "text_color": "#EE4D2D",
+                    "border_color": "#EE4D2D",
+                    "background_color": null,
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "购买10 个 享受9.8折折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": {
+                "discount_text": "-62%"
+            },
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 2.6k"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 95000,
+                "strikethrough_price": 250000,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 25674736390,
+            "shopid": 36597571,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 25674736390,
+                "model_id": 226233047942,
+                "promotion_type": 201,
+                "promotion_id": 519318043623424,
+                "price": 95000,
+                "strikethrough_price": 250000,
+                "discount": 62,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 2594,
+                "monthly_sold_count": 1056,
+                "historical_sold_count_text": "已售 2.6k",
+                "monthly_sold_count_text": "月销量 1.1k"
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [844931064601283, 822059734999051, 843079680351338, 298628334, 834230344633359, 1718087960, 1428713, 1007622, 700630038],
+            "catid": 100629,
+            "shopee_verified": false,
+            "liked_count": 108,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "Minicoco Shop",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1713346949,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100629, 100645, 100782]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 4.811965811965812,
+                "rating_count": [117, 1, 1, 2, 11, 102]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": null,
+            "tier_variations": [{
+                "name": "Flavours",
+                "options": ["【单杯】排骨菌菇粥38g", "【单杯】精炖牛肉粥38g", "【单杯】家常海鲜粥38g", "【单杯】皮蛋瘦肉粥37g", "【单杯】麦芯鸡粥33g", "【单杯】香芋蔬菜粥40g", "【单杯】潮牛火锅粥40g", "【单杯】生滚鸡煌粥40g"],
+                "images": ["sg-11134207-7rd5b-lu7nme86xc1l7d", "sg-11134207-7rd6t-lu7nme86yqm110", "sg-11134207-7rd4m-lu7nme87056h5f", "sg-11134207-7rd6q-lu7nme871jqxe7", "sg-11134207-7rd65-lu7nme872ybd81", "sg-11134207-7rd71-lu7nme86qbpbdf", "sg-11134207-7rd74-lu7nme86rq9rbf", "sg-11134207-7rd71-lu7nme86t4u7f2"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POPMART SKULLPANDA Wishing Time to Series Plush Flower Wreath Accessories Surrounding Christmas decorations gifts",
+            "image": "sg-11134201-7ren7-m2rkwwi9nmqpa1",
+            "images": ["sg-11134201-7ren7-m2rkwwi9nmqpa1", "sg-11134201-7rep6-m2rkwwprb8uha4", "sg-11134201-7repk-m2rkwx2iskodb2", "sg-11134201-7reql-m2rkwxbogl0n6a", "sg-11134201-7reqp-m2rkwxle2devf0", "sg-11134201-7renp-m2rkwxwhkq2h68", "sg-11134201-7repc-m2rkwy6habvre1", "sg-11134201-7reqc-m2rkwylgk6iu05", "sg-11134201-7rep5-m2rkwywa75nr74"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "RATING_STAR",
+                "style": "filled+border",
+                "specs": {
+                    "text_color": "#000000",
+                    "border_color": "#FFBB00",
+                    "background_color": "#FFF8E4",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": {
+                        "md5": "sg-11134258-7rdyn-m0h123bcdnum38",
+                        "width": 12,
+                        "height": 12,
+                        "background_color": null,
+                        "top_offset": null
+                    },
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "5.0",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }, {
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 1"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 8990000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29968009351,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29968009351,
+                "model_id": 217987264437,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 8990000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 1,
+                "monthly_sold_count": 1,
+                "historical_sold_count_text": "已售 1",
+                "monthly_sold_count_text": "月销量 1"
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1007622, 1798631, 298628394, 700630038, 1718087960, 1428713, 844931064601283, 822059734999051, 822120593194000, 1119699],
+            "catid": 100632,
+            "shopee_verified": false,
+            "liked_count": 0,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1731986360,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100632, 100684, 101008, 101722]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 5,
+                "rating_count": [1, 0, 0, 0, 0, 1]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khxm-m2rkw0si3v9ib0.16000081731986320.mp4",
+                "thumb_url": "sg-11110106-7reoj-m2rkw4jwknpxce",
+                "duration": 25,
+                "version": 2,
+                "vid": "sg-11110106-6khxm-m2rkw0si3v9ib0",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khxm-m2rkw0si3v9ib0.16000081731986320.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxm-m2rkw0si3v9ib0.16000081731986320.mp4",
+                    "width": 720,
+                    "height": 960
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxm-m2rkw0si3v9ib0.default.mp4",
+                    "width": 540,
+                    "height": 720
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khxm-m2rkw0si3v9ib0\",\"biz\":107,\"duration\":24846,\"create_time\":1731986317,\"update_time\":1731986321,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7reoj-m2rkw4jwknpxce\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khxm-m2rkw0si3v9ib0.16000081731986320.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxm-m2rkw0si3v9ib0.16000081731986320.mp4\",\"width\":720,\"height\":960,\"bitrate\":550468,\"abitrate\":102120,\"duration\":24799,\"size\":2045201,\"fps\":25,\"update_time\":1731986330,\"codec\":\"H264\"}],\"extend_formats\":{\"H265\":[{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khxm-m2rkw0si3v9ib0.16003091731986331.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxm-m2rkw0si3v9ib0.16003091731986331.mp4\",\"width\":720,\"height\":960,\"bitrate\":558531,\"abitrate\":102120,\"duration\":24799,\"size\":2073102,\"fps\":25,\"update_time\":1731986345,\"codec\":\"H265\"}]},\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxm-m2rkw0si3v9ib0.default.mp4\",\"width\":540,\"height\":720,\"bitrate\":232976,\"abitrate\":64243,\"duration\":24799,\"size\":943559,\"fps\":25,\"update_time\":1731986335,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "颜色分类",
+                "options": ["Plush flower wreath"],
+                "images": ["sg-11134201-7reni-m2rkwz73oib1ea"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POPMART SKULLPANDA Candy Monster Town Series Doll Mystery Box Action Figure Official Store Hot Sell Trendy Gift",
+            "image": "sg-11134201-7rdwb-lzoixsztbpsy2e",
+            "images": ["sg-11134201-7rdwb-lzoixsztbpsy2e", "sg-11134201-7rdyi-lzkfb5jvsho477", "sg-11134201-7rdvs-lzkfb5nrmscnfb", "sg-11134201-7rdx2-lzkfb5uzdmxu54", "sg-11134201-7rdvu-lzkfb62r0v0na3", "sg-11134201-7rdxi-lzkfb67quyqif5", "sg-11134201-7rdyj-lzkfb6cqnnl851", "sg-11134201-7rdvj-lzkfb6gwhkmid8", "sg-11134201-7rdvm-lzkfb6m6b8xydd"],
+            "shop_location": null,
+            "highlight_videos": [{
+                "video_id": "sg-11110113-6khxa-m0936wkwyi935f",
+                "thumb_url": null,
+                "duration": 5000,
+                "version": 2,
+                "vid": "sg-11110113-6khxa-m0936wkwyi935f",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khxa-m0936wkwyi935f",
+                "thumb_url": null,
+                "duration": 5000,
+                "version": 2,
+                "vid": "sg-11110113-6khxa-m0936wkwyi935f",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khxa-m0936wkwyi935f",
+                "thumb_url": null,
+                "duration": 5000,
+                "version": 2,
+                "vid": "sg-11110113-6khxa-m0936wkwyi935f",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }],
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "RATING_STAR",
+                "style": "filled+border",
+                "specs": {
+                    "text_color": "#000000",
+                    "border_color": "#FFBB00",
+                    "background_color": "#FFF8E4",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": {
+                        "md5": "sg-11134258-7rdyn-m0h123bcdnum38",
+                        "width": 12,
+                        "height": 12,
+                        "background_color": null,
+                        "top_offset": null
+                    },
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "4.7",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": {
+                "discount_text": "-48%"
+            },
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 4"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 1393000,
+                "strikethrough_price": 2690000,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29959662954,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29959662954,
+                "model_id": 256496502949,
+                "promotion_type": 301,
+                "promotion_id": 541820132278272,
+                "price": 1393000,
+                "strikethrough_price": 2690000,
+                "discount": 48,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 4,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": "已售 4",
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1798631, 298628394, 844931064601283, 1428713, 1718087960, 822059734999051, 822120593194000, 1119699, 1007622, 700630038],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 10,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1725015475,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 4.666666666666667,
+                "rating_count": [3, 0, 0, 0, 1, 2]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110105/mms/sg-11110105-6khwn-lzz064687k53f8.16000081725898055.mp4",
+                "thumb_url": "sg-11110105-7rdvd-lzz06o5oz21124",
+                "duration": 41,
+                "version": 2,
+                "vid": "sg-11110105-6khwn-lzz064687k53f8",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110105/mms/sg-11110105-6khwn-lzz064687k53f8.16000081725898055.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khwn-lzz064687k53f8.16000081725898055.mp4",
+                    "width": 720,
+                    "height": 960
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khwn-lzz064687k53f8.default.mp4",
+                    "width": 540,
+                    "height": 720
+                },
+                "mms_data": "{\"vid\":\"sg-11110105-6khwn-lzz064687k53f8\",\"biz\":107,\"duration\":40833,\"create_time\":1725898053,\"update_time\":1725898057,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110105-7rdvd-lzz06o5oz21124\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110105/mms/sg-11110105-6khwn-lzz064687k53f8.16000081725898055.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khwn-lzz064687k53f8.16000081725898055.mp4\",\"width\":720,\"height\":960,\"bitrate\":548345,\"abitrate\":47118,\"duration\":40819,\"size\":3072563,\"fps\":25.02451,\"update_time\":1725898073,\"codec\":\"H264\"}],\"extend_formats\":{\"H265\":[{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110105/mms/sg-11110105-6khwn-lzz064687k53f8.16003091725898074.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khwn-lzz064687k53f8.16003091725898074.mp4\",\"width\":720,\"height\":960,\"bitrate\":491929,\"abitrate\":47118,\"duration\":40819,\"size\":2788066,\"fps\":25.02451,\"update_time\":1725898108,\"codec\":\"H265\"}]},\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khwn-lzz064687k53f8.default.mp4\",\"width\":540,\"height\":720,\"bitrate\":438156,\"abitrate\":47118,\"duration\":40819,\"size\":2510603,\"fps\":25.02451,\"update_time\":1725898087,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "LIKE",
+                "options": ["Cookie Raccoon", "Eif", "Marshmallow Unicorn", "Candy Thief", "Octopus Monster", "Gummy Bear Baby", "Chicken Hunter", "Bubble Ghost", "Milk Ghost", "Strawberry Clown", "Fairy Godmaother", "Sugar Rabbit", "Complete set of 6"],
+                "images": ["sg-11134201-7rdxb-lzkfb70bnqqwd8", "sg-11134201-7rdyo-lzkfb779dl87a9", "sg-11134201-7rdvf-lzkfb7b59atj0a", "sg-11134201-7rdxt-lzkfb7eh4fqvc2", "sg-11134201-7rdyk-lzkfb7hsy5nwff", "sg-11134201-7rdwx-lzkfb7lex3cc4f", "sg-11134201-7rdxm-lzkfb7p0nlgi6e", "sg-11134201-7rdy6-lzkfb7wicmsi5c", "sg-11134201-7rdw6-lzkfb80y7k383b", "sg-11134201-7rdys-lzkfb86i28mg20", "sg-11134201-7rdwl-lzkfb8k3fiti23", "sg-11134201-7rdwf-lzkfb8qh66oyc3", "sg-11134201-7rdvw-lzkfb8w0wnyyc4"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POPMART CRYBABY × The Powerpuff Girls series Blind Box Action Figure Official Store Hot Sell  Trendy Gift",
+            "image": "sg-11134201-7rdy3-m05lgcdrmep2ec",
+            "images": ["sg-11134201-7rdy3-m05lgcdrmep2ec", "sg-11134201-7rdxi-lzq2fue5bls72b", "sg-11134201-7rdyb-m04o5w9btla89a", "sg-11134201-7rdyr-m04o5vf34obl29", "sg-11134201-7rdy0-m04o5vgqzfame1", "sg-11134201-7rdvg-m04o5vj8vrd52d", "sg-11134201-7rdwu-m04o5vfn11ve06", "sg-11134201-7rdvv-lzq2ftg0o5nu27", "sg-11134201-7rdww-lzq2ftxhzytjfd"],
+            "shop_location": null,
+            "highlight_videos": [{
+                "video_id": "sg-11110113-6khyq-m09y2zpqfdhc24",
+                "thumb_url": null,
+                "duration": 3350,
+                "version": 2,
+                "vid": "sg-11110113-6khyq-m09y2zpqfdhc24",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khyq-m09y2zpqfdhc24",
+                "thumb_url": null,
+                "duration": 3350,
+                "version": 2,
+                "vid": "sg-11110113-6khyq-m09y2zpqfdhc24",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khyq-m09y2zpqfdhc24",
+                "thumb_url": null,
+                "duration": 3350,
+                "version": 2,
+                "vid": "sg-11110113-6khyq-m09y2zpqfdhc24",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }],
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "RATING_STAR",
+                "style": "filled+border",
+                "specs": {
+                    "text_color": "#000000",
+                    "border_color": "#FFBB00",
+                    "background_color": "#FFF8E4",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": {
+                        "md5": "sg-11134258-7rdyn-m0h123bcdnum38",
+                        "width": 12,
+                        "height": 12,
+                        "background_color": null,
+                        "top_offset": null
+                    },
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "5.0",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }, {
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": {
+                "discount_text": "-30%"
+            },
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 31"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 4193000,
+                "strikethrough_price": 5990000,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29860071400,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29860071400,
+                "model_id": 251591273768,
+                "promotion_type": 301,
+                "promotion_id": 541820132278272,
+                "price": 4193000,
+                "strikethrough_price": 5990000,
+                "discount": 30,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 31,
+                "monthly_sold_count": 2,
+                "historical_sold_count_text": "已售 31",
+                "monthly_sold_count_text": "月销量 2"
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1798631, 298628394, 1428713, 1718087960, 844931064601283, 822059734999051, 822120593194000, 1119699, 1007622, 700630038, 834230344633359],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 134,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1725357038,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 5,
+                "rating_count": [7, 0, 0, 0, 0, 7]
+            },
+            "global_brand": {
+                "brand_id": 1802277,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.16000081726240790.mp4",
+                "thumb_url": "sg-11110106-7rdyc-m04o0degu35bd5",
+                "duration": 35,
+                "version": 2,
+                "vid": "sg-11110106-6khwq-m04o07jlfq2bb4",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.16000081726240790.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.16000081726240790.mp4",
+                    "width": 720,
+                    "height": 1280
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.default.mp4",
+                    "width": 540,
+                    "height": 960
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khwq-m04o07jlfq2bb4\",\"biz\":107,\"duration\":34533,\"create_time\":1726240787,\"update_time\":1726240791,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rdyc-m04o0degu35bd5\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.16000081726240790.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.16000081726240790.mp4\",\"width\":720,\"height\":1280,\"bitrate\":690889,\"abitrate\":47182,\"duration\":34560,\"size\":3218592,\"fps\":25,\"update_time\":1726240821,\"codec\":\"H264\"}],\"extend_formats\":{\"H265\":[{\"format\":1600307,\"defn\":\"V540P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.16003071726381052.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.16003071726381052.mp4\",\"width\":540,\"height\":960,\"bitrate\":379318,\"abitrate\":47182,\"duration\":34528,\"size\":1873903,\"fps\":25.02897,\"update_time\":1726381086,\"codec\":\"H265\"},{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.16003091726240841.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.16003091726240841.mp4\",\"width\":720,\"height\":1280,\"bitrate\":562829,\"abitrate\":47182,\"duration\":34528,\"size\":2665751,\"fps\":25.02897,\"update_time\":1726240894,\"codec\":\"H265\"}]},\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwq-m04o07jlfq2bb4.default.mp4\",\"width\":540,\"height\":960,\"bitrate\":447692,\"abitrate\":47182,\"duration\":34528,\"size\":2165751,\"fps\":25.02897,\"update_time\":1726240855,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "Style Options",
+                "options": ["Random 1 pc", "Random 6 pcs", "Full set contact us", "The Mayor", "Sleepy Buttercup", "Brushing Teeth Bloss", "Bedtime Bubbles", "The Professor", "Bunny Buttercup", "Bunny Blossom", "Bunny Bubbles", "Mojo jojo", "Buttercup", "Blossom", "Bubbles", "Light display box"],
+                "images": ["sg-11134201-7rdy2-lzq2fv02e4vc71", "sg-11134201-7rdyu-lzq2fu45q8okc6", "sg-11134201-7rdxa-m04ncklun2xhbb", "sg-11134201-7rdy4-m04nei86ss1262", "sg-11134201-7rdyk-m04nei8gsd0n88", "sg-11134201-7rdy9-m04nenex8wnd26", "sg-11134201-7rdwt-m04neipy2s2d9d", "sg-11134201-7rdw1-m04nejh4z012ec", "sg-11134201-7rdvi-m04nei86rcy14b", "sg-11134201-7rdya-m04nejj2w5o3a9", "sg-11134201-7rdw5-m04nek8ltdw583", "sg-11134201-7rdx2-m04nejssgj532a", "sg-11134201-7rdw4-m04nekefm9k7c5", "sg-11134201-7rdyo-m04nel0ws722a9", "sg-11134201-7rdvc-m04neknv9v2t4a", "sg-11134201-7rdvm-m04o51fqxbux1e"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "POPMART Disney/Pixar POP CUBE-3 series blind box gift ornaments",
+            "image": "sg-11134201-7rdx5-lzoydkqqbxnw67",
+            "images": ["sg-11134201-7rdx5-lzoydkqqbxnw67", "sg-11134201-7rdvk-lzoydkzc0qvb6b", "sg-11134201-7rdwd-lzoydl7xo5yk0b", "sg-11134201-7rdxj-lzoydlgtb6bb10", "sg-11134201-7rdwa-lzoydloaytf8d9", "sg-11134201-7rdx4-lzoydlxglepjb5", "sg-11134201-7rdwk-lzoydm8u4rl647", "sg-11134201-7rdww-lzoydmi9sczb42", "sg-11134201-7rdvq-lzoydmuhahwo5e"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": null,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": null,
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 4990000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29859983411,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29859983411,
+                "model_id": 236727605886,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 4990000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 0,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": null,
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1798631, 298628394, 1718087960, 1428713, 844931064601283, 822059734999051, 822120593194000, 1119699, 1007622, 700630038],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 2,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1725289674,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": null,
+            "tier_variations": [{
+                "name": "款式描述",
+                "options": ["Random 1", "9 pcs a set"],
+                "images": ["sg-11134201-7rdwa-lzoydloaytf8d9", "sg-11134201-7rdyb-lzoydn3mx3skef"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POPMART LABUBU Haloween The Monsters Carnival Series  Blind Mystery Box Action Figure Official Store Hot Sell Gift",
+            "image": "sg-11134201-7rdwp-m1ml93teeb7o3a",
+            "images": ["sg-11134201-7rdwp-m1ml93teeb7o3a", "sg-11134201-7rdvz-m1ml95vhfan20f", "sg-11134201-7rdxm-m1ml98ixi7uw7b", "sg-11134201-7rdya-m1ml99pnuhxbf0", "sg-11134201-7rdyo-m1ml9bftbjns05", "sg-11134201-7rdxn-m1ml9d90lbbyfd", "sg-11134201-7rdw8-m1ml9ekqovqff9", "sg-11134201-7rdwv-m1ml9fwqqnau3a", "sg-11134201-7rdyh-m1ml9h4axhgn3b"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": null,
+            "icon_in_price": null,
+            "discount_tag": {
+                "discount_text": "-30%"
+            },
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": null,
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 1533000,
+                "strikethrough_price": 2190000,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29814750521,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29814750521,
+                "model_id": 178483908487,
+                "promotion_type": 301,
+                "promotion_id": 541820132278272,
+                "price": 1533000,
+                "strikethrough_price": 2190000,
+                "discount": 30,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 0,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": null,
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1007622, 1798631, 298628394, 700630038, 844931064601283, 1718087960, 1428713, 822059734999051, 822120593194000, 1119699],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 3,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1729505031,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 1802277,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khwd-m1mmrprdldva66.16000031729507578.mp4",
+                "thumb_url": "sg-11110106-7rdwt-m1mms0ae2vcw0f",
+                "duration": 58,
+                "version": 2,
+                "vid": "sg-11110106-6khwd-m1mmrprdldva66",
+                "formats": [{
+                    "format": 1600003,
+                    "defn": "V480P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khwd-m1mmrprdldva66.16000031729507578.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwd-m1mmrprdldva66.16000031729507578.mp4",
+                    "width": 480,
+                    "height": 854
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwd-m1mmrprdldva66.default.mp4",
+                    "width": 480,
+                    "height": 854
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khwd-m1mmrprdldva66\",\"biz\":107,\"duration\":58375,\"create_time\":1729507575,\"update_time\":1729507579,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rdwt-m1mms0ae2vcw0f\",\"formats\":[{\"format\":1600003,\"defn\":\"V480P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khwd-m1mmrprdldva66.16000031729507578.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwd-m1mmrprdldva66.16000031729507578.mp4\",\"width\":480,\"height\":854,\"bitrate\":553914,\"abitrate\":64058,\"duration\":58389,\"size\":4551462,\"fps\":25,\"update_time\":1729507598,\"codec\":\"H264\"}],\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwd-m1mmrprdldva66.default.mp4\",\"width\":480,\"height\":854,\"bitrate\":487898,\"abitrate\":64142,\"duration\":58375,\"size\":4075095,\"fps\":25,\"update_time\":1729507637,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "Style Options",
+                "options": ["Full set contact us", "Mummy", "Devil", "Science Monster", "Death", "Wolf Man", "Ghost", "Trash Can Monster", "Witch", "Scarecrow", "Bat", "Vampire lord", "Pumpkin Monster"],
+                "images": ["sg-11134201-7rdvu-m1ml8q7oaye6cc", "sg-11134201-7rdxc-m1ml8r94tk8v84", "sg-11134201-7rdw4-m1ml8rd0nvlr39", "sg-11134201-7rdyb-m1ml8rgwgs52d4", "sg-11134201-7rdw4-m1ml8rydu05bc0", "sg-11134201-7rdvx-m1ml8slethz142", "sg-11134201-7rdx7-m1ml8v6x3gvz6a", "sg-11134201-7rdx9-m1ml8y38uszo2d", "sg-11134201-7rdy3-m1ml8y8sl9r2b6", "sg-11134201-7rdvc-m1ml8yjm418ob2", "sg-11134201-7rdvn-m1ml8yzfgvxafe", "sg-11134201-7rdwd-m1ml9047t7icb6", "sg-11134201-7rdvl-m1ml938v9rrd71"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 52TOYS Stranger Hand QueSera Series Blind Mystery Box Wind-Up Movable Designer Toy Halloween Gift Hot Sell",
+            "image": "sg-11134201-7rdvo-m1me3kf2075p52",
+            "images": ["sg-11134201-7rdvo-m1me3kf2075p52", "sg-11134201-7rdwv-m1me3ks3fpl093", "sg-11134201-7rdy2-m1me3l2x430o9f", "sg-11134201-7rdvi-m1me3ldqo9fjd9", "sg-11134201-7rdy2-m1me3lp43dt3cb", "sg-11134201-7rdxa-m1me3lznpdj3a0", "sg-11134201-7rdyd-m1me3mbv63sv5e", "sg-11134201-7rdve-m1me3mkqt3r17a", "sg-11134201-7rdys-m1me3mroiy4o8e"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": null,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": null,
+            "icon_in_price": null,
+            "discount_tag": {
+                "discount_text": "-30%"
+            },
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 1"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 1533000,
+                "strikethrough_price": 2190000,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29814714560,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29814714560,
+                "model_id": 233350071666,
+                "promotion_type": 301,
+                "promotion_id": 541820132278272,
+                "price": 1533000,
+                "strikethrough_price": 2190000,
+                "discount": 30,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 1,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": "已售 1",
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1007622, 1798631, 298628394, 700630038, 1718087960, 1428713, 844931064601283, 822059734999051, 822120593194000, 1119699],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 3,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1729492994,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 3665761,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": null,
+            "tier_variations": [{
+                "name": "款式描述",
+                "options": ["Random 1 pc", "Random 2 pcs", "Full set 6 pcs", "Zombie Hand", "Vampire Hand", "Giallo Hand", "Stitched hand", "Cyborg hand", "Hollow hand"],
+                "images": ["sg-11134201-7rdyd-m1me3n8lu6pic1", "sg-11134201-7rdyd-m1me3n8lu6pic1", "sg-11134201-7rdw6-m1me3nnv7uppc9", "sg-11134201-7rdvw-m1me3nvcwwcf4d", "sg-11134201-7rdvw-m1me3o34mx54fb", "sg-11134201-7rdxp-m1me3oz1au2nfd", "sg-11134201-7rdy5-m1me3pvrywxw09", "sg-11134201-7rdxq-m1me3qqaugfb4c", "sg-11134201-7rdxi-m1me3rnbfc59fe"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "Pop Mart SG SELLER 🔥2024 Hot Selling   THE MONSTERS×Hiroshi Yokoyama Ma.k. series figure blind box LABUBU Designer toys",
+            "image": "sg-11134201-7rdxr-lzpmy2un9epj0b",
+            "images": ["sg-11134201-7rdxr-lzpmy2un9epj0b", "sg-11134201-7rdxy-lzpmy342vldzdb", "sg-11134201-7rdx1-lzpmy3cyim20e6", "sg-11134201-7rdyk-lzpmy3pg0c3005", "sg-11134201-7rdww-lzpmy3xro5lmb2", "sg-11134201-7rdwj-lzpmy49z6ap60a", "sg-11134201-7rdw0-lzpmy4oeml2g01", "sg-11134201-7rdw8-lzpmy4vmamg859", "sg-11134201-7rdvj-lzpmy55bwf3oa9"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": {
+                "mask_type": 2,
+                "mask_text": "未上架"
+            },
+            "icon_in_image": {
+                "icon_type": null,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reng-m2te1y1swuhzb8",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": null,
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 6990000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29810009590,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29810009590,
+                "model_id": 185362174643,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 6990000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 0,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": null,
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1798631, 298628394, 1428713, 1718087960, 844931064601283, 822059734999051, 822120593194000, 1119699, 1007622],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 1,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 8,
+            "ctime": 1725330989,
+            "flag": 131328,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": null,
+            "tier_variations": [{
+                "name": "款式描述",
+                "options": ["Random 1", "Random 6 pieces", "Specific Figure"],
+                "images": ["sg-11134201-7rdw9-lzpmy5htfjw415", "sg-11134201-7rdyw-lzpmy5oh4e944c", "sg-11134201-7rdx3-lzpmy5w8t0yw32"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "SG SELLER 🔥2024 Hot Selling POPMART LABUBU Space Adventure Series Blind Box Ornaments",
+            "image": "sg-11134201-7rdw5-lzojo82xhibrc6",
+            "images": ["sg-11134201-7rdw5-lzojo82xhibrc6", "sg-11134201-7rdvu-lzlv1ys5svca1e", "sg-11134201-7rdy0-lzlv1z5r8z3ecd", "sg-11134201-7rdws-lzlv1ziiqaif1a", "sg-11134201-7rdwf-lzlv1zu6anhw21", "sg-11134201-7rdvu-lzlv203bvu7r2b", "sg-11134201-7rdvs-lzlv20bnmh6cf7", "sg-11134201-7rdwr-lzlv20nl27hwd8", "sg-11134201-7rdyd-lzlv211gjaiu36"],
+            "shop_location": null,
+            "highlight_videos": [{
+                "video_id": "sg-11110113-6khxk-m03dk58ih7lf20",
+                "thumb_url": null,
+                "duration": 4750,
+                "version": 2,
+                "vid": "sg-11110113-6khxk-m03dk58ih7lf20",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khxk-m03dk58ih7lf20",
+                "thumb_url": null,
+                "duration": 4750,
+                "version": 2,
+                "vid": "sg-11110113-6khxk-m03dk58ih7lf20",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khxk-m03dk58ih7lf20",
+                "thumb_url": null,
+                "duration": 4750,
+                "version": 2,
+                "vid": "sg-11110113-6khxk-m03dk58ih7lf20",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }],
+            "item_card_mask": {
+                "mask_type": 2,
+                "mask_text": "未上架"
+            },
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reng-m2te1y1swuhzb8",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": null,
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 3990000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29809786569,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29809786569,
+                "model_id": 223187839608,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 3990000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 0,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": null,
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": true,
+            "is_preview": false,
+            "label_ids": [22, 1798631, 298628394, 844931064601283, 1718087960, 1428713, 1119699, 1007622, 834230344633359],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 0,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 8,
+            "ctime": 1725102484,
+            "flag": 131328,
+            "item_status": "sold_out",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110105/mms/sg-11110105-6khy2-lzyza5rbp9isb7.16000081725896555.mp4",
+                "thumb_url": "sg-11110105-7rdxk-lzyzajozbhmtb7",
+                "duration": 54,
+                "version": 2,
+                "vid": "sg-11110105-6khy2-lzyza5rbp9isb7",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110105/mms/sg-11110105-6khy2-lzyza5rbp9isb7.16000081725896555.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khy2-lzyza5rbp9isb7.16000081725896555.mp4",
+                    "width": 544,
+                    "height": 960
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khy2-lzyza5rbp9isb7.default.mp4",
+                    "width": 540,
+                    "height": 952
+                },
+                "mms_data": "{\"vid\":\"sg-11110105-6khy2-lzyza5rbp9isb7\",\"biz\":107,\"duration\":53633,\"create_time\":1725896552,\"update_time\":1725896556,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110105-7rdxk-lzyzajozbhmtb7\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110105/mms/sg-11110105-6khy2-lzyza5rbp9isb7.16000081725896555.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khy2-lzyza5rbp9isb7.16000081725896555.mp4\",\"width\":544,\"height\":960,\"bitrate\":808140,\"abitrate\":31105,\"duration\":53599,\"size\":5668882,\"fps\":25.01866,\"update_time\":1725896574,\"codec\":\"H264\"}],\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110105/mms/sg-11110105-6khy2-lzyza5rbp9isb7.default.mp4\",\"width\":540,\"height\":952,\"bitrate\":466125,\"abitrate\":31105,\"duration\":53599,\"size\":3377346,\"fps\":25.01866,\"update_time\":1725896597,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "款式描述",
+                "options": ["Random 1", "Random 6 pieces", "Specified style"],
+                "images": ["sg-11134201-7rdw6-lzlv21am4hl24d", "sg-11134201-7rdxn-lzlv21i3wc4ic3", "sg-11134201-7rdw8-lzlv21ubbo0q15"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 Snowman Wooden Ladder Christmas Tree Ornament Door \u0026 Window Decoration Gift Designer Toy Hot Sell Xmas Home",
+            "image": "sg-11134201-7rfg8-m399i1i55c4d5e",
+            "images": ["sg-11134201-7rfg8-m399i1i55c4d5e", "sg-11134201-7rfgv-m399i2cny34ebd", "sg-11134201-7rfi6-m399i2mdiezs24", "sg-11134201-7rfh6-m399i3bwjvj4c4", "sg-11134201-7rfhw-m399i3o4224u4c", "sg-11134201-7rfgp-m399i451afme01", "sg-11134201-7rfhf-m399i4icqzdp85", "sg-11134201-7rffp-m399i4ogjf4ncf", "sg-11134201-7rff6-m3di20b5d4h31c"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "NEW_ARRIVAL",
+                "style": "outline",
+                "specs": {
+                    "text_color": "#EE4D2D",
+                    "border_color": "#EE4D2D",
+                    "background_color": null,
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "New Arrival",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": null,
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 1811000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29769385525,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29769385525,
+                "model_id": 233535428860,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 1811000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 0,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": null,
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1007622, 1798631, 298628394, 700630038, 1718087960, 1428713, 844931064601283, 822059734999051, 822120593194000, 1119699],
+            "catid": 100636,
+            "shopee_verified": false,
+            "liked_count": 0,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1733056793,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100636, 100711, 101165]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khwj-m3995ztrs42ef7.16000081733056225.mp4",
+                "thumb_url": "sg-11110106-7rfib-m39961ycpsetd8",
+                "duration": 16,
+                "version": 2,
+                "vid": "sg-11110106-6khwj-m3995ztrs42ef7",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khwj-m3995ztrs42ef7.16000081733056225.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwj-m3995ztrs42ef7.16000081733056225.mp4",
+                    "width": 720,
+                    "height": 960
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwj-m3995ztrs42ef7.default.mp4",
+                    "width": 540,
+                    "height": 720
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khwj-m3995ztrs42ef7\",\"biz\":107,\"duration\":15604,\"create_time\":1733056224,\"update_time\":1733056226,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rfib-m39961ycpsetd8\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khwj-m3995ztrs42ef7.16000081733056225.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwj-m3995ztrs42ef7.16000081733056225.mp4\",\"width\":720,\"height\":960,\"bitrate\":516058,\"abitrate\":128376,\"duration\":15627,\"size\":1271555,\"fps\":25,\"update_time\":1733056231,\"codec\":\"H264\"}],\"extend_formats\":{\"H265\":[{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khwj-m3995ztrs42ef7.16003091733056300.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwj-m3995ztrs42ef7.16003091733056300.mp4\",\"width\":720,\"height\":960,\"bitrate\":292208,\"abitrate\":128376,\"duration\":15627,\"size\":837738,\"fps\":25,\"update_time\":1733056311,\"codec\":\"H265\"}]},\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwj-m3995ztrs42ef7.default.mp4\",\"width\":540,\"height\":720,\"bitrate\":283312,\"abitrate\":64439,\"duration\":15627,\"size\":692805,\"fps\":25,\"update_time\":1733056302,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "Style Options",
+                "options": ["WoodenOrnament-Elder", "WoodOrnament-Snowman", "Wooden Tree Doll Set", "Non-woven Tree 01", "Non-woven Tree 02", "Nonwoven02+Flag+Orna"],
+                "images": ["sg-11134201-7rfi2-m399i4z02moe92", "sg-11134201-7rffp-m399i58podaj0c", "sg-11134201-7rfgx-m399i5m14vvb66", "sg-11134201-7rfhs-m399i5x4oopzcd", "sg-11134201-7rfia-m399i6bk3j5y08", "sg-11134201-7rfff-m399i6mnnah2fb"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POPMART Molly x Warner Bros. 100th Anniversary Series Blind Mystery Box Decoration  Gift Designer Toy Hot SellDoll",
+            "image": "sg-11134201-7rfh0-m3g1a0uk0zkr10",
+            "images": ["sg-11134201-7rfh0-m3g1a0uk0zkr10", "sg-11134201-7rfi9-m32yluu6jk8ee4", "sg-11134201-7rffw-m32ylv3w6qlg12", "sg-11134201-7rffx-m32ylvpj9nvoff", "sg-11134201-7rfhg-m32ylvzsum12ea", "sg-11134201-7rfhx-m32ylw84igvra1", "sg-11134201-7rffo-m32ylwsxo0tqb8", "sg-11134201-7rffz-m32ylx0pclqea4", "sg-11134201-7rfhs-m32ylyfhaayu9f"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "NEW_ARRIVAL",
+                "style": "outline",
+                "specs": {
+                    "text_color": "#EE4D2D",
+                    "border_color": "#EE4D2D",
+                    "background_color": null,
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "New Arrival",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": null,
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 2999000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29768898372,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29768898372,
+                "model_id": 188014660307,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 2999000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 0,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": null,
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1007622, 1798631, 298628394, 700630038, 1718087960, 1428713, 844931064601283, 822059734999051, 822120593194000, 1119699],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 1,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1732675266,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 1802277,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khxh-m32ym7g438h9ab.16000031732675306.mp4",
+                "thumb_url": "sg-11110106-7rfhg-m32ymu44xg23d0",
+                "duration": 60,
+                "version": 2,
+                "vid": "sg-11110106-6khxh-m32ym7g438h9ab",
+                "formats": [{
+                    "format": 1600003,
+                    "defn": "V480P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khxh-m32ym7g438h9ab.16000031732675306.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxh-m32ym7g438h9ab.16000031732675306.mp4",
+                    "width": 480,
+                    "height": 854
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxh-m32ym7g438h9ab.default.mp4",
+                    "width": 480,
+                    "height": 854
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khxh-m32ym7g438h9ab\",\"biz\":107,\"duration\":59724,\"create_time\":1732675305,\"update_time\":1732675309,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rfhg-m32ymu44xg23d0\",\"formats\":[{\"format\":1600003,\"defn\":\"V480P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khxh-m32ym7g438h9ab.16000031732675306.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxh-m32ym7g438h9ab.16000031732675306.mp4\",\"width\":480,\"height\":854,\"bitrate\":517284,\"abitrate\":64023,\"duration\":59720,\"size\":4386157,\"fps\":25,\"update_time\":1732675329,\"codec\":\"H264\"}],\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxh-m32ym7g438h9ab.default.mp4\",\"width\":480,\"height\":854,\"bitrate\":452264,\"abitrate\":64092,\"duration\":59720,\"size\":3905715,\"fps\":25,\"update_time\":1732675471,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "Style Options",
+                "options": ["Full set contact us", "Sealed (Random)", "Batman", "Annabelle", "Superman", "Tom \u0026 Jerry (Tom)", "Ready Player One", "Tom \u0026 Jerry (Jerry)", "Gremlins", "Space Jam", "Willy Wonka", "Corpse Bride", "Lord Of The Rings", "The Great Gatsby", "Hidden-The Matrix"],
+                "images": ["sg-11134201-7rffk-m31xlh44ndicc4", "sg-11134201-7rfho-m32yl72rcq9y00", "sg-11134201-7rfhs-m32ylcxwqbqx06", "sg-11134201-7rfgi-m32yle6ayss9b8", "sg-11134201-7rfg1-m32ylfjeywo1cf", "sg-11134201-7rfg6-m32ylgwixmeled", "sg-11134201-7rffw-m32yll22us4hea", "sg-11134201-7rffd-m32ylldgfiq1a7", "sg-11134201-7rffp-m32ylmlul5vfe7", "sg-11134201-7rfhp-m32ylnbnkuni43", "sg-11134201-7rfi8-m32ylogzuwhn34", "sg-11134201-7rfih-m32ylpccp8fv5a", "sg-11134201-7rff9-m32ylq7feebg7c", "sg-11134201-7rfh6-m32ylsb68qnw7d", "sg-11134201-7rfhi-m32yluf75g2vd3"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POP MART SKULLPANDA The Sound Series Phone Chain Mystery Box Action Figure Official Store Hot Gift Toy Accessories",
+            "image": "sg-11134201-7rdvs-m0h4j6fulmv8dc",
+            "images": ["sg-11134201-7rdvs-m0h4j6fulmv8dc", "sg-11134201-7rdy7-lzucjtxw8os402", "sg-11134201-7rdwd-lzucjuhve1ige1", "sg-11134201-7rdyp-lzucjuqh1gdk49", "sg-11134201-7rdwt-lzucjuv6xctoaa", "sg-11134201-7rdyk-lzucjv06n8cn24", "sg-11134201-7rdvi-lzucjv4cjyhm24", "sg-11134201-7rdy1-lzucjv88bgyyec", "sg-11134201-7rdyj-lzucjvce5d6v46"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "RATING_STAR",
+                "style": "filled+border",
+                "specs": {
+                    "text_color": "#000000",
+                    "border_color": "#FFBB00",
+                    "background_color": "#FFF8E4",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": {
+                        "md5": "sg-11134258-7rdyn-m0h123bcdnum38",
+                        "width": 12,
+                        "height": 12,
+                        "background_color": null,
+                        "top_offset": null
+                    },
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "5.0",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }, {
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 1"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 5990000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29760422286,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29760422286,
+                "model_id": 241541706772,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 5990000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 1,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": "已售 1",
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1798631, 298628394, 844931064601283, 1428713, 1718087960, 822059734999051, 822120593194000, 1119699, 1007622, 700630038],
+            "catid": 100013,
+            "shopee_verified": false,
+            "liked_count": 6,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1725616183,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100013, 100075, 100280]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 5,
+                "rating_count": [1, 0, 0, 0, 0, 1]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khxh-lzuccjdih3cc7b.16000081725615840.mp4",
+                "thumb_url": "sg-11110106-7rdy5-lzuccn2f1jx4f0",
+                "duration": 32,
+                "version": 2,
+                "vid": "sg-11110106-6khxh-lzuccjdih3cc7b",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khxh-lzuccjdih3cc7b.16000081725615840.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxh-lzuccjdih3cc7b.16000081725615840.mp4",
+                    "width": 544,
+                    "height": 960
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxh-lzuccjdih3cc7b.default.mp4",
+                    "width": 540,
+                    "height": 952
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khxh-lzuccjdih3cc7b\",\"biz\":107,\"duration\":32366,\"create_time\":1725615838,\"update_time\":1725615841,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rdy5-lzuccn2f1jx4f0\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khxh-lzuccjdih3cc7b.16000081725615840.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxh-lzuccjdih3cc7b.16000081725615840.mp4\",\"width\":544,\"height\":960,\"bitrate\":860583,\"abitrate\":32204,\"duration\":32319,\"size\":3635001,\"fps\":25.03094,\"update_time\":1725615852,\"codec\":\"H264\"}],\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxh-lzuccjdih3cc7b.default.mp4\",\"width\":540,\"height\":952,\"bitrate\":474032,\"abitrate\":32204,\"duration\":32319,\"size\":2073347,\"fps\":25.03094,\"update_time\":1725615889,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "款式描述",
+                "options": ["Full set contact us", "Random 1 pc ", "Random 3 pcs", "绽·欢欣之声手机链", "惗·笃信之声手机链", "毅·无畏之声手机链", "唳·警惕之声手机链", "炙·愤怒之声手机链", "泣·忧郁之声手机链", "憎·厌恶之声手机链", "谧·平静之声手机链", "Hidden-倾听手机链"],
+                "images": ["sg-11134201-7rdxx-lzucjvgu09yaec", "sg-11134201-7rdvj-lzucjvkpxeg2f8", "sg-11134201-7rdyk-lzucjv06n8cn24", "sg-11134201-7rdyv-lzucjvnroqk4bb", "sg-11134201-7rdw2-lzucjw6wy430d5", "sg-11134201-7rdyr-lzucjw9ytnqsdf", "sg-11134201-7rdvz-lzucjxabb2b8f6", "sg-11134201-7rdxg-lzucjxuuh0msa0", "sg-11134201-7rdvi-lzucjy403lui73", "sg-11134201-7rdvm-lzucjydfpt4a8f", "sg-11134201-7rdxx-lzucjym1emg8c1", "sg-11134201-7rdvq-lzucjyxyvqzmfd"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POPMART THE MONSTERS LABUBU Drunk In Sea Series Official Store Hot Sell Trendy Gift Accessories Plush Doll ",
+            "image": "sg-11134201-7rdxc-lzt25t45r0iq92",
+            "images": ["sg-11134201-7rdxc-lzt25t45r0iq92", "sg-11134201-7rdy8-lzt25tezb6dj98", "sg-11134201-7rdx6-lzt25tjz3vooea", "sg-11134201-7rdxh-lzt25toyxysifd", "sg-11134201-7rdws-lzt25tteq2i45b", "sg-11134201-7rdwo-lzt25tyeirfecd", "sg-11134201-7rdxa-lzt25u48a8jb33"],
+            "shop_location": null,
+            "highlight_videos": [{
+                "video_id": "sg-11110113-6khwf-m043s3xqwr9c47",
+                "thumb_url": null,
+                "duration": 3300,
+                "version": 2,
+                "vid": "sg-11110113-6khwf-m043s3xqwr9c47",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khwf-m043s3xqwr9c47",
+                "thumb_url": null,
+                "duration": 3300,
+                "version": 2,
+                "vid": "sg-11110113-6khwf-m043s3xqwr9c47",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khwf-m043s3xqwr9c47",
+                "thumb_url": null,
+                "duration": 3300,
+                "version": 2,
+                "vid": "sg-11110113-6khwf-m043s3xqwr9c47",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }],
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": null,
+            "icon_in_price": null,
+            "discount_tag": {
+                "discount_text": "-40%"
+            },
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 2"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 2994000,
+                "strikethrough_price": 4990000,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29760331954,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29760331954,
+                "model_id": 168401923819,
+                "promotion_type": 301,
+                "promotion_id": 541817573752832,
+                "price": 2994000,
+                "strikethrough_price": 4990000,
+                "discount": 40,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 2,
+                "monthly_sold_count": 2,
+                "historical_sold_count_text": "已售 2",
+                "monthly_sold_count_text": "月销量 2"
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1798631, 298628394, 1428713, 1718087960, 844931064601283, 822059734999051, 822120593194000, 1119699, 1007622, 700630038],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 5,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1725538176,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101392]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 1802277,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khxs-lzt1plonkip6a3.16000081725537419.mp4",
+                "thumb_url": "sg-11110106-7rdvm-lzt1pp0io1s54d",
+                "duration": 30,
+                "version": 2,
+                "vid": "sg-11110106-6khxs-lzt1plonkip6a3",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khxs-lzt1plonkip6a3.16000081725537419.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxs-lzt1plonkip6a3.16000081725537419.mp4",
+                    "width": 576,
+                    "height": 1024
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxs-lzt1plonkip6a3.default.mp4",
+                    "width": 540,
+                    "height": 960
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khxs-lzt1plonkip6a3\",\"biz\":107,\"duration\":29965,\"create_time\":1725537417,\"update_time\":1725537419,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rdvm-lzt1pp0io1s54d\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khxs-lzt1plonkip6a3.16000081725537419.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxs-lzt1plonkip6a3.16000081725537419.mp4\",\"width\":576,\"height\":1024,\"bitrate\":658031,\"abitrate\":32386,\"duration\":29920,\"size\":2608458,\"fps\":25.03342,\"update_time\":1725537433,\"codec\":\"H264\"}],\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxs-lzt1plonkip6a3.default.mp4\",\"width\":540,\"height\":960,\"bitrate\":432683,\"abitrate\":32386,\"duration\":29920,\"size\":1765648,\"fps\":25.03342,\"update_time\":1725537468,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "颜色分类",
+                "options": ["Earphone Case (Pro) ", "Labubu Fan", "Hair Clip", "Glass Cup ", "Travel bottle", "Bag", "Phone Case (14 Pro)", "Phone Case 14 ProMax", "Phone Case (15 Pro)", "Phone Case 15 ProMax"],
+                "images": ["sg-11134201-7rdwa-lzt25u982x3a45", "sg-11134201-7rdw6-lzt25ue7vm8q43", "sg-11134201-7rdx4-lzt25uqff5dzca", "sg-11134201-7rdvm-lzt25v9am5isa7", "sg-11134201-7rdvc-lzt25vnq116025", "sg-11134201-7rdvs-lzt25vzxkkdo58", "sg-11134201-7rdyt-lzt25wjwsqsqc8", "sg-11134201-7rdyt-lzt25wjwsqsqc8", "sg-11134201-7rdyt-lzt25wjwsqsqc8", "sg-11134201-7rdyt-lzt25wjwsqsqc8"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 PLANET BEAR We PanPan Theater Blind Mystery Box Action Figure Hot Sell Gift Designer Toy",
+            "image": "sg-11134201-7reos-m2171und468g72",
+            "images": ["sg-11134201-7reos-m2171und468g72", "sg-11134201-7req8-m2171vn5kzkta5", "sg-11134201-7repa-m2171xeyzls050", "sg-11134201-7renw-m2171yqz2r2705", "sg-11134201-7rep1-m21722ehow7xf5", "sg-11134201-7reqm-m21723nzub6qfe", "sg-11134201-7renh-m21724guo2og25", "sg-11134201-7repy-m21724pqb37k96", "sg-11134201-7reoe-m21727hc9bfh32"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "BUNDLE_DEAL",
+                "style": "outline",
+                "specs": {
+                    "text_color": "#EE4D2D",
+                    "border_color": "#EE4D2D",
+                    "background_color": null,
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "购买2 个 享受9.5折折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": null,
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 2930000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29716173863,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29716173863,
+                "model_id": 185516087336,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 2930000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 0,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": null,
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1007622, 1798631, 298628394, 700630038, 1718087960, 1428713, 844931064601283, 822059734999051, 822120593194000, 1119699],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 0,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1730389168,
+            "flag": 0,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khxp-m217a3pycj7gf4.16000081730389587.mp4",
+                "thumb_url": "sg-11110106-7ren7-m217b7lty8m439",
+                "duration": 57,
+                "version": 2,
+                "vid": "sg-11110106-6khxp-m217a3pycj7gf4",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khxp-m217a3pycj7gf4.16000081730389587.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxp-m217a3pycj7gf4.16000081730389587.mp4",
+                    "width": 720,
+                    "height": 1280
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxp-m217a3pycj7gf4.default.mp4",
+                    "width": 540,
+                    "height": 960
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khxp-m217a3pycj7gf4\",\"biz\":107,\"duration\":57122,\"create_time\":1730389583,\"update_time\":1730389634,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7ren7-m217b7lty8m439\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khxp-m217a3pycj7gf4.16000081730389587.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxp-m217a3pycj7gf4.16000081730389587.mp4\",\"width\":720,\"height\":1280,\"bitrate\":1019295,\"abitrate\":128129,\"duration\":57122,\"size\":8241846,\"fps\":25,\"update_time\":1730389634,\"codec\":\"H264\"}],\"extend_formats\":{\"H265\":[{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khxp-m217a3pycj7gf4.16003091730389637.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxp-m217a3pycj7gf4.16003091730389637.mp4\",\"width\":720,\"height\":1280,\"bitrate\":589590,\"abitrate\":128129,\"duration\":57122,\"size\":5177434,\"fps\":25,\"update_time\":1730389737,\"codec\":\"H265\"}]},\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxp-m217a3pycj7gf4.default.mp4\",\"width\":540,\"height\":960,\"bitrate\":486534,\"abitrate\":64156,\"duration\":57122,\"size\":3981146,\"fps\":25,\"update_time\":1730389650,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "Style Options",
+                "options": ["Full set contact us", "Random 1 pc", "Lemon Summer", "White Wash", "My mr. mermaid", "Doudou's Sunday", "Penny Loves Pig", "Pan Pan Food God", "Next Cup Is Better", "House Pan", "Family Fun", "heterochromatic", "Special  A", "Special  B"],
+                "images": ["sg-11134201-7reob-m1zc1wtc0wad37", "sg-11134201-7renk-m2170h6vgb6o47", "sg-11134201-7rend-m2170ykjzaot9e", "sg-11134201-7renx-m21712opygz90a", "sg-11134201-7reo5-m21716j6bv1984", "sg-11134201-7rend-m2171d4eoovrb1", "sg-11134201-7ren7-m2171g24dzwgb7", "sg-11134201-7repm-m2171m5lgtstc5", "sg-11134201-7reo1-m2171n8pvkdz67", "sg-11134201-7renu-m2171oa6cr9c71", "sg-11134201-7req4-m2171pr6776l8c", "sg-11134201-7ren4-m2171q6pkgl392", "sg-11134201-7repm-m2171qjr1da735", "sg-11134201-7reny-m2171t9p21dr07"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POPMART CRYBABY Plush Flower Sad Club Series Blind Box Plush Doll Accessories Official Store Hot Sell Trendy Gift",
+            "image": "sg-11134201-7rdw1-lzrtxbdqwuhu50",
+            "images": ["sg-11134201-7rdw1-lzrtxbdqwuhu50", "sg-11134201-7rdwq-m065jc8111udf2", "sg-11134201-7rdy2-m065jc6d4wm95b", "sg-11134201-7rdwh-lzrtxc2fvblg53", "sg-11134201-7rdwx-lzrtxc8tlypy90", "sg-11134201-7rdy0-lzrtxbpyezxwdd", "sg-11134201-7rdww-lzrtxcf7cmr0ca", "sg-11134201-7rdvl-m065jbwxhalj87", "sg-11134201-7rdya-lzrtxdepwnif4a"],
+            "shop_location": null,
+            "highlight_videos": [{
+                "video_id": "sg-11110113-6khyg-m09xjfct4rsj6e",
+                "thumb_url": null,
+                "duration": 5000,
+                "version": 2,
+                "vid": "sg-11110113-6khyg-m09xjfct4rsj6e",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khyg-m09xjfct4rsj6e",
+                "thumb_url": null,
+                "duration": 5000,
+                "version": 2,
+                "vid": "sg-11110113-6khyg-m09xjfct4rsj6e",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }, {
+                "video_id": "sg-11110113-6khyg-m09xjfct4rsj6e",
+                "thumb_url": null,
+                "duration": 5000,
+                "version": 2,
+                "vid": "sg-11110113-6khyg-m09xjfct4rsj6e",
+                "formats": null,
+                "default_format": null,
+                "mms_data": null
+            }],
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "RATING_STAR",
+                "style": "filled+border",
+                "specs": {
+                    "text_color": "#000000",
+                    "border_color": "#FFBB00",
+                    "background_color": "#FFF8E4",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": {
+                        "md5": "sg-11134258-7rdyn-m0h123bcdnum38",
+                        "width": 12,
+                        "height": 12,
+                        "background_color": null,
+                        "top_offset": null
+                    },
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "4.7",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }, {
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 29"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 3990000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29710203404,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29710203404,
+                "model_id": 217781200687,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 3990000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 29,
+                "monthly_sold_count": 8,
+                "historical_sold_count_text": "已售 29",
+                "monthly_sold_count_text": "月销量 8"
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1798631, 298628394, 1428713, 1718087960, 844931064601283, 822059734999051, 822120593194000, 1119699, 1007622, 700630038],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 128,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1725463794,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 4.714285714285714,
+                "rating_count": [7, 0, 0, 1, 0, 6]
+            },
+            "global_brand": {
+                "brand_id": 1802277,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.16000081726330959.mp4",
+                "thumb_url": "sg-11110106-7rdw3-m065mu2gx22000",
+                "duration": 31,
+                "version": 2,
+                "vid": "sg-11110106-6khy0-m065mlmd9qd631",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.16000081726330959.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.16000081726330959.mp4",
+                    "width": 720,
+                    "height": 1280
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.default.mp4",
+                    "width": 540,
+                    "height": 960
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khy0-m065mlmd9qd631\",\"biz\":107,\"duration\":31433,\"create_time\":1726330957,\"update_time\":1726330963,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rdw3-m065mu2gx22000\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.16000081726330959.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.16000081726330959.mp4\",\"width\":720,\"height\":1280,\"bitrate\":1019294,\"abitrate\":47244,\"duration\":31440,\"size\":4214168,\"fps\":25.03185,\"update_time\":1726330981,\"codec\":\"H264\"}],\"extend_formats\":{\"H265\":[{\"format\":1600307,\"defn\":\"V540P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.16003071728122938.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.16003071728122938.mp4\",\"width\":540,\"height\":960,\"bitrate\":387374,\"abitrate\":47244,\"duration\":31440,\"size\":1738881,\"fps\":25,\"update_time\":1728122961,\"codec\":\"H265\"},{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.16003091726331000.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.16003091726331000.mp4\",\"width\":720,\"height\":1280,\"bitrate\":611555,\"abitrate\":47244,\"duration\":31440,\"size\":2616841,\"fps\":25.03185,\"update_time\":1726331052,\"codec\":\"H265\"}]},\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khy0-m065mlmd9qd631.default.mp4\",\"width\":540,\"height\":960,\"bitrate\":444947,\"abitrate\":47244,\"duration\":31440,\"size\":1959860,\"fps\":25.03185,\"update_time\":1726331013,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "Style Choice",
+                "options": ["Random 1 pc", "6 pcs FULL set", "Papaya yellow plush", "Sakura pink plush", "Taro purple plush", "Sky blue plush", "Sunshine yellow plus", "Rouge powder plush", "Hidden cherry red", "Sad Club Cup Gold", "Sad Club Lamp"],
+                "images": ["sg-11134201-7rdvf-lzrtxdldmx137b", "sg-11134201-7rdx9-lzrtxdtzbqcse0", "sg-11134201-7rdxk-lzrtxe4suhwo3c", "sg-11134201-7rdyj-lzrtxe9ioztm8c", "sg-11134201-7rdwb-lzrtxedohi2f12", "sg-11134201-7rdvz-lzrtxei4b06v73", "sg-11134201-7rdyj-lzrtxeno4a2v37", "sg-11134201-7rdw1-lzrtxethucma3f", "sg-11134201-7rdx1-lzrtxf19izho73", "sg-11134201-7rdy2-lzrtxfcn2cms59", "sg-11134201-7rdwc-lzrtxfkoqk1z2c"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POPMART MINIONS Travelogue of China Series Action Figure Blind Box Official Store Hot Sell  Trendy Gift Accessories",
+            "image": "sg-11134201-7rdyo-m08u0djpr4560c",
+            "images": ["sg-11134201-7rdyo-m08u0djpr4560c", "sg-11134201-7rdxe-lzrhx1y56p7s92", "sg-11134201-7rdvv-m08txqc72vhi51", "sg-11134201-7rdye-m08tfh66rhop01", "sg-11134201-7rdyg-lzrhx2d4jd4c0f", "sg-11134201-7rdxk-m08tyvx48ba9e9", "sg-11134201-7rdyx-lzrhx2l67lbr05", "sg-11134201-7rdvv-lzrhx2rtxufu0b", "sg-11134201-7rdxe-m08tyb84ii6t27"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": null,
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS+CCB",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reno-m2te0g6vrmnb33",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": null,
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 3990000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29710185215,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29710185215,
+                "model_id": 215366005084,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 3990000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 0,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": null,
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1798631, 298628394, 1428713, 1718087960, 844931064601283, 822059734999051, 822120593194000, 1119699, 1007622, 700630038],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 10,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 1,
+            "ctime": 1725443604,
+            "flag": 131072,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 0,
+                "rating_count": [0, 0, 0, 0, 0, 0]
+            },
+            "global_brand": {
+                "brand_id": 1802277,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khxw-lzrhhmsnl1k84e.16000081725442884.mp4",
+                "thumb_url": "sg-11110106-7rdxl-lzrhhrxg4dfp4c",
+                "duration": 59,
+                "version": 2,
+                "vid": "sg-11110106-6khxw-lzrhhmsnl1k84e",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khxw-lzrhhmsnl1k84e.16000081725442884.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxw-lzrhhmsnl1k84e.16000081725442884.mp4",
+                    "width": 576,
+                    "height": 1024
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxw-lzrhhmsnl1k84e.default.mp4",
+                    "width": 540,
+                    "height": 960
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khxw-lzrhhmsnl1k84e\",\"biz\":107,\"duration\":58900,\"create_time\":1725442881,\"update_time\":1725442885,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rdxl-lzrhhrxg4dfp4c\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khxw-lzrhhmsnl1k84e.16000081725442884.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxw-lzrhhmsnl1k84e.16000081725442884.mp4\",\"width\":576,\"height\":1024,\"bitrate\":694435,\"abitrate\":32195,\"duration\":58880,\"size\":5398597,\"fps\":25.01698,\"update_time\":1725442912,\"codec\":\"H264\"}],\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khxw-lzrhhmsnl1k84e.default.mp4\",\"width\":540,\"height\":960,\"bitrate\":445895,\"abitrate\":32195,\"duration\":58880,\"size\":3569332,\"fps\":25.01698,\"update_time\":1725442970,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "款式描述",
+                "options": ["Random 1 pc ", "Random 6 pcs", "Full set contact us", "Scene display box", "Lion Dance-Stuart", "Peking Opeara-Stuart", "Shanghai Singing-Tow", "Tiger Riding-Dave", "Jungfu Hammer-Phil", "Terracotta Warrior-K", "Candied Haws-Tom", "Flying High-Stuart", "Chinese Calligraphy-", "Hotpot-Bob", "Game of Go-Bob", "Bamboo Flute-Bob", "Hidden-Lion Sculptor"],
+                "images": ["sg-11134201-7rdxn-lzrhx3o0mqwna7", "sg-11134201-7rdwq-lzrhx3v8dl3a32", "sg-11134201-7rdxa-m04ncklun2xhbb", "sg-11134201-7rdxe-lzrhx6ny8spm54", "sg-11134201-7rdwk-m08tfc5u3fei73", "sg-11134201-7rdye-m08tfh66rhop01", "sg-11134201-7rdwi-m08tflse09vke0", "sg-11134201-7rdyx-m08tfrcpv4qieb", "sg-11134201-7rdyp-m08tg6884vy295", "sg-11134201-7rdy3-m08tga5qdt7l96", "sg-11134201-7rdwq-m08tge8sd7eifb", "sg-11134201-7rdw0-m08tgjcgwenidb", "sg-11134201-7rdx6-m08tgo6ptezy24", "sg-11134201-7rdwp-m08tgu1b98me1a", "sg-11134201-7rdvs-m08tgyomgdts91", "sg-11134201-7rdwt-m08th257e2uf7f", "sg-11134201-7rdxj-m08thgfchoyda2"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POP MART CRYBABY Cheer Up, Baby! Series Pendant, Plush Doll \u0026 Bag Official Store Hot Sell Gift Toy Accessories",
+            "image": "sg-11134201-7rdx7-m0zj9ovd0aztb2",
+            "images": ["sg-11134201-7rdx7-m0zj9ovd0aztb2", "sg-11134201-7rdyc-m0zj9q7d22g9ed", "sg-11134201-7rdw9-m0zj9rlb0zfhfc", "sg-11134201-7rdw7-m0zj9rtcqm9d5c", "sg-11134201-7rdxq-m0zj9tc0h835a1", "sg-11134201-7rdyk-m0zj9g59w5gp24", "sg-11134201-7rdvk-m0zj9u2ne8l04a", "sg-11134201-7rdyj-m0zj9vg1fdfr3c", "sg-11134201-7rdyb-m0zj9h48csbh52"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": {
+                "mask_type": 2,
+                "mask_text": "未上架"
+            },
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reng-m2te1y1swuhzb8",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 5"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 6900000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29663315817,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29663315817,
+                "model_id": 197857542638,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 6900000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 5,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": "已售 5",
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1007622, 1798631, 298628394, 844931064601283, 1428713, 1718087960, 1119699, 822059734999051, 822120593194000],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 15,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 8,
+            "ctime": 1728109395,
+            "flag": 131328,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 2.5,
+                "rating_count": [2, 1, 0, 0, 1, 0]
+            },
+            "global_brand": {
+                "brand_id": 1802277,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khwn-m0zja7x94lel82.16000081728109422.mp4",
+                "thumb_url": "sg-11110106-7rdx5-m0zjahbrdl9l6e",
+                "duration": 47,
+                "version": 2,
+                "vid": "sg-11110106-6khwn-m0zja7x94lel82",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khwn-m0zja7x94lel82.16000081728109422.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwn-m0zja7x94lel82.16000081728109422.mp4",
+                    "width": 720,
+                    "height": 1280
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwn-m0zja7x94lel82.default.mp4",
+                    "width": 540,
+                    "height": 960
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khwn-m0zja7x94lel82\",\"biz\":107,\"duration\":46974,\"create_time\":1728109420,\"update_time\":1728109426,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rdx5-m0zjahbrdl9l6e\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khwn-m0zja7x94lel82.16000081728109422.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwn-m0zja7x94lel82.16000081728109422.mp4\",\"width\":720,\"height\":1280,\"bitrate\":642556,\"abitrate\":47113,\"duration\":46998,\"size\":4089215,\"fps\":25,\"update_time\":1728109459,\"codec\":\"H264\"}],\"extend_formats\":{\"H265\":[{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khwn-m0zja7x94lel82.16003091728109475.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwn-m0zja7x94lel82.16003091728109475.mp4\",\"width\":720,\"height\":1280,\"bitrate\":340359,\"abitrate\":47113,\"duration\":46998,\"size\":2318861,\"fps\":25,\"update_time\":1728109525,\"codec\":\"H265\"}]},\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khwn-m0zja7x94lel82.default.mp4\",\"width\":540,\"height\":960,\"bitrate\":429931,\"abitrate\":47113,\"duration\":46998,\"size\":2841111,\"fps\":25,\"update_time\":1728109484,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "Style Options",
+                "options": ["Pendant 15cm", "Eva Doll 28cm", "Canvas Bag-Rainbow", "Canvas Bag-White"],
+                "images": ["sg-11134201-7rdyk-m0zj9g59w5gp24", "sg-11134201-7rdx6-m0zj9gbdj0ilfc", "sg-11134201-7rdyb-m0zj9h48csbh52", "sg-11134201-7rdwl-m0zj9oopa2874a"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }, {
+        "item_card_displayed_asset": {
+            "name": "🇸🇬 POPMART LABUBU Halloween Carnival Series Soft Vinyl \u0026 Plush Doll Keychain Official Store Hot Sell Accessories",
+            "image": "sg-11134201-7rdx0-m0g1hm0i5pfm75",
+            "images": ["sg-11134201-7rdx0-m0g1hm0i5pfm75", "sg-11134201-7rdxw-m0g1hmbbsohud1", "sg-11134201-7rdvw-m0g1hmm5a11l23", "sg-11134201-7rdys-m0g1hmwow0hme9", "sg-11134201-7rdy5-m0g1xc71mbzy0e", "sg-11134201-7rdwm-m0g1hnfa3ekaca", "sg-11134201-7rdwl-m0g1hnqdn5ve29", "sg-11134201-7rdx7-m0g1hnz9a5yo2a", "sg-11134201-7rdym-m0g1hod4pv5u8d"],
+            "shop_location": null,
+            "highlight_videos": null,
+            "item_card_mask": {
+                "mask_type": 2,
+                "mask_text": "未上架"
+            },
+            "icon_in_image": {
+                "icon_type": 2,
+                "ads_text": "Ad"
+            },
+            "image_overlay": {
+                "featured_promo_overlay": null,
+                "legacy_overlay": {
+                    "name": "12.12_FSS",
+                    "image_overlay": {
+                        "hash": "sg-11134258-7reng-m2te1y1swuhzb8",
+                        "width": 320,
+                        "height": 320
+                    }
+                }
+            },
+            "seller_flag": null,
+            "promotion_label_list": [{
+                "type": "RATING_STAR",
+                "style": "filled+border",
+                "specs": {
+                    "text_color": "#000000",
+                    "border_color": "#FFBB00",
+                    "background_color": "#FFF8E4",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": {
+                        "md5": "sg-11134258-7rdyn-m0h123bcdnum38",
+                        "width": 12,
+                        "height": 12,
+                        "background_color": null,
+                        "top_offset": null
+                    },
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "5.0",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }, {
+                "type": "VOUCHER",
+                "style": "voucher",
+                "specs": {
+                    "text_color": "#FFFFFF",
+                    "border_color": null,
+                    "background_color": "#F69113",
+                    "primary_color": null,
+                    "secondary_color": null,
+                    "image": null,
+                    "gradient_colors": null
+                },
+                "data": {
+                    "text": "$5 折扣",
+                    "text_left": null,
+                    "text_right": null,
+                    "progress_percent": null
+                }
+            }],
+            "icon_in_price": null,
+            "discount_tag": null,
+            "voucher_applied_icon": null,
+            "rating": null,
+            "sold_count": {
+                "text": "已售 2"
+            },
+            "estimated_delivery_time": null,
+            "free_badge": null,
+            "find_similar": null,
+            "long_image": null,
+            "long_images": null,
+            "top_product_badge": null,
+            "item_card_specs": null,
+            "display_price": {
+                "price": 5900000,
+                "strikethrough_price": null,
+                "hidden_price_display_text": null
+            },
+            "cta_button": null
+        },
+        "item_data": {
+            "itemid": 29662037896,
+            "shopid": 1091798934,
+            "is_adult": false,
+            "need_kyc": false,
+            "adult_age_threshold": null,
+            "item_card_display_price": {
+                "item_id": 29662037896,
+                "model_id": 256644895440,
+                "promotion_type": 0,
+                "promotion_id": 0,
+                "price": 5900000,
+                "strikethrough_price": null,
+                "discount": 0,
+                "hidden_price_display_text": null,
+                "recommended_shop_voucher_promotion_id": null,
+                "recommended_platform_voucher_promotion_id": null
+            },
+            "item_card_display_sold_count": {
+                "historical_sold_count": 2,
+                "monthly_sold_count": 0,
+                "historical_sold_count_text": "已售 2",
+                "monthly_sold_count_text": null
+            },
+            "is_sold_out": false,
+            "is_preview": false,
+            "label_ids": [22, 1007622, 1798631, 298628394, 1718087960, 1428713, 844931064601283, 822059734999051, 822120593194000, 1119699],
+            "catid": 100639,
+            "shopee_verified": false,
+            "liked_count": 56,
+            "item_type": 0,
+            "reference_item_id": "",
+            "shop_data": {
+                "shop_name": "CHOSEN1",
+                "shop_icon": null,
+                "shop_location": "SG"
+            },
+            "status": 8,
+            "ctime": 1726929340,
+            "flag": 131328,
+            "item_status": "normal",
+            "global_cat": {
+                "catid": [100639, 100737, 101385]
+            },
+            "overlay_images": null,
+            "item_rating": {
+                "rating_star": 5,
+                "rating_count": [1, 0, 0, 0, 0, 1]
+            },
+            "global_brand": {
+                "brand_id": 0,
+                "display_name": null
+            },
+            "platform_voucher": null,
+            "video_info_list": [{
+                "video_id": "api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.16000081726925596.mp4",
+                "thumb_url": "sg-11110106-7rdwa-m0fz9lq34fov05",
+                "duration": 45,
+                "version": 2,
+                "vid": "sg-11110106-6khw9-m0fz97vhdq0y53",
+                "formats": [{
+                    "format": 1600008,
+                    "defn": "V720P",
+                    "profile": "MP4",
+                    "path": "api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.16000081726925596.mp4",
+                    "url": "https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.16000081726925596.mp4",
+                    "width": 720,
+                    "height": 1280
+                }],
+                "default_format": {
+                    "format": 1600323,
+                    "defn": "V540P",
+                    "profile": "MP4",
+                    "path": "",
+                    "url": "https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.default.mp4",
+                    "width": 540,
+                    "height": 960
+                },
+                "mms_data": "{\"vid\":\"sg-11110106-6khw9-m0fz97vhdq0y53\",\"biz\":107,\"duration\":45418,\"create_time\":1726925590,\"update_time\":1726925599,\"serviceID\":2,\"cover\":\"https://down-tx-sg.img.susercontent.com/sg-11110106-7rdwa-m0fz9lq34fov05\",\"formats\":[{\"format\":1600008,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.16000081726925596.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.16000081726925596.mp4\",\"width\":720,\"height\":1280,\"bitrate\":693368,\"abitrate\":128065,\"duration\":45418,\"size\":4697864,\"fps\":25.02205,\"update_time\":1726925624,\"codec\":\"H264\"}],\"extend_formats\":{\"H265\":[{\"format\":1600307,\"defn\":\"V540P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.16003071726934315.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.16003071726934315.mp4\",\"width\":540,\"height\":960,\"bitrate\":196587,\"abitrate\":128065,\"duration\":45418,\"size\":1884609,\"fps\":25.02205,\"update_time\":1726934337,\"codec\":\"H265\"},{\"format\":1600309,\"defn\":\"V720P\",\"profile\":\"MP4\",\"path\":\"api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.16003091726925645.mp4\",\"url\":\"https://down-cvs-sg.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.16003091726925645.mp4\",\"width\":720,\"height\":1280,\"bitrate\":299151,\"abitrate\":128065,\"duration\":45418,\"size\":2466108,\"fps\":25.02205,\"update_time\":1726925693,\"codec\":\"H265\"}]},\"default_format\":{\"format\":1600323,\"defn\":\"V540P\",\"profile\":\"MP4\",\"url\":\"https://mms.vod.susercontent.com/api/v4/11110106/mms/sg-11110106-6khw9-m0fz97vhdq0y53.default.mp4\",\"width\":540,\"height\":960,\"bitrate\":385294,\"abitrate\":64149,\"duration\":45418,\"size\":2588226,\"fps\":25.02205,\"update_time\":1726925657,\"codec\":\"H264\"}}"
+            }],
+            "tier_variations": [{
+                "name": "款式描述",
+                "options": ["Labubu Vinyl doll", "Labubu-Light Pendant", "Dimmo-Light Pendant", "Molly-Light Pendant", "Labubu-Fridge Sticke", "Molly-Fridge Sticker", "Dimmo-Fridge Sticker", "Labubu-Canvas Bag"],
+                "images": ["sg-11134201-7rdyv-m0g1xdp5f5r869", "sg-11134201-7rdvt-m0g1hp23pbadef", "sg-11134201-7rdxe-m0g1hpdh8o3oad", "sg-11134201-7rdy0-m0g1hpmwxog236", "sg-11134201-7rdvg-m0g1hpwch24k60", "sg-11134201-7rdyu-m0g1hq5i3o0e3f", "sg-11134201-7rdxp-m0g1hqd9v3hh58", "sg-11134201-7rdw4-m0g1hqjniy9we3"],
+                "properties": null,
+                "type": 0
+            }]
+        }
+    }],
+    "card_version": "standard_version_v1"
+}

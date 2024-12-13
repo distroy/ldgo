@@ -11,13 +11,25 @@ type copyPair struct {
 	From reflect.Kind
 }
 
-type copyFuncType = func(c *copyContext, target, source reflect.Value) (end bool)
+type (
+	copyFuncType    = func(c *copyContext, target, source reflect.Value) (end bool)
+	getCopyFuncType = func(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType
+)
 
-var copyFuncMap = map[copyPair]copyFuncType{}
+var (
+	copyFuncMap    = map[copyPair]copyFuncType{}
+	getCopyFuncMap = map[copyPair]getCopyFuncType{}
+)
 
 func registerCopyFunc(m map[copyPair]copyFuncType) {
 	for pair, fnCopy := range m {
 		copyFuncMap[pair] = fnCopy
+	}
+}
+
+func registerGetCopyFunc(m map[copyPair]getCopyFuncType) {
+	for pair, fn := range m {
+		getCopyFuncMap[pair] = fn
 	}
 }
 
