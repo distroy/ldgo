@@ -64,8 +64,8 @@ func copyReflectToStructFromStruct(c *copyContext, target, source reflect.Value)
 		// tField := reflect.NewAt(tFieldInfo.Type, tFieldAddr).Elem()
 		// sFieldAddr := unsafe.Pointer(source.Field(sFieldInfo.Index).UnsafeAddr())
 		// sField := reflect.NewAt(sFieldInfo.Type, sFieldAddr).Elem()
-		tField := refStructField(target, tFieldInfo)
-		sField := refStructField(source, sFieldInfo)
+		tField := refStructFieldByCopyFieldInfo(target, tFieldInfo)
+		sField := refStructFieldByCopyFieldInfo(source, sFieldInfo)
 
 		c.PushField(tFieldInfo.Name)
 		copyReflect(c, tField, sField)
@@ -94,18 +94,18 @@ func getCopyFuncToStructFromStruct(c *copyContext, tTyp, sTyp reflect.Type) copy
 			continue
 		}
 
-		fnFieldCopy := getCopyFunc(c, tFieldInfo.Type, sFieldInfo.Type)
+		pff := getCopyFunc(c, tFieldInfo.Type, sFieldInfo.Type)
 		copyFields = append(copyFields, func(c *copyContext, target, source reflect.Value) (end bool) {
 			// tFieldAddr := unsafe.Pointer(target.Field(tFieldInfo.Index).UnsafeAddr())
 			// tField := reflect.NewAt(tFieldInfo.Type, tFieldAddr).Elem()
 			// sFieldAddr := unsafe.Pointer(source.Field(sFieldInfo.Index).UnsafeAddr())
 			// sField := reflect.NewAt(sFieldInfo.Type, sFieldAddr).Elem()
-			tField := refStructField(target, tFieldInfo)
-			sField := refStructField(source, sFieldInfo)
+			tField := refStructFieldByCopyFieldInfo(target, tFieldInfo)
+			sField := refStructFieldByCopyFieldInfo(source, sFieldInfo)
 
 			c.PushField(tFieldInfo.Name)
 			// copyReflect(c, tField, sField)
-			end = fnFieldCopy(c, tField, sField)
+			end = (*pff)(c, tField, sField)
 			c.PopField()
 
 			return end
@@ -174,20 +174,20 @@ func getCopyFuncToStructFromMap(c *copyContext, tTyp, sTyp reflect.Type) copyFun
 	for _, v := range tInfo.Fields {
 		tFieldInfo := v
 		keyVal := reflect.ValueOf(tFieldInfo.Name)
-		fnCopy := getCopyFunc(c, tFieldInfo.Type, sTyp.Elem())
+		pff := getCopyFunc(c, tFieldInfo.Type, sTyp.Elem())
 		fnFieldCopies = append(fnFieldCopies, func(c *copyContext, target, source reflect.Value) (end bool) {
 			sField := source.MapIndex(keyVal)
 
 			// tFieldAddr := unsafe.Pointer(target.Field(tFieldInfo.Index).UnsafeAddr())
 			// tField := reflect.NewAt(tFieldInfo.Type, tFieldAddr).Elem()
-			tField := refStructField(target, tFieldInfo)
+			tField := refStructFieldByCopyFieldInfo(target, tFieldInfo)
 			if !sField.IsValid() {
 				tField.Set(tFieldInfo.TypeZero)
 				return true
 			}
 
 			c.PushField(tFieldInfo.Name)
-			ok := fnCopy(c, tField, sField)
+			ok := (*pff)(c, tField, sField)
 			c.PopField()
 			return ok
 		})
