@@ -82,7 +82,7 @@ func mergeWithContext(c *mergeContext, target, source interface{}) error {
 func cloneForMerge(c *mergeContext, x reflect.Value) reflect.Value {
 	v := x
 	if c.Clone {
-		v = deepClone(v)
+		v = deepCloneRef(v)
 	}
 	return v
 }

@@ -40,11 +40,14 @@ func refKindOfType(t reflect.Type) reflect.Kind {
 	return t.Kind()
 }
 
-func refStructField(v reflect.Value, info *copyFieldInfo) reflect.Value {
+func refStructFieldByCopyFieldInfo(v reflect.Value, info *copyFieldInfo) reflect.Value {
+	return refStructField(v, info.Index, &info.StructField)
+}
+func refStructField(v reflect.Value, index int, info *reflect.StructField) reflect.Value {
 	if info.IsExported() {
-		return v.Field(info.Index)
+		return v.Field(index)
 	}
-	addr := unsafe.Pointer(v.Field(info.Index).UnsafeAddr())
+	addr := unsafe.Pointer(v.Field(index).UnsafeAddr())
 	return reflect.NewAt(info.Type, addr).Elem()
 }
 

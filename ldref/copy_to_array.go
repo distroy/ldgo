@@ -170,7 +170,7 @@ func getCopyFuncToArrayFromSlice(c *copyContext, tTyp, sTyp reflect.Type) copyFu
 		}
 	}
 
-	fnElemCopy := getCopyFunc(c, tTyp.Elem(), sTyp.Elem())
+	pfe := getCopyFunc(c, tTyp.Elem(), sTyp.Elem())
 
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		l := source.Len()
@@ -185,7 +185,7 @@ func getCopyFuncToArrayFromSlice(c *copyContext, tTyp, sTyp reflect.Type) copyFu
 
 			c.PushField(strconv.Itoa(i))
 			// copyReflect(c, tItem, sItem)
-			fnElemCopy(c, tItem, sItem)
+			(*pfe)(c, tItem, sItem)
 			c.PopField()
 		}
 
