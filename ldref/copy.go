@@ -223,24 +223,24 @@ func copyReflect(c *copyContext, target, source reflect.Value) bool {
 }
 
 func copyReflectV2(c *copyContext, target, source reflect.Value) bool {
-	fnCopy := getCopyFunc(c, refTypeOfValue(target), refTypeOfValue(source))
-	return fnCopy(c, target, source)
+	pf := getCopyFunc(c, refTypeOfValue(target), refTypeOfValue(source))
+	return (*pf)(c, target, source)
 }
 
 func _getCopyFuncReflect(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
-	fnCopy := getCopyFuncIndirect(c, tTyp, sTyp)
-	var fnElemCopy copyFuncType
+	pf := getCopyFuncIndirect(c, tTyp, sTyp)
+	var pfe *copyFuncType
 	if refKindOfType(tTyp) == reflect.Ptr {
-		fnElemCopy = getCopyFuncIndirect(c, tTyp.Elem(), sTyp)
+		pfe = getCopyFuncIndirect(c, tTyp.Elem(), sTyp)
 	}
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		_target := target
 		_source := source
 
-		fn := fnCopy
+		fn := *pf
 		if !target.CanAddr() {
 			target = target.Elem()
-			fn = fnElemCopy
+			fn = *pfe
 		}
 
 		if end := fn(c, target, source); end {
@@ -281,8 +281,8 @@ func copyReflectWithIndirect(c *copyContext, target, source reflect.Value) bool 
 	}
 }
 func copyReflectWithIndirectV2(c *copyContext, target, source reflect.Value) bool {
-	fnCopy := getCopyFuncIndirect(c, target.Type(), source.Type())
-	return fnCopy(c, target, source)
+	pf := getCopyFuncIndirect(c, target.Type(), source.Type())
+	return (*pf)(c, target, source)
 }
 func _getCopyFuncReflectWithIndirect(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
 	pair := copyPair{To: refKindOfType(tTyp), From: refKindOfType(sTyp)}
@@ -303,7 +303,7 @@ func _getCopyFuncReflectWithIndirect(c *copyContext, tTyp, sTyp reflect.Type) co
 			sTyp = sTyp.Elem()
 		}
 
-		fnCopy := getCopyFuncIndirect(c, tTyp, sTyp)
+		pfe := getCopyFuncIndirect(c, tTyp, sTyp)
 		tZero := reflect.Zero(tTyp)
 		return func(c *copyContext, target, source reflect.Value) (end bool) {
 			source, _ = indirectCopySource(source)
@@ -311,7 +311,7 @@ func _getCopyFuncReflectWithIndirect(c *copyContext, tTyp, sTyp reflect.Type) co
 				target.Set(tZero)
 				return true
 			}
-			return fnCopy(c, target, source)
+			return (*pfe)(c, target, source)
 		}
 	}
 

@@ -127,7 +127,7 @@ func getCopyFuncToSliceFromSlice(c *copyContext, tTyp, sTyp reflect.Type) copyFu
 		return func(c *copyContext, target, source reflect.Value) (end bool) { return false }
 	}
 
-	fnElemCopy := getCopyFunc(c, tTyp.Elem(), sTyp.Elem())
+	pfe := getCopyFunc(c, tTyp.Elem(), sTyp.Elem())
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		l := source.Len()
 		if l > target.Len() {
@@ -139,7 +139,7 @@ func getCopyFuncToSliceFromSlice(c *copyContext, tTyp, sTyp reflect.Type) copyFu
 			sItem := source.Index(i)
 
 			c.PushField(strconv.Itoa(i))
-			fnElemCopy(c, tItem, sItem)
+			(*pfe)(c, tItem, sItem)
 			c.PopField()
 		}
 
@@ -205,7 +205,7 @@ func getCopyFuncToSliceFromMapWithEmptyStructValue(c *copyContext, tTyp, sTyp re
 		return func(c *copyContext, target, source reflect.Value) (end bool) { return false }
 	}
 
-	fnElemCopy := getCopyFunc(c, tTyp.Elem(), sTyp.Key())
+	pfe := getCopyFunc(c, tTyp.Elem(), sTyp.Key())
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		l := source.Len()
 		if l > target.Len() {
@@ -225,7 +225,7 @@ func getCopyFuncToSliceFromMapWithEmptyStructValue(c *copyContext, tTyp, sTyp re
 			sItem := it.Key()
 
 			c.PushField(strconv.Itoa(i))
-			fnElemCopy(c, tItem, sItem)
+			(*pfe)(c, tItem, sItem)
 			c.PopField()
 		}
 
