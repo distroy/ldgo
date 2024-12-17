@@ -9,14 +9,16 @@ import (
 	"sync"
 )
 
-func Clone[T any](d T) T {
+func Clone[T any](d T) T { return cloneV1(d) }
+
+func cloneV1[T any](d T) T {
 	var i interface{} = d
 	if x, ok := i.(reflect.Value); ok {
-		var r interface{} = clone(x)
+		var r interface{} = cloneRef(x)
 		return r.(T)
 	}
 
-	x := clone(reflect.ValueOf(i))
+	x := cloneRef(reflect.ValueOf(i))
 	if x.Kind() == reflect.Invalid {
 		var zero T
 		return zero
@@ -24,8 +26,22 @@ func Clone[T any](d T) T {
 
 	return x.Interface().(T)
 }
+func cloneV2[T any](d T) T {
+	var i interface{} = d
+	if x, ok := i.(reflect.Value); ok {
+		var r interface{} = cloneRefV2(x)
+		return r.(T)
+	}
 
-func clone(x0 reflect.Value) reflect.Value {
+	x := cloneRefV2(reflect.ValueOf(i))
+	if x.Kind() == reflect.Invalid {
+		var zero T
+		return zero
+	}
+
+	return x.Interface().(T)
+}
+func cloneRef(x0 reflect.Value) reflect.Value {
 	if x0.Kind() == reflect.Interface {
 		if x0.IsNil() {
 			return x0
@@ -39,7 +55,7 @@ func clone(x0 reflect.Value) reflect.Value {
 		return reflect.Value{}
 
 	case reflect.Struct:
-		if isSyncType(x0) {
+		if isSyncType(x0.Type()) {
 			return reflect.Zero(x0.Type())
 		}
 		return x0
@@ -59,6 +75,46 @@ func clone(x0 reflect.Value) reflect.Value {
 
 	return x0
 }
+func cloneRefV2(x0 reflect.Value) reflect.Value {
+	t := refTypeOfValue(x0)
+	pf := getCloneFuncByPool(t, false)
+	return (*pf)(x0)
+}
+func getCloneFunc(t reflect.Type) cloneFuncType {
+	switch refKindOfType(t) {
+	case reflect.Invalid:
+		return func(x0 reflect.Value) reflect.Value { return reflect.Value{} }
+
+	case reflect.Interface:
+		return func(x0 reflect.Value) reflect.Value {
+			if x0.IsNil() {
+				return x0
+			}
+			return cloneRefV2(x0.Elem())
+		}
+
+	case reflect.Struct:
+		zero := reflect.Zero(t)
+		if isSyncType(t) {
+			return func(x0 reflect.Value) reflect.Value { return zero }
+		}
+		return func(x0 reflect.Value) reflect.Value { return x0 }
+
+	case reflect.Ptr:
+		return getCloneFuncPtr(t)
+
+	case reflect.Array:
+		return cloneArray
+
+	case reflect.Slice:
+		return cloneSlice
+
+	case reflect.Map:
+		return cloneMap
+	}
+
+	return func(v reflect.Value) reflect.Value { return v }
+}
 
 func clonePtr(x0 reflect.Value) reflect.Value {
 	if x0.IsNil() {
@@ -66,15 +122,28 @@ func clonePtr(x0 reflect.Value) reflect.Value {
 	}
 
 	x1 := reflect.New(x0.Type().Elem())
-
 	x1.Elem().Set(x0.Elem())
 	return x1
 }
+func getCloneFuncPtr(t reflect.Type) cloneFuncType {
+	tt := t.Elem()
+	zero := reflect.Zero(t)
+	return func(x0 reflect.Value) reflect.Value {
+		if x0.IsNil() {
+			return zero
+		}
 
-func isSyncType(v reflect.Value) bool {
-	if v.Kind() != reflect.Struct {
+		x1 := reflect.New(tt)
+		x1.Elem().Set(x0.Elem())
+		return x1
+	}
+}
+
+func isSyncType(t reflect.Type) bool {
+	if t.Kind() != reflect.Struct {
 		return false
 	}
+	v := reflect.Zero(t)
 	switch v.Interface().(type) {
 	case sync.Mutex, sync.RWMutex, sync.Cond, sync.WaitGroup:
 		return true
@@ -83,13 +152,7 @@ func isSyncType(v reflect.Value) bool {
 }
 
 func cloneArray(x0 reflect.Value) reflect.Value {
-	l0 := x0.Len()
-	x1 := reflect.New(reflect.ArrayOf(l0, x0.Type().Elem())).Elem()
-	for i := 0; i < l0; i++ {
-		v0 := x0.Index(i)
-		x1.Index(i).Set(v0)
-	}
-	return x1
+	return x0
 }
 
 func cloneSlice(x0 reflect.Value) reflect.Value {

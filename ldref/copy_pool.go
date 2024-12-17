@@ -137,7 +137,7 @@ func parseCopyFieldInfo(index int, field reflect.StructField, tagName string) *c
 	return f
 }
 
-var copyFuncPool = &ldsync.Map[copyFuncKey, copyFuncType]{}
+var copyFuncPool = &ldsync.Map[copyFuncKey, *copyFuncType]{}
 
 type copyFuncKey struct {
 	Target   copyStructKey
@@ -145,19 +145,6 @@ type copyFuncKey struct {
 	Clone    bool
 	Indirect bool
 }
-
-// type copyFuncValue struct {
-// 	inited   sync.Once
-// 	getFunc  getCopyFuncType
-// 	copyFunc copyFuncType
-// }
-//
-// func (p *copyFuncValue) Copy(c *copyContext, target, source reflect.Value) bool {
-// 	p.inited.Do(func() {
-// 		p.copyFunc = p.getFunc(c, target.Type(), source.Type())
-// 	})
-// 	return p.copyFunc(c, target, source)
-// }
 
 func isBaseType(typ reflect.Type) bool {
 	switch refKindOfType(typ) {
@@ -173,13 +160,13 @@ func isBaseType(typ reflect.Type) bool {
 	return true
 }
 
-func getCopyFunc(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+func getCopyFunc(c *copyContext, tTyp, sTyp reflect.Type) *copyFuncType {
 	return _getCopyFuncWithIndirect(c, tTyp, sTyp, false)
 }
-func getCopyFuncIndirect(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+func getCopyFuncIndirect(c *copyContext, tTyp, sTyp reflect.Type) *copyFuncType {
 	return _getCopyFuncWithIndirect(c, tTyp, sTyp, true)
 }
-func _getCopyFuncWithIndirect(c *copyContext, tTyp, sTyp reflect.Type, indirect bool) copyFuncType {
+func _getCopyFuncWithIndirect(c *copyContext, tTyp, sTyp reflect.Type, indirect bool) *copyFuncType {
 	key := copyFuncKey{
 		Target:   copyStructKey{Type: tTyp},
 		Source:   copyStructKey{Type: sTyp},
@@ -194,8 +181,15 @@ func _getCopyFuncWithIndirect(c *copyContext, tTyp, sTyp reflect.Type, indirect 
 		key.Source.TagName = getTagName(c.SourceTag)
 	}
 
-	if fn, _ := copyFuncPool.Load(key); fn != nil {
-		return fn
+	if pf, _ := copyFuncPool.Load(key); pf != nil {
+		return pf
+	}
+
+	var fn copyFuncType
+	pf := &fn
+
+	if pf, loaded := copyFuncPool.LoadOrStore(key, pf); loaded {
+		return pf
 	}
 
 	fnGet := _getCopyFuncReflect
@@ -203,7 +197,6 @@ func _getCopyFuncWithIndirect(c *copyContext, tTyp, sTyp reflect.Type, indirect 
 		fnGet = _getCopyFuncReflectWithIndirect
 	}
 
-	fn := fnGet(c, tTyp, sTyp)
-	fn, _ = copyFuncPool.LoadOrStore(key, fn)
-	return fn
+	*pf = fnGet(c, tTyp, sTyp)
+	return pf
 }
