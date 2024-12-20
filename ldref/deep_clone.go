@@ -106,7 +106,8 @@ func getDeepCloneFunc(t reflect.Type) cloneFuncType {
 }
 func deepCloneRefV2(x0 reflect.Value) reflect.Value {
 	t := refTypeOfValue(x0)
-	pf := getCloneFuncByPool(t, true)
+	pf, done := getCloneFuncByPool(t, true)
+	done()
 	return (*pf)(x0)
 }
 
@@ -122,7 +123,7 @@ func deepClonePtr(x0 reflect.Value) reflect.Value {
 }
 func getDeepCloneFuncPtr(t reflect.Type) cloneFuncType {
 	tt := t.Elem()
-	pf := getCloneFuncByPool(tt, true)
+	pf, done := getCloneFuncByPool(tt, true)
 	return func(x0 reflect.Value) reflect.Value {
 		if x0.IsNil() {
 			return x0
@@ -130,6 +131,7 @@ func getDeepCloneFuncPtr(t reflect.Type) cloneFuncType {
 
 		x1 := reflect.New(tt)
 
+		done()
 		x1.Elem().Set((*pf)(x0.Elem()))
 		return x1
 	}
@@ -171,11 +173,12 @@ func getDeepCloneFuncStruct(t reflect.Type) cloneFuncType {
 	for _i := 0; _i < n; _i++ {
 		i := _i
 		sf := t.Field(i)
-		pf := getCloneFuncByPool(sf.Type, true)
+		pf, done := getCloneFuncByPool(sf.Type, true)
 		fnFields = append(fnFields, func(x0, x1 reflect.Value) {
 			f0 := refStructField(x0, i, &sf)
 			f1 := refStructField(x1, i, &sf)
 
+			done()
 			f1.Set((*pf)(f0))
 		})
 	}
@@ -205,11 +208,12 @@ func deepCloneArray(x0 reflect.Value) reflect.Value {
 	return x1
 }
 func getDeepCloneFuncArray(t reflect.Type) cloneFuncType {
-	pf := getCloneFuncByPool(t.Elem(), true)
+	pf, done := getCloneFuncByPool(t.Elem(), true)
 	return func(x0 reflect.Value) reflect.Value {
 		l0 := x0.Len()
 		x1 := reflect.New(t).Elem()
 		for i := 0; i < l0; i++ {
+			done()
 			v0 := x0.Index(i)
 			v1 := (*pf)(v0)
 			x1.Index(i).Set(v1)
@@ -233,7 +237,7 @@ func deepCloneSlice(x0 reflect.Value) reflect.Value {
 }
 func getDeepCloneFuncSlice(t reflect.Type) cloneFuncType {
 	tt := t.Elem()
-	pf := getCloneFuncByPool(tt, true)
+	pf, done := getCloneFuncByPool(tt, true)
 	return func(x0 reflect.Value) reflect.Value {
 		if x0.IsNil() {
 			return x0
@@ -242,6 +246,7 @@ func getDeepCloneFuncSlice(t reflect.Type) cloneFuncType {
 		// x1 := reflect.MakeSlice(reflect.SliceOf(x0.Type().Elem()), l0, l0)
 		x1 := reflect.MakeSlice(t, l0, l0)
 		for i := 0; i < l0; i++ {
+			done()
 			v0 := x0.Index(i)
 			v1 := (*pf)(v0)
 			x1.Index(i).Set(v1)
@@ -265,14 +270,16 @@ func deepCloneMap(x0 reflect.Value) reflect.Value {
 func getDeepCloneFuncMap(t reflect.Type) cloneFuncType {
 	tk := t.Key()
 	tv := t.Elem()
-	pfk := getCloneFuncByPool(tk, true)
-	pfv := getCloneFuncByPool(tv, true)
+	pfk, dk := getCloneFuncByPool(tk, true)
+	pfv, dv := getCloneFuncByPool(tv, true)
 	return func(x0 reflect.Value) reflect.Value {
 		x1 := reflect.MakeMap(t)
 		for it := x0.MapRange(); it.Next(); {
 			key := it.Key()
 			val := it.Value()
 
+			dk()
+			dv()
 			key = (*pfk)(key)
 			val = (*pfv)(val)
 			x1.SetMapIndex(key, val)

@@ -223,26 +223,31 @@ func copyReflect(c *copyContext, target, source reflect.Value) bool {
 }
 
 func copyReflectV2(c *copyContext, target, source reflect.Value) bool {
-	pf := getCopyFunc(c, refTypeOfValue(target), refTypeOfValue(source))
+	pf, done := getCopyFunc(c, refTypeOfValue(target), refTypeOfValue(source))
+	done()
 	return (*pf)(c, target, source)
 }
 
 func _getCopyFuncReflect(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
-	pf := getCopyFuncIndirect(c, tTyp, sTyp)
+	pf, done := getCopyFuncIndirect(c, tTyp, sTyp)
 	var pfe *copyFuncType
+	var de func()
 	if refKindOfType(tTyp) == reflect.Ptr {
-		pfe = getCopyFuncIndirect(c, tTyp.Elem(), sTyp)
+		pfe, de = getCopyFuncIndirect(c, tTyp.Elem(), sTyp)
 	}
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		_target := target
 		_source := source
 
 		fn := *pf
+		d := done
 		if !target.CanAddr() {
 			target = target.Elem()
 			fn = *pfe
+			d = de
 		}
 
+		d()
 		if end := fn(c, target, source); end {
 			return end
 		}
@@ -281,7 +286,8 @@ func copyReflectWithIndirect(c *copyContext, target, source reflect.Value) bool 
 	}
 }
 func copyReflectWithIndirectV2(c *copyContext, target, source reflect.Value) bool {
-	pf := getCopyFuncIndirect(c, target.Type(), source.Type())
+	pf, done := getCopyFuncIndirect(c, target.Type(), source.Type())
+	done()
 	return (*pf)(c, target, source)
 }
 func _getCopyFuncReflectWithIndirect(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
@@ -303,7 +309,7 @@ func _getCopyFuncReflectWithIndirect(c *copyContext, tTyp, sTyp reflect.Type) co
 			sTyp = sTyp.Elem()
 		}
 
-		pfe := getCopyFuncIndirect(c, tTyp, sTyp)
+		pfe, done := getCopyFuncIndirect(c, tTyp, sTyp)
 		tZero := reflect.Zero(tTyp)
 		return func(c *copyContext, target, source reflect.Value) (end bool) {
 			source, _ = indirectCopySource(source)
@@ -311,6 +317,7 @@ func _getCopyFuncReflectWithIndirect(c *copyContext, tTyp, sTyp reflect.Type) co
 				target.Set(tZero)
 				return true
 			}
+			done()
 			return (*pfe)(c, target, source)
 		}
 	}
