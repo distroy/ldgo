@@ -18,11 +18,11 @@ goarch: amd64
 pkg: github.com/distroy/ldgo/v2/ldref
 cpu: VirtualApple @ 2.50GHz
 Benchmark_cloneV1
-Benchmark_cloneV1-10            47422789                22.29 ns/op
+Benchmark_cloneV1-10            47517410                22.76 ns/op
 Benchmark_cloneV2
-Benchmark_cloneV2-10            40559266                28.71 ns/op
+Benchmark_cloneV2-10            33064568                39.95 ns/op
 PASS
-ok      github.com/distroy/ldgo/v2/ldref        9.584s
+ok      github.com/distroy/ldgo/v2/ldref        7.611s
 */
 
 type testCloneStruct struct {

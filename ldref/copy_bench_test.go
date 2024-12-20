@@ -18,17 +18,17 @@ goarch: amd64
 pkg: github.com/distroy/ldgo/v2/ldref
 cpu: VirtualApple @ 2.50GHz
 Benchmark_copyV1
-Benchmark_copyV1-10                20092             59424 ns/op
+Benchmark_copyV1-10                19524             62112 ns/op
 Benchmark_copyV2
-Benchmark_copyV2-10                42955             28423 ns/op
+Benchmark_copyV2-10                36728             32386 ns/op
 Benchmark_deepCopyV1
-Benchmark_deepCopyV1-10            12066             94852 ns/op
+Benchmark_deepCopyV1-10            13221            125257 ns/op
 Benchmark_deepCopyV2
-Benchmark_deepCopyV2-10            23590             46978 ns/op
+Benchmark_deepCopyV2-10            20768             55933 ns/op
 Benchmark_jsonCopy
-Benchmark_jsonCopy-10               5764            202620 ns/op
+Benchmark_jsonCopy-10               7374            218447 ns/op
 PASS
-ok      github.com/distroy/ldgo/v2/ldref        19.954s
+ok      github.com/distroy/ldgo/v2/ldref        15.918s
 */
 
 func benchPrepareObjects(n int) []*copybenchstruct1.ItemCardData {

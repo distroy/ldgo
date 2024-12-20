@@ -19,11 +19,11 @@ goarch: amd64
 pkg: github.com/distroy/ldgo/v2/ldref
 cpu: VirtualApple @ 2.50GHz
 Benchmark_deepCloneV1
-Benchmark_deepCloneV1-10           16648             71985 ns/op
+Benchmark_deepCloneV1-10           15806             75251 ns/op
 Benchmark_deepCloneV2
-Benchmark_deepCloneV2-10           23139             51524 ns/op
+Benchmark_deepCloneV2-10           22030             55012 ns/op
 PASS
-ok      github.com/distroy/ldgo/v2/ldref        8.359s
+ok      github.com/distroy/ldgo/v2/ldref        6.935s
 */
 
 func testDeepClone(t *testing.T, cloneFunc func(x0 any) any) {
