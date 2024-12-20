@@ -200,8 +200,8 @@ func getCopyFuncToMapFromMap(c *copyContext, tTyp, sTyp reflect.Type) copyFuncTy
 		return func(c *copyContext, target, source reflect.Value) (end bool) { return false }
 	}
 
-	pfk := getCopyFunc(c, tKeyTyp, sKeyTyp)
-	pfv := getCopyFunc(c, tValTyp, sValTyp)
+	pfk, dk := getCopyFunc(c, tKeyTyp, sKeyTyp)
+	pfv, dv := getCopyFunc(c, tValTyp, sValTyp)
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		// if target.IsNil() {
 		target.Set(reflect.MakeMap(tTyp))
@@ -213,6 +213,9 @@ func getCopyFuncToMapFromMap(c *copyContext, tTyp, sTyp reflect.Type) copyFuncTy
 
 			tKey := reflect.New(tKeyTyp).Elem()
 			tVal := reflect.New(tValTyp).Elem()
+
+			dk()
+			dv()
 
 			c.PushField(fmt.Sprintf("%v(key)", sKey.Interface()))
 			keyEnd := (*pfk)(c, tKey, sKey)
@@ -318,8 +321,8 @@ func getCopyFuncToMapFromSliceWithIndexBeKey(c *copyContext, tTyp, sTyp reflect.
 		return func(c *copyContext, target, source reflect.Value) (end bool) { return false }
 	}
 
-	pfk := getCopyFunc(c, tKeyTyp, sKeyTyp)
-	pfv := getCopyFunc(c, tValTyp, sValTyp)
+	pfk, dk := getCopyFunc(c, tKeyTyp, sKeyTyp)
+	pfv, dv := getCopyFunc(c, tValTyp, sValTyp)
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		target.Set(reflect.MakeMap(target.Type()))
 
@@ -329,6 +332,9 @@ func getCopyFuncToMapFromSliceWithIndexBeKey(c *copyContext, tTyp, sTyp reflect.
 
 			tKey := reflect.New(tKeyTyp).Elem()
 			tVal := reflect.New(tValTyp).Elem()
+
+			dk()
+			dv()
 
 			c.PushField(fmt.Sprintf("%d(key)", i))
 			keyEnd := (*pfk)(c, tKey, sKey)
@@ -391,7 +397,7 @@ func getCopyFuncToMapFromSliceWithEmptyStructValue(c *copyContext, tTyp, sTyp re
 		return func(c *copyContext, target, source reflect.Value) (end bool) { return false }
 	}
 
-	pfe := getCopyFunc(c, tElemTyp, sElemTyp)
+	pfe, done := getCopyFunc(c, tElemTyp, sElemTyp)
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		target.Set(reflect.MakeMap(target.Type()))
 
@@ -402,6 +408,7 @@ func getCopyFuncToMapFromSliceWithEmptyStructValue(c *copyContext, tTyp, sTyp re
 
 			tElem := reflect.New(tElemTyp).Elem()
 
+			done()
 			c.PushField(fmt.Sprintf("%d", i))
 			keyEnd := (*pfe)(c, tElem, sElem)
 			c.PopField()

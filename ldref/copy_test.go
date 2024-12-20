@@ -1312,13 +1312,6 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 	})
 }
 
-func TestCopy(t *testing.T) {
-	testCopyFunc(t, Copy)
-}
-
-func Test_copyV1(t *testing.T) {
-	testCopyFunc(t, copyV1)
-}
-func Test_copyV2(t *testing.T) {
-	testCopyFunc(t, copyV2)
-}
+func TestCopy(t *testing.T)    { testCopyFunc(t, Copy) }
+func Test_copyV1(t *testing.T) { testCopyFunc(t, copyV1) }
+func Test_copyV2(t *testing.T) { testCopyFunc(t, copyV2) }

@@ -77,7 +77,8 @@ func cloneRef(x0 reflect.Value) reflect.Value {
 }
 func cloneRefV2(x0 reflect.Value) reflect.Value {
 	t := refTypeOfValue(x0)
-	pf := getCloneFuncByPool(t, false)
+	pf, done := getCloneFuncByPool(t, false)
+	done()
 	return (*pf)(x0)
 }
 func getCloneFunc(t reflect.Type) cloneFuncType {

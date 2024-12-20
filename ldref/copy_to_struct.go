@@ -94,7 +94,7 @@ func getCopyFuncToStructFromStruct(c *copyContext, tTyp, sTyp reflect.Type) copy
 			continue
 		}
 
-		pff := getCopyFunc(c, tFieldInfo.Type, sFieldInfo.Type)
+		pff, done := getCopyFunc(c, tFieldInfo.Type, sFieldInfo.Type)
 		copyFields = append(copyFields, func(c *copyContext, target, source reflect.Value) (end bool) {
 			// tFieldAddr := unsafe.Pointer(target.Field(tFieldInfo.Index).UnsafeAddr())
 			// tField := reflect.NewAt(tFieldInfo.Type, tFieldAddr).Elem()
@@ -103,6 +103,7 @@ func getCopyFuncToStructFromStruct(c *copyContext, tTyp, sTyp reflect.Type) copy
 			tField := refStructFieldByCopyFieldInfo(target, tFieldInfo)
 			sField := refStructFieldByCopyFieldInfo(source, sFieldInfo)
 
+			done()
 			c.PushField(tFieldInfo.Name)
 			// copyReflect(c, tField, sField)
 			end = (*pff)(c, tField, sField)
@@ -174,7 +175,7 @@ func getCopyFuncToStructFromMap(c *copyContext, tTyp, sTyp reflect.Type) copyFun
 	for _, v := range tInfo.Fields {
 		tFieldInfo := v
 		keyVal := reflect.ValueOf(tFieldInfo.Name)
-		pff := getCopyFunc(c, tFieldInfo.Type, sTyp.Elem())
+		pff, done := getCopyFunc(c, tFieldInfo.Type, sTyp.Elem())
 		fnFieldCopies = append(fnFieldCopies, func(c *copyContext, target, source reflect.Value) (end bool) {
 			sField := source.MapIndex(keyVal)
 
@@ -186,6 +187,7 @@ func getCopyFuncToStructFromMap(c *copyContext, tTyp, sTyp reflect.Type) copyFun
 				return true
 			}
 
+			done()
 			c.PushField(tFieldInfo.Name)
 			ok := (*pff)(c, tField, sField)
 			c.PopField()

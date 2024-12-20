@@ -8,8 +8,6 @@ import (
 	"reflect"
 	"strings"
 	"sync"
-
-	"github.com/distroy/ldgo/v3/ldsync"
 )
 
 const defaultCopyTagName = "json"
@@ -137,7 +135,7 @@ func parseCopyFieldInfo(index int, field reflect.StructField, tagName string) *c
 	return f
 }
 
-var copyFuncPool = &ldsync.Map[copyFuncKey, *copyFuncType]{}
+var copyFuncPool = &commFuncPool[copyFuncKey, copyFuncType]{}
 
 type copyFuncKey struct {
 	Target   copyStructKey
@@ -160,13 +158,13 @@ func isBaseType(typ reflect.Type) bool {
 	return true
 }
 
-func getCopyFunc(c *copyContext, tTyp, sTyp reflect.Type) *copyFuncType {
+func getCopyFunc(c *copyContext, tTyp, sTyp reflect.Type) (*copyFuncType, func()) {
 	return _getCopyFuncWithIndirect(c, tTyp, sTyp, false)
 }
-func getCopyFuncIndirect(c *copyContext, tTyp, sTyp reflect.Type) *copyFuncType {
+func getCopyFuncIndirect(c *copyContext, tTyp, sTyp reflect.Type) (*copyFuncType, func()) {
 	return _getCopyFuncWithIndirect(c, tTyp, sTyp, true)
 }
-func _getCopyFuncWithIndirect(c *copyContext, tTyp, sTyp reflect.Type, indirect bool) *copyFuncType {
+func _getCopyFuncWithIndirect(c *copyContext, tTyp, sTyp reflect.Type, indirect bool) (*copyFuncType, func()) {
 	key := copyFuncKey{
 		Target:   copyStructKey{Type: tTyp},
 		Source:   copyStructKey{Type: sTyp},
@@ -181,22 +179,10 @@ func _getCopyFuncWithIndirect(c *copyContext, tTyp, sTyp reflect.Type, indirect 
 		key.Source.TagName = getTagName(c.SourceTag)
 	}
 
-	if pf, _ := copyFuncPool.Load(key); pf != nil {
-		return pf
-	}
-
-	var fn copyFuncType
-	pf := &fn
-
-	if pf, loaded := copyFuncPool.LoadOrStore(key, pf); loaded {
-		return pf
-	}
-
-	fnGet := _getCopyFuncReflect
-	if indirect {
-		fnGet = _getCopyFuncReflectWithIndirect
-	}
-
-	*pf = fnGet(c, tTyp, sTyp)
-	return pf
+	return copyFuncPool.Get(key, func() copyFuncType {
+		if indirect {
+			return _getCopyFuncReflectWithIndirect(c, tTyp, sTyp)
+		}
+		return _getCopyFuncReflect(c, tTyp, sTyp)
+	})
 }
