@@ -8,8 +8,26 @@ import (
 	"testing"
 
 	"github.com/distroy/ldgo/v2/lderr"
+	"github.com/distroy/ldgo/v2/ldref/internal/copybenchstruct1"
 	"github.com/smartystreets/goconvey/convey"
 )
+
+/*
+goos: darwin
+goarch: amd64
+pkg: github.com/distroy/ldgo/v2/ldref
+cpu: VirtualApple @ 2.50GHz
+Benchmark_mergeV1
+Benchmark_mergeV1-10                    21379281                54.55 ns/op
+Benchmark_mergeV2
+Benchmark_mergeV2-10                    23590855                54.51 ns/op
+Benchmark_mergeV1WithClone
+Benchmark_mergeV1WithClone-10              16126             98721 ns/op
+Benchmark_mergeV2WithClone
+Benchmark_mergeV2WithClone-10              21660             52806 ns/op
+PASS
+ok      github.com/distroy/ldgo/v2/ldref        14.325s
+*/
 
 type testErrorStruct struct {
 	value interface{}
@@ -23,15 +41,15 @@ type testErrorStruct2 struct {
 
 func (*testErrorStruct2) Error() string { return "" }
 
-func TestMerge(t *testing.T) {
+func testMergeWithFunc(t *testing.T, fnMerge func(target, source interface{}, cfg ...*MergeConfig) error) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
 		c.Convey("fail", func(c convey.C) {
 			c.Convey("to invalid type", func(c convey.C) {
-				err := Merge(1, 2)
+				err := fnMerge(1, 2)
 				c.So(err, convey.ShouldResemble, lderr.ErrReflectTargetNotPtr)
 			})
 			c.Convey("to nil ptr", func(c convey.C) {
-				err := Merge((*int)(nil), 2)
+				err := fnMerge((*int)(nil), 2)
 				c.So(err, convey.ShouldResemble, lderr.ErrReflectTargetNilPtr)
 			})
 		})
@@ -42,7 +60,7 @@ func TestMerge(t *testing.T) {
 					var target error
 					source := testErrorStruct{value: "abcde"}
 
-					err := Merge(&target, source)
+					err := fnMerge(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldResemble, testErrorStruct{value: "abcde"})
 				})
@@ -50,7 +68,7 @@ func TestMerge(t *testing.T) {
 					var target error
 					source := &testErrorStruct{value: "abcde"}
 
-					err := Merge(&target, source)
+					err := fnMerge(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldResemble, testErrorStruct{value: "abcde"})
 				})
@@ -58,7 +76,7 @@ func TestMerge(t *testing.T) {
 					var target error
 					source := &testErrorStruct2{value: "abcde"}
 
-					err := Merge(&target, source)
+					err := fnMerge(&target, source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldResemble, &testErrorStruct2{value: "abcde"})
 				})
@@ -69,7 +87,7 @@ func TestMerge(t *testing.T) {
 					target int = 1
 				)
 
-				err := Merge(&target, (*int)(nil))
+				err := fnMerge(&target, (*int)(nil))
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, 1)
 			})
@@ -80,7 +98,7 @@ func TestMerge(t *testing.T) {
 					source = 1234
 				)
 
-				err := Merge(&target, source)
+				err := fnMerge(&target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, 1234)
 			})
@@ -90,7 +108,7 @@ func TestMerge(t *testing.T) {
 					source = 1234
 				)
 
-				err := Merge(&target, &source)
+				err := fnMerge(&target, &source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldEqual, 1234)
 			})
@@ -102,7 +120,7 @@ func TestMerge(t *testing.T) {
 						source = 1234
 					)
 
-					err := Merge(&target, &source)
+					err := fnMerge(&target, &source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldEqual, &source)
 				})
@@ -112,7 +130,7 @@ func TestMerge(t *testing.T) {
 						source = 1234
 					)
 
-					err := Merge(&target, &source, &MergeConfig{Clone: true})
+					err := fnMerge(&target, &source, &MergeConfig{Clone: true})
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldNotEqual, &source)
 					c.So(target, convey.ShouldResemble, &source)
@@ -130,7 +148,7 @@ func TestMerge(t *testing.T) {
 					}
 				)
 
-				err := Merge(target, source)
+				err := fnMerge(target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, &testCloneStruct{
 					Int:    1234,
@@ -156,7 +174,7 @@ func TestMerge(t *testing.T) {
 					}
 				)
 
-				err := Merge(&target, &source)
+				err := fnMerge(&target, &source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, map[string]any{
 					"a": 1234,
@@ -179,7 +197,7 @@ func TestMerge(t *testing.T) {
 						}
 					)
 
-					err := Merge(&target, &source)
+					err := fnMerge(&target, &source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldResemble, map[string]any{
 						"a": []any{1, 2, 4},
@@ -196,7 +214,7 @@ func TestMerge(t *testing.T) {
 						}
 					)
 
-					err := Merge(&target, &source, &MergeConfig{MergeSlice: true})
+					err := fnMerge(&target, &source, &MergeConfig{MergeSlice: true})
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldResemble, map[string]any{
 						"a": []any{1, 3, 4, 7},
@@ -211,7 +229,7 @@ func TestMerge(t *testing.T) {
 						source = [4]any{1, 2, 4}
 					)
 
-					err := Merge(&target, &source)
+					err := fnMerge(&target, &source)
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldResemble, [4]any{1, 2, 4})
 				})
@@ -221,7 +239,7 @@ func TestMerge(t *testing.T) {
 						source = [4]any{0, 2, 0, 14}
 					)
 
-					err := Merge(&target, &source, &MergeConfig{MergeArray: true})
+					err := fnMerge(&target, &source, &MergeConfig{MergeArray: true})
 					c.So(err, convey.ShouldBeNil)
 					c.So(target, convey.ShouldResemble, [4]any{0, 2, 5, 14})
 				})
@@ -229,3 +247,39 @@ func TestMerge(t *testing.T) {
 		})
 	})
 }
+
+func TestMerge(t *testing.T)    { testMergeWithFunc(t, Merge) }
+func Test_mergeV1(t *testing.T) { testMergeWithFunc(t, mergeV1) }
+func Test_mergeV2(t *testing.T) { testMergeWithFunc(t, mergeV2) }
+
+func benchMergeFunc(b *testing.B, fnMerge func(target, source interface{}, cfg ...*MergeConfig) error, clone bool) {
+	size := 1024
+	mask := size - 1
+	objs := benchPrepareObjects(size)
+	{
+		target := &copybenchstruct1.ItemCardData{}
+		source := objs[0]
+		fnMerge(target, source)
+	}
+	cfg := &MergeConfig{
+		Clone: clone,
+	}
+	b.ResetTimer()
+	b.RunParallel(func(p *testing.PB) {
+		count := 0
+		for p.Next() {
+			idx := count & mask
+			count++
+
+			target := &copybenchstruct1.ItemCardData{}
+			source := objs[idx]
+			fnMerge(target, source, cfg)
+		}
+	})
+	b.StopTimer()
+}
+
+func Benchmark_mergeV1(b *testing.B)          { benchMergeFunc(b, mergeV1, false) }
+func Benchmark_mergeV2(b *testing.B)          { benchMergeFunc(b, mergeV2, false) }
+func Benchmark_mergeV1WithClone(b *testing.B) { benchMergeFunc(b, mergeV1, true) }
+func Benchmark_mergeV2WithClone(b *testing.B) { benchMergeFunc(b, mergeV2, true) }

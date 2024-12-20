@@ -113,7 +113,7 @@ func getCopyFuncToIfaceFromPtr(c *copyContext, tTyp, sTyp reflect.Type) copyFunc
 
 	switch sElemTyp.Kind() {
 	case reflect.Struct, reflect.Map, reflect.Slice, reflect.Array, reflect.Interface:
-		pfe := getCopyFuncIndirect(c, tTyp, sTyp.Elem())
+		pfe, done := getCopyFuncIndirect(c, tTyp, sTyp.Elem())
 		return func(c *copyContext, target, source reflect.Value) (end bool) {
 			val, _ := indirectCopySource(source)
 			if val.Kind() == reflect.Ptr && val.IsNil() {
@@ -122,6 +122,7 @@ func getCopyFuncToIfaceFromPtr(c *copyContext, tTyp, sTyp reflect.Type) copyFunc
 			}
 
 			// return copyReflectToIfaceFromComplexKinds(c, target, source, nil)
+			done()
 			return (*pfe)(c, target, source.Elem())
 		}
 	}

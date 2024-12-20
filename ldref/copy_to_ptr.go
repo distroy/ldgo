@@ -154,7 +154,7 @@ func getCopyFuncToPtrFromPtr(c *copyContext, tTyp, sTyp reflect.Type) copyFuncTy
 		sElemType = sElemType.Elem()
 	}
 
-	pfe := getCopyFunc(c, tElemType, sElemType)
+	pfe, done := getCopyFunc(c, tElemType, sElemType)
 	tZero := reflect.Zero(tTyp)
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		sVal, _ := indirectCopySource(source)
@@ -163,6 +163,7 @@ func getCopyFuncToPtrFromPtr(c *copyContext, tTyp, sTyp reflect.Type) copyFuncTy
 			return true
 		}
 		tVal, _ := indirectCopyTarget(target)
+		done()
 		(*pfe)(c, tVal, sVal)
 		return true
 	}
@@ -203,10 +204,11 @@ func getCopyFuncToPtrFromOthers(c *copyContext, tTyp, sTyp reflect.Type) copyFun
 	for tt.Kind() == reflect.Ptr {
 		tt = tt.Elem()
 	}
-	pfe := getCopyFunc(c, tt, sTyp)
+	pfe, done := getCopyFunc(c, tt, sTyp)
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		sVal := source
 		tVal, _ := indirectCopyTarget(target)
+		done()
 		return (*pfe)(c, tVal, sVal)
 	}
 }
