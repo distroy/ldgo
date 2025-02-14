@@ -1235,6 +1235,54 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				})
 			})
 
+			c.Convey("map[string]any to *struct", func(c convey.C) {
+				var (
+					target testCopyStruct
+					source = map[string]any{
+						`id`:     "100",
+						`Ignore`: "true",
+						`Name`:   "abc",
+						`Age`:    "23",
+						`Female`: "true",
+						`Ptr`:    "1234",
+					}
+				)
+
+				err := copyFunc(&target, &source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(&target, convey.ShouldResemble, &testCopyStruct{
+					Id:     100,
+					Name:   "abc",
+					Age:    23,
+					Female: true,
+					Ptr:    testNewInt(1234),
+				})
+			})
+
+			c.Convey("map[any]any to map[string]string", func(c convey.C) {
+				var (
+					target map[string]string
+					source = map[any]any{
+						`id`:     100,
+						`Ignore`: true,
+						`Name`:   "abc",
+						`Age`:    23,
+						`Female`: true,
+						`Ptr`:    testNewInt(1234),
+					}
+				)
+
+				err := copyFunc(&target, &source)
+				c.So(err, convey.ShouldBeNil)
+				c.So(target, convey.ShouldResemble, map[string]string{
+					`id`:     "100",
+					`Ignore`: "true",
+					`Name`:   "abc",
+					`Age`:    "23",
+					`Female`: "true",
+					`Ptr`:    "1234",
+				})
+			})
 		})
 
 		c.Convey("to *array", func(c convey.C) {
