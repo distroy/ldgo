@@ -10,6 +10,67 @@ import (
 
 func init() {
 	registerCopyFunc(map[copyPair]copyFuncType{
+		{To: reflect.Ptr, From: reflect.Interface}: copyReflectFromIface,
+
+		{To: reflect.Struct, From: reflect.Interface}: copyReflectFromIface,
+		{To: reflect.Map, From: reflect.Interface}:    copyReflectFromIface,
+		{To: reflect.Slice, From: reflect.Interface}:  copyReflectFromIface,
+		{To: reflect.Array, From: reflect.Interface}:  copyReflectFromIface,
+
+		{To: reflect.Bool, From: reflect.Interface}:       copyReflectFromIface,
+		{To: reflect.String, From: reflect.Interface}:     copyReflectFromIface,
+		{To: reflect.Float32, From: reflect.Interface}:    copyReflectFromIface,
+		{To: reflect.Float64, From: reflect.Interface}:    copyReflectFromIface,
+		{To: reflect.Complex64, From: reflect.Interface}:  copyReflectFromIface,
+		{To: reflect.Complex128, From: reflect.Interface}: copyReflectFromIface,
+		{To: reflect.Int, From: reflect.Interface}:        copyReflectFromIface,
+		{To: reflect.Int8, From: reflect.Interface}:       copyReflectFromIface,
+		{To: reflect.Int16, From: reflect.Interface}:      copyReflectFromIface,
+		{To: reflect.Int32, From: reflect.Interface}:      copyReflectFromIface,
+		{To: reflect.Int64, From: reflect.Interface}:      copyReflectFromIface,
+		{To: reflect.Uint, From: reflect.Interface}:       copyReflectFromIface,
+		{To: reflect.Uint8, From: reflect.Interface}:      copyReflectFromIface,
+		{To: reflect.Uint16, From: reflect.Interface}:     copyReflectFromIface,
+		{To: reflect.Uint32, From: reflect.Interface}:     copyReflectFromIface,
+		{To: reflect.Uint64, From: reflect.Interface}:     copyReflectFromIface,
+		{To: reflect.Uintptr, From: reflect.Interface}:    copyReflectFromIface,
+
+		{To: reflect.UnsafePointer, From: reflect.Interface}: copyReflectFromIface,
+		{To: reflect.Func, From: reflect.Interface}:          copyReflectFromIface,
+		{To: reflect.Chan, From: reflect.Interface}:          copyReflectFromIface,
+	})
+	registerGetCopyFunc(map[copyPair]getCopyFuncType{
+		{To: reflect.Ptr, From: reflect.Interface}: getCopyFuncFromIface,
+
+		{To: reflect.Struct, From: reflect.Interface}: getCopyFuncFromIface,
+		{To: reflect.Map, From: reflect.Interface}:    getCopyFuncFromIface,
+		{To: reflect.Slice, From: reflect.Interface}:  getCopyFuncFromIface,
+		{To: reflect.Array, From: reflect.Interface}:  getCopyFuncFromIface,
+
+		{To: reflect.Bool, From: reflect.Interface}:       getCopyFuncFromIface,
+		{To: reflect.String, From: reflect.Interface}:     getCopyFuncFromIface,
+		{To: reflect.Float32, From: reflect.Interface}:    getCopyFuncFromIface,
+		{To: reflect.Float64, From: reflect.Interface}:    getCopyFuncFromIface,
+		{To: reflect.Complex64, From: reflect.Interface}:  getCopyFuncFromIface,
+		{To: reflect.Complex128, From: reflect.Interface}: getCopyFuncFromIface,
+		{To: reflect.Int, From: reflect.Interface}:        getCopyFuncFromIface,
+		{To: reflect.Int8, From: reflect.Interface}:       getCopyFuncFromIface,
+		{To: reflect.Int16, From: reflect.Interface}:      getCopyFuncFromIface,
+		{To: reflect.Int32, From: reflect.Interface}:      getCopyFuncFromIface,
+		{To: reflect.Int64, From: reflect.Interface}:      getCopyFuncFromIface,
+		{To: reflect.Uint, From: reflect.Interface}:       getCopyFuncFromIface,
+		{To: reflect.Uint8, From: reflect.Interface}:      getCopyFuncFromIface,
+		{To: reflect.Uint16, From: reflect.Interface}:     getCopyFuncFromIface,
+		{To: reflect.Uint32, From: reflect.Interface}:     getCopyFuncFromIface,
+		{To: reflect.Uint64, From: reflect.Interface}:     getCopyFuncFromIface,
+		{To: reflect.Uintptr, From: reflect.Interface}:    getCopyFuncFromIface,
+
+		{To: reflect.UnsafePointer, From: reflect.Interface}: getCopyFuncFromIface,
+		{To: reflect.Func, From: reflect.Interface}:          getCopyFuncFromIface,
+		{To: reflect.Chan, From: reflect.Interface}:          getCopyFuncFromIface,
+	})
+
+	registerCopyFunc(map[copyPair]copyFuncType{
 		{To: reflect.Interface, From: reflect.Invalid}:   copyReflectToIfaceFromInvalid,
 		{To: reflect.Interface, From: reflect.Interface}: copyReflectToIfaceFromIface,
 		{To: reflect.Interface, From: reflect.Ptr}:       copyReflectToIfaceFromPtr,
@@ -140,16 +201,19 @@ func getCopyFuncToIfaceFromPtr(c *copyContext, tTyp, sTyp reflect.Type) copyFunc
 	}
 }
 
-func copyReflectToIfaceFromIface(c *copyContext, target, source reflect.Value) bool {
+func copyReflectFromIface(c *copyContext, target, source reflect.Value) bool {
 	if source.IsNil() {
-		val := reflect.Zero(typeOfIface)
+		val := reflect.Zero(target.Type())
 		target.Set(val)
 		return true
 	}
 
 	return copyReflectWithIndirect(c, target, source.Elem())
 }
-func getCopyFuncToIfaceFromIface(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+func copyReflectToIfaceFromIface(c *copyContext, target, source reflect.Value) bool {
+	return copyReflectFromIface(c, target, source)
+}
+func getCopyFuncFromIface(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
 	tZero := reflect.Zero(tTyp)
 	return func(c *copyContext, target, source reflect.Value) (end bool) {
 		if source.IsNil() {
@@ -159,6 +223,9 @@ func getCopyFuncToIfaceFromIface(c *copyContext, tTyp, sTyp reflect.Type) copyFu
 
 		return copyReflectWithIndirectV2(c, target, source.Elem())
 	}
+}
+func getCopyFuncToIfaceFromIface(c *copyContext, tTyp, sTyp reflect.Type) copyFuncType {
+	return getCopyFuncFromIface(c, tTyp, sTyp)
 }
 
 func copyReflectToIfaceFromComplexKinds(
