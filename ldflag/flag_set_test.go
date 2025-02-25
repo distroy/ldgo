@@ -380,8 +380,6 @@ func TestFlagSet_Parse(t *testing.T) {
 
 				b := &strings.Builder{}
 				s.SetOutput(b)
-
-				s.EnableDefault(true)
 				s.Model(flags)
 
 				err := s.Parse([]string{
@@ -432,8 +430,6 @@ Flags:
 
 				b := &strings.Builder{}
 				s.SetOutput(b)
-
-				s.EnableDefault(true)
 				s.Model(flags)
 
 				err := s.Parse([]string{
