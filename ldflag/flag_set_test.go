@@ -100,7 +100,8 @@ Flags:
                 show the average complexity
         -debug-log
                 print debug log
-        -rate <float> (default: 0.65)
+        -rate <float>
+                default: 0.65
         -branch <branch>
                 git branch name
         -include <regexp>
@@ -143,7 +144,8 @@ Flags:
                 show the average complexity
         -debug-log
                 print debug log
-        -rate <float> (default: 0.65)
+        -rate <float>
+                default: 0.65
         -branch <branch>
                 git branch name
         -include <regexp>
@@ -375,12 +377,35 @@ func TestFlagSet_Parse(t *testing.T) {
 
 			c.Convey("fail", func(c convey.C) {
 				flags := &Flags{}
+
+				b := &strings.Builder{}
+				s.SetOutput(b)
 				s.Model(flags)
 
 				err := s.Parse([]string{
 					"-method", "d",
 				})
 				c.So(err, convey.ShouldNotBeNil)
+				c.So(b.String(), convey.ShouldEqual, `the value of flag -method should be [a b c]
+Usage of unittest:
+Flags:
+        -method <string>
+                options: a,b,c
+`)
+			})
+
+			c.Convey("writeUsage", func(c convey.C) {
+				flags := &Flags{}
+				b := &strings.Builder{}
+
+				s.Model(flags)
+				s.writeUsage(b)
+
+				c.So(b.String(), convey.ShouldEqual, `Usage of unittest:
+Flags:
+        -method <string>
+                options: a,b,c
+`)
 			})
 		})
 
@@ -402,12 +427,37 @@ func TestFlagSet_Parse(t *testing.T) {
 
 			c.Convey("fail", func(c convey.C) {
 				flags := &Flags{}
+
+				b := &strings.Builder{}
+				s.SetOutput(b)
 				s.Model(flags)
 
 				err := s.Parse([]string{
 					"-method", "d",
 				})
 				c.So(err, convey.ShouldNotBeNil)
+				c.So(b.String(), convey.ShouldEqual, `the value of flag -method should be [a b c]
+Usage of unittest:
+Flags:
+        -method <string>
+                options: a,b,c
+                default: a
+`)
+			})
+
+			c.Convey("writeUsage", func(c convey.C) {
+				flags := &Flags{}
+				b := &strings.Builder{}
+
+				s.Model(flags)
+				s.writeUsage(b)
+
+				c.So(b.String(), convey.ShouldEqual, `Usage of unittest:
+Flags:
+        -method <string>
+                options: a,b,c
+                default: a
+`)
 			})
 		})
 	})
