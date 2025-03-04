@@ -17,7 +17,7 @@ func NewAny[T any](d T) *Any[T] {
 }
 
 type Any[T any] struct {
-	v interface{}
+	v any
 }
 
 func (v *Any[T]) Store(d T)          { v.store(v.pack(d)) }
@@ -40,7 +40,7 @@ func (v *Any[T]) load() anyData[T] {
 		return anyData[T]{}
 	}
 
-	var val interface{}
+	var val any
 	data := atomic.LoadPointer(&vp.data)
 	vlp := (*efaceWords)(unsafe.Pointer(&val))
 	vlp.typ = typ
@@ -49,7 +49,7 @@ func (v *Any[T]) load() anyData[T] {
 }
 
 func (v *Any[T]) store(val anyData[T]) {
-	vli := interface{}(val)
+	vli := any(val)
 	vlp := (*efaceWords)(unsafe.Pointer(&vli))
 
 	vp := (*efaceWords)(unsafe.Pointer(v))
@@ -68,7 +68,7 @@ func (v *Any[T]) store(val anyData[T]) {
 }
 
 func (v *Any[T]) swap(new anyData[T]) (old anyData[T]) {
-	ni := interface{}(new)
+	ni := any(new)
 	np := (*efaceWords)(unsafe.Pointer(&ni))
 
 	vp := (*efaceWords)(unsafe.Pointer(v))
@@ -84,7 +84,7 @@ func (v *Any[T]) swap(new anyData[T]) (old anyData[T]) {
 		runtime_procUnpin()
 	}
 
-	var oi interface{}
+	var oi any
 	op := (*efaceWords)(unsafe.Pointer(&oi))
 	op.typ, op.data = np.typ, atomic.SwapPointer(&vp.data, np.data)
 	return oi.(anyData[T])
@@ -92,13 +92,13 @@ func (v *Any[T]) swap(new anyData[T]) (old anyData[T]) {
 
 func (v *Any[T]) compareAndSwap(old, new anyData[T]) (swapped bool) {
 	var zero anyData[T]
-	// zi := interface{}(zero)
+	// zi := any(zero)
 	// zp := (*efaceWords)(unsafe.Pointer(&zi))
 
-	// oi := interface{}(old)
+	// oi := any(old)
 	// op := (*efaceWords)(unsafe.Pointer(&oi))
 
-	ni := interface{}(new)
+	ni := any(new)
 	np := (*efaceWords)(unsafe.Pointer(&ni))
 
 	vp := (*efaceWords)(unsafe.Pointer(v))
@@ -126,7 +126,7 @@ func (v *Any[T]) compareAndSwap(old, new anyData[T]) (swapped bool) {
 	var i any
 	(*efaceWords)(unsafe.Pointer(&i)).typ = typ
 	(*efaceWords)(unsafe.Pointer(&i)).data = data
-	// if i != (interface{})(old) {
+	// if i != (any)(old) {
 	// 	return false
 	// }
 	if !v.equal(i.(anyData[T]), old) {
@@ -141,7 +141,7 @@ func (v *Any[T]) equal(a, b anyData[T]) bool {
 	return equal(aa, bb)
 }
 
-// efaceWords is interface{} internal representation.
+// efaceWords is any internal representation.
 type efaceWords struct {
 	typ  unsafe.Pointer
 	data unsafe.Pointer
