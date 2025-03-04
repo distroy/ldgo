@@ -27,9 +27,9 @@ func (d Duration) Seconds() float64             { return d.get().Seconds() }
 func (d Duration) String() string               { return d.get().String() }
 func (d Duration) Truncate(m Duration) Duration { return Duration(d.get().Truncate(m.get())) }
 
-func (d Duration) MarshalJSON() ([]byte, error) { return timeinternal.DurationMarshalJSON(d.get()) }
+func (d Duration) MarshalJSON() ([]byte, error) { return timeinternal.DurationMarshalJson(d.get()) }
 func (d *Duration) UnmarshalJSON(b []byte) error {
-	dur, err := timeinternal.DurationUnmarshalJSON(b)
+	dur, err := timeinternal.DurationUnmarshalJson(b)
 	if err == nil {
 		*d.ptr() = dur
 	}
