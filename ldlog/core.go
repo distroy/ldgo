@@ -59,7 +59,7 @@ func (l *core) enable(lvl zapcore.Level, skip int) bool {
 	return l.enabler.Enable(lvl, skip+1)
 }
 
-func (l *core) format(format string, args ...interface{}) {
+func (l *core) format(format string, args ...any) {
 	if formatFlag {
 		_ = fmt.Sprintf(format, args...)
 	}
