@@ -98,34 +98,36 @@ func (l *Logger) Error(msg string, fields ...zap.Field) { l.zCore(lvlE, 1).Error
 func (l *Logger) Panic(msg string, fields ...zap.Field) { l.zCore(lvlP, 1).Panic(msg, fields...) }
 func (l *Logger) Fatal(msg string, fields ...zap.Field) { l.zCore(lvlF, 1).Fatal(msg, fields...) }
 
-func (l *Logger) Debugf(fmt string, args ...interface{}) {
+func (l *Logger) Debugf(fmt string, args ...any) {
 	l.format(fmt, args...)
 	l.zSugar(lvlD, 1).Debugf(fmt, args...)
 }
-func (l *Logger) Infof(fmt string, args ...interface{}) {
+func (l *Logger) Infof(fmt string, args ...any) {
 	l.format(fmt, args...)
 	l.zSugar(lvlI, 1).Infof(fmt, args...)
 }
-func (l *Logger) Warnf(fmt string, args ...interface{}) {
+func (l *Logger) Warnf(fmt string, args ...any) {
 	l.format(fmt, args...)
 	l.zSugar(lvlW, 1).Warnf(fmt, args...)
 }
-func (l *Logger) Errorf(fmt string, args ...interface{}) {
+func (l *Logger) Errorf(fmt string, args ...any) {
 	l.format(fmt, args...)
 	l.zSugar(lvlE, 1).Errorf(fmt, args...)
 }
-func (l *Logger) Panicf(fmt string, args ...interface{}) {
+func (l *Logger) Panicf(fmt string, args ...any) {
+	defer l.Sync()
 	l.format(fmt, args...)
 	l.zSugar(lvlP, 1).Panicf(fmt, args...)
 }
-func (l *Logger) Fatalf(fmt string, args ...interface{}) {
+func (l *Logger) Fatalf(fmt string, args ...any) {
+	defer l.Sync()
 	l.format(fmt, args...)
 	l.zSugar(lvlF, 1).Fatalf(fmt, args...)
 }
 
-func (l *Logger) Debugln(args ...interface{}) { l.zSugar(lvlD, 1).Debug(pw(args)) }
-func (l *Logger) Infoln(args ...interface{})  { l.zSugar(lvlI, 1).Info(pw(args)) }
-func (l *Logger) Warnln(args ...interface{})  { l.zSugar(lvlW, 1).Warn(pw(args)) }
-func (l *Logger) Errorln(args ...interface{}) { l.zSugar(lvlE, 1).Error(pw(args)) }
-func (l *Logger) Panicln(args ...interface{}) { l.zSugar(lvlP, 1).Panic(pw(args)) }
-func (l *Logger) Fatalln(args ...interface{}) { l.zSugar(lvlF, 1).Fatal(pw(args)) }
+func (l *Logger) Debugln(args ...any) { l.zSugar(lvlD, 1).Debug(pw(args)) }
+func (l *Logger) Infoln(args ...any)  { l.zSugar(lvlI, 1).Info(pw(args)) }
+func (l *Logger) Warnln(args ...any)  { l.zSugar(lvlW, 1).Warn(pw(args)) }
+func (l *Logger) Errorln(args ...any) { l.zSugar(lvlE, 1).Error(pw(args)) }
+func (l *Logger) Panicln(args ...any) { defer l.Sync(); l.zSugar(lvlP, 1).Panic(pw(args)) }
+func (l *Logger) Fatalln(args ...any) { defer l.Sync(); l.zSugar(lvlF, 1).Fatal(pw(args)) }

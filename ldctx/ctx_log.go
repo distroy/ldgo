@@ -37,6 +37,10 @@ type stringer interface {
 	String() string
 }
 
+func syncLog(c context.Context) {
+	GetLogger(c).Sync()
+}
+
 //go:linkname zCoreByLogger github.com/distroy/ldgo/v2/ldlog.zCoreByLogger
 func zCoreByLogger(l *ldlog.Logger, lvl zapcore.Level, skip int) *zap.Logger
 
@@ -59,7 +63,7 @@ const (
 	lvlF = zapcore.FatalLevel
 )
 
-func format(format string, args ...interface{}) {
+func format(format string, args ...any) {
 	if formatFlag {
 		_ = fmt.Sprintf(format, args...)
 	}
@@ -69,30 +73,38 @@ func LogD(c Context, msg string, fields ...zap.Field) { zCore(c, lvlD, 1).Debug(
 func LogI(c Context, msg string, fields ...zap.Field) { zCore(c, lvlI, 1).Info(msg, fields...) }
 func LogW(c Context, msg string, fields ...zap.Field) { zCore(c, lvlW, 1).Warn(msg, fields...) }
 func LogE(c Context, msg string, fields ...zap.Field) { zCore(c, lvlE, 1).Error(msg, fields...) }
-func LogP(c Context, msg string, fields ...zap.Field) { zCore(c, lvlP, 1).Panic(msg, fields...) }
-func LogF(c Context, msg string, fields ...zap.Field) { zCore(c, lvlF, 1).Fatal(msg, fields...) }
+func LogP(c Context, msg string, fields ...zap.Field) {
+	defer syncLog(c)
+	zCore(c, lvlP, 1).Panic(msg, fields...)
+}
+func LogF(c Context, msg string, fields ...zap.Field) {
+	defer syncLog(c)
+	zCore(c, lvlF, 1).Fatal(msg, fields...)
+}
 
-func LogDf(c Context, fmt string, args ...interface{}) {
+func LogDf(c Context, fmt string, args ...any) {
 	format(fmt, args...)
 	zSugar(c, lvlD, 1).Debugf(fmt, args...)
 }
-func LogIf(c Context, fmt string, args ...interface{}) {
+func LogIf(c Context, fmt string, args ...any) {
 	format(fmt, args...)
 	zSugar(c, lvlI, 1).Infof(fmt, args...)
 }
-func LogWf(c Context, fmt string, args ...interface{}) {
+func LogWf(c Context, fmt string, args ...any) {
 	format(fmt, args...)
 	zSugar(c, lvlW, 1).Warnf(fmt, args...)
 }
-func LogEf(c Context, fmt string, args ...interface{}) {
+func LogEf(c Context, fmt string, args ...any) {
 	format(fmt, args...)
 	zSugar(c, lvlE, 1).Errorf(fmt, args...)
 }
-func LogPf(c Context, fmt string, args ...interface{}) {
+func LogPf(c Context, fmt string, args ...any) {
+	defer syncLog(c)
 	format(fmt, args...)
 	zSugar(c, lvlP, 1).Panicf(fmt, args...)
 }
-func LogFf(c Context, fmt string, args ...interface{}) {
+func LogFf(c Context, fmt string, args ...any) {
+	defer syncLog(c)
 	format(fmt, args...)
 	zSugar(c, lvlF, 1).Fatalf(fmt, args...)
 }
