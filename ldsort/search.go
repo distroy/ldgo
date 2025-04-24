@@ -30,6 +30,18 @@ func Search[T any](a []T, f func(v T) bool) int {
 
 // Index uses binary search to find and return the smallest index in [0, n)
 // at which compare(v) == 0, or return -1 if there is no compare(v) == 0
+//
+// To permit binary search, Find requires that compare(i) < 0 for a leading
+// prefix of the range, cmp(i) == 0 in the middle, and cmp(i) > 0 for
+// the final suffix of the range.
+//
+// For example:
+//
+//	Index(a, func (v int) int {
+//		if v < target { return -1 }
+//		if v > target { return +1 }
+//		return 0
+//	})
 func Index[T any](a []T, compare func(v T) int) int {
 	return internalIndex(len(a), func(i int) int {
 		return compare(a[i])

@@ -4,6 +4,8 @@
 
 package ldsort
 
+import "github.com/distroy/ldgo/v3/internal/cmp"
+
 type sortable interface {
 	~string |
 		~int | ~int8 | ~int16 | ~int32 | ~int64 |
@@ -11,16 +13,7 @@ type sortable interface {
 		~float32 | ~float64
 }
 
-func compare[T sortable](a, b T) int {
-	switch {
-	case a == b:
-		return 0
-	case a > b:
-		return +1
-	default:
-		return -1
-	}
-}
+func compare[T sortable](a, b T) int { return cmp.CompareComparable(a, b) }
 
 type Slice[T sortable] []T
 
