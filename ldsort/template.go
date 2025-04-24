@@ -4,7 +4,7 @@
 
 package ldsort
 
-import "github.com/distroy/ldgo/v3/internal/cmp"
+import "github.com/distroy/ldgo/v2/internal/cmp"
 
 type sortable interface {
 	~string |
@@ -13,7 +13,7 @@ type sortable interface {
 		~float32 | ~float64
 }
 
-func compare[T sortable](a, b T) int { return cmp.CompareComparable(a, b) }
+func compare[T sortable](a, b T) int { return cmp.CompareOrderable(a, b) }
 
 type Slice[T sortable] []T
 
