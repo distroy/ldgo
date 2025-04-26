@@ -42,9 +42,9 @@ func TestLogger(t *testing.T) {
 		})
 
 		c.Convey("warn", func(c convey.C) {
-			l.Warn("warn message")
+			l.Warn("warn message", zap.Int("int", 123))
 			c.So(writer.String(), convey.ShouldEqual,
-				"2021-08-22T13:30:58.000+0800|WARN|-|ldlog/logger_test.go:45|warn message,abc=xxx\n")
+				"2021-08-22T13:30:58.000+0800|WARN|-|ldlog/logger_test.go:45|warn message,abc=xxx|int=123\n")
 		})
 
 		c.Convey("info", func(c convey.C) {
@@ -66,7 +66,7 @@ func TestLogger(t *testing.T) {
 		})
 
 		c.Convey("errorln", func(c convey.C) {
-			l.Errorln("errorln message", (*LoggerValue)(nil), (unsafe.Pointer)((uintptr)(0x2345)))
+			l.Errorln("errorln message", (*LoggerValue)(nil), unsafe.Pointer(uintptr(0x2345)))
 			c.So(writer.String(), convey.ShouldEqual,
 				"2021-08-22T13:30:58.000+0800|ERROR|-|ldlog/logger_test.go:69|errorln message (*ldlog.LoggerValue)(nil) (unsafe.Pointer)(0x2345),abc=xxx\n")
 		})

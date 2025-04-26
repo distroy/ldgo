@@ -7,6 +7,7 @@ package ldlog
 import (
 	"time"
 
+	"github.com/distroy/ldgo/v3/ldlog/internal/handler"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -61,7 +62,7 @@ func (l *Logger) WithSequence(seq string) *Logger {
 	if seq == "" || l.sequence == seq {
 		return l
 	}
-	log := l.Core().With(zap.String(sequenceKey, seq))
+	log := l.Core().With(zap.String(handler.SequenceKey, seq))
 	l = l.clone()
 	l.log = log
 	l.sugar = log.Sugar()

@@ -13,6 +13,7 @@ import (
 	"time"
 	"unicode/utf8"
 
+	"github.com/distroy/ldgo/v3/ldlog/internal/handler"
 	"go.uber.org/zap/buffer"
 	"go.uber.org/zap/zapcore"
 )
@@ -22,12 +23,8 @@ const (
 	_hex = "0123456789abcdef"
 )
 
-var (
-	sequenceKey = "request_id"
-)
-
-func SetSequenceKey(key string) { sequenceKey = key }
-func GetSequenceKey() string    { return sequenceKey }
+func SetSequenceKey(key string) { handler.SequenceKey = key }
+func GetSequenceKey() string    { return handler.SequenceKey }
 
 type loggerEncoderPool struct {
 	_pool sync.Pool
@@ -169,7 +166,7 @@ func (enc *loggerEncoder) OpenNamespace(key string) {
 
 func (enc *loggerEncoder) AddString(key, val string) {
 	switch key {
-	case sequenceKey:
+	case handler.SequenceKey:
 		enc.sequence = val
 	default:
 		enc.addKey(key)
