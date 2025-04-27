@@ -136,7 +136,7 @@ func TestNewRingBuffer(t *testing.T) {
 			n, err = b.Write([]byte("0123456789"))
 			c.Convey("write after close & empty", func(c convey.C) {
 				c.So(n, convey.ShouldEqual, 0)
-				c.So(err, convey.ShouldBeNil)
+				c.So(err, convey.ShouldEqual, io.ErrUnexpectedEOF)
 			})
 		})
 	})

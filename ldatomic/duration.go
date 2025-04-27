@@ -6,6 +6,8 @@ package ldatomic
 
 import (
 	"time"
+
+	"github.com/distroy/ldgo/v3/internal/timeinternal"
 )
 
 type Duration int64
@@ -30,4 +32,13 @@ func (p *Duration) Add(delta time.Duration) (new time.Duration) {
 }
 func (p *Duration) Sub(delta time.Duration) (new time.Duration) {
 	return time.Duration(p.get().Sub(int64(delta)))
+}
+
+func (p Duration) MarshalJSON() ([]byte, error) { return timeinternal.DurationMarshalJson(p.Load()) }
+func (p *Duration) UnmarshalJSON(b []byte) error {
+	dur, err := timeinternal.DurationUnmarshalJson(b)
+	if err == nil {
+		p.Store(dur)
+	}
+	return err
 }

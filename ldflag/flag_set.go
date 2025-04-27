@@ -129,11 +129,10 @@ func (s *FlagSet) writeUsageHeader(w io.Writer) {
 
 func (s *FlagSet) writeFlagUsage(w io.Writer, f *Flag) {
 	const (
-		tab           = "        "
-		nameSize      = len(tab) * 2
-		namePrefix    = tab
-		usagePrefix   = "\n" + namePrefix + tab
-		defaultPrefix = usagePrefix + tab
+		tab         = "        "
+		nameSize    = len(tab) * 2
+		namePrefix  = tab
+		usagePrefix = namePrefix + tab
 	)
 
 	b := &strings.Builder{}
@@ -155,36 +154,57 @@ func (s *FlagSet) writeFlagUsage(w io.Writer, f *Flag) {
 
 		// Four spaces before the tab triggers good alignment
 		// for both 4- and 8-space tab stops.
-		fmt.Fprint(b, usagePrefix)
+		fmt.Fprint(b, "\n", usagePrefix)
 	}
 
-	fmt.Fprint(b, strings.ReplaceAll(usage, "\n", usagePrefix))
+	fmt.Fprint(b, strings.ReplaceAll(usage, "\n", "\n"+usagePrefix))
+
+	s.writeFlagUsageOptions(b, f, usagePrefix)
+	s.writeFlagUsageDefault(b, f, usagePrefix, tab)
+
+	fmt.Fprint(w, b.String(), "\n")
+}
+
+func (s *FlagSet) writeFlagUsageDefault(b io.Writer, f *Flag, usagePrefix, tab string) {
+	var (
+		defaultPrefix = usagePrefix + tab
+	)
 
 	if isFlagDefaultZero(f) {
-		fmt.Fprint(w, b.String(), "\n")
 		return
 	}
 
+	fmt.Fprint(b, "\n", usagePrefix, "default:")
 	switch v := f.Value.(type) {
 	default:
 		if strings.Index(f.Default, "\n") > 0 {
-			fmt.Fprint(b, usagePrefix, "default:")
-			fmt.Fprint(b, defaultPrefix, strings.ReplaceAll(f.Default, "\n", defaultPrefix))
+			fmt.Fprint(b, "\n", defaultPrefix, strings.ReplaceAll(f.Default, "\n", "\n"+defaultPrefix))
 		} else {
-			fmt.Fprintf(b, " (default: %v)", f.Default)
+			// fmt.Fprintf(b, " (default: %v)", f.Default)
+			fmt.Fprint(b, " ", f.Default)
 		}
 
 	case *stringValue, *stringPtrValue:
-		fmt.Fprintf(b, " (default: %q)", f.Default)
+		// fmt.Fprintf(b, " (default: %q)", f.Default)
+		fmt.Fprint(b, " ", f.Default)
 
 	case *stringsValue:
-		fmt.Fprint(b, usagePrefix, "default:")
 		for _, s := range *v {
-			fmt.Fprintf(b, "%s%q", defaultPrefix, s)
+			fmt.Fprintf(b, "\n%s%q", defaultPrefix, s)
 		}
 	}
+}
 
-	fmt.Fprint(w, b.String(), "\n")
+func (s *FlagSet) writeFlagUsageOptions(b io.Writer, f *Flag, usagePrefix string) {
+	if len(f.Options) == 0 {
+		return
+	}
+
+	// if f.Usage != "" && !strings.HasSuffix(f.Usage, ".") {
+	// 	fmt.Fprintf(b, ".")
+	// }
+	// fmt.Fprintf(b, " [options: %s]", strings.Join(f.Options, ","))
+	fmt.Fprintf(b, "\n%soptions: %s", usagePrefix, strings.Join(f.Options, ","))
 }
 
 func (s *FlagSet) sortedFlags() []*Flag {
@@ -401,9 +421,9 @@ func (s *FlagSet) parseFieldFlag(lvl int, val reflect.Value, field reflect.Struc
 		Options: s.parseOptions(tags.Get("options")),
 	}
 
-	if f.Default == "" && len(f.Options) > 0 {
-		f.Default = f.Options[0]
-	}
+	// if f.Default == "" && len(f.Options) > 0 {
+	// 	f.Default = f.Options[0]
+	// }
 
 	if len(f.Name) == 0 {
 		f.Name = parseFlagName(field)

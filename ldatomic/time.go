@@ -5,6 +5,7 @@
 package ldatomic
 
 import (
+	"encoding/json"
 	"time"
 )
 
@@ -40,4 +41,17 @@ func (p *Time) Change(change func(old time.Time) (new time.Time)) (new time.Time
 	old := p.Load()
 	new = change(old)
 	return new, p.d.CompareAndSwap(old, new)
+}
+
+func (v Time) MarshalJSON() ([]byte, error)  { return marshalJSON[time.Time](&v) }
+func (v *Time) UnmarshalJSON(b []byte) error { return unmarshalJSON[time.Time](v, b) }
+
+func marshalJSON[T any, L Loader[T]](v L) ([]byte, error) { return json.Marshal(v.Load()) }
+func unmarshalJSON[T any, S Storer[T]](v S, b []byte) error {
+	var d T
+	if err := json.Unmarshal(b, &d); err != nil {
+		return err
+	}
+	v.Store(d)
+	return nil
 }

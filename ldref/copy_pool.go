@@ -21,9 +21,10 @@ var copyNameKeysInTag = []string{
 type copyFieldInfo struct {
 	reflect.StructField
 
-	Name   string
-	Index  int
-	Ignore bool
+	Name     string
+	Index    int
+	Ignore   bool
+	TypeZero reflect.Value
 }
 
 type copyStructKey struct {
@@ -38,10 +39,15 @@ type copyStructValue struct {
 	Ignores []*copyFieldInfo
 }
 
-func getCopyTypeInfo(typ reflect.Type, tagName string) *copyStructValue {
-	if tagName == "" {
-		tagName = defaultCopyTagName
+func getTagName(name string) string {
+	if name != "" {
+		return name
 	}
+	return defaultCopyTagName
+}
+
+func getCopyTypeInfo(typ reflect.Type, tagName string) *copyStructValue {
+	tagName = getTagName(tagName)
 	key := copyStructKey{
 		Type:    typ,
 		TagName: tagName,
@@ -81,6 +87,7 @@ func parseCopyFieldInfo(index int, field reflect.StructField, tagName string) *c
 		StructField: field,
 		Name:        field.Name,
 		Index:       index,
+		TypeZero:    reflect.Zero(field.Type),
 	}
 
 	tagStr := field.Tag.Get(tagName)
@@ -126,4 +133,56 @@ func parseCopyFieldInfo(index int, field reflect.StructField, tagName string) *c
 	}
 
 	return f
+}
+
+var copyFuncPool = &commFuncPool[copyFuncKey, copyFuncType]{}
+
+type copyFuncKey struct {
+	Target   copyStructKey
+	Source   copyStructKey
+	Clone    bool
+	Indirect bool
+}
+
+func isBaseType(typ reflect.Type) bool {
+	switch refKindOfType(typ) {
+	case reflect.Ptr, reflect.Array, reflect.Slice, reflect.Chan:
+		return isBaseType(typ.Elem())
+
+	case reflect.Map:
+		return isBaseType(typ.Elem()) && isBaseType(typ.Key())
+
+	case reflect.Struct, reflect.Interface:
+		return false
+	}
+	return true
+}
+
+func getCopyFunc(c *copyContext, tTyp, sTyp reflect.Type) (*copyFuncType, func()) {
+	return _getCopyFuncWithIndirect(c, tTyp, sTyp, false)
+}
+func getCopyFuncIndirect(c *copyContext, tTyp, sTyp reflect.Type) (*copyFuncType, func()) {
+	return _getCopyFuncWithIndirect(c, tTyp, sTyp, true)
+}
+func _getCopyFuncWithIndirect(c *copyContext, tTyp, sTyp reflect.Type, indirect bool) (*copyFuncType, func()) {
+	key := copyFuncKey{
+		Target:   copyStructKey{Type: tTyp},
+		Source:   copyStructKey{Type: sTyp},
+		Clone:    c.Clone,
+		Indirect: indirect,
+	}
+
+	if !isBaseType(tTyp) {
+		key.Target.TagName = getTagName(c.TargetTag)
+	}
+	if !isBaseType(sTyp) {
+		key.Source.TagName = getTagName(c.SourceTag)
+	}
+
+	return copyFuncPool.Get(key, func() copyFuncType {
+		if indirect {
+			return _getCopyFuncReflectWithIndirect(c, tTyp, sTyp)
+		}
+		return _getCopyFuncReflect(c, tTyp, sTyp)
+	})
 }

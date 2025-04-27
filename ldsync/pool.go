@@ -38,12 +38,12 @@ var pools = &sync.Map{}
 
 func GetPool[T any](fnNew func() T) *Pool[T] {
 	var d T
-	typ := reflect.TypeOf(d)
-	if i, _ := pools.Load(typ); i != nil {
+	key := reflect.TypeOf(d)
+	if i, _ := pools.Load(key); i != nil {
 		return i.(*Pool[T])
 	}
 
 	p := &Pool[T]{New: fnNew}
-	i, _ := pools.LoadOrStore(typ, p)
+	i, _ := pools.LoadOrStore(key, p)
 	return i.(*Pool[T])
 }
