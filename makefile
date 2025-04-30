@@ -15,9 +15,9 @@ GO_FLAGS=${flags}
 GO_VERSION=$(shell go version | cut -d" " -f 3)
 GO_MAJOR_VERSION=$(shell echo $(GO_VERSION) | cut -d"." -f 1)
 GO_SUB_VERSION=$(shell echo $(GO_VERSION) | cut -d"." -f 2)
-# ifeq ($(shell expr ${GO_SUB_VERSION} '>' 10), 1)
-# 	GO_FLAGS+=-mod=vendor
-# endif
+ifeq ($(shell expr ${GO_SUB_VERSION} '>' 22), 1)
+	GO_FLAGS+=-ldflags=-checklinkname=0
+endif
 $(info GO_VERSION: $(GO_MAJOR_VERSION).$(GO_SUB_VERSION))
 $(info GO_FLAGS: $(GO_FLAGS))
 

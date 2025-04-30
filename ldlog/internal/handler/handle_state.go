@@ -80,6 +80,10 @@ func (s *handleState) closeGroup(name string) {
 func (s *handleState) appendAttrs(as []slog.Attr) bool {
 	nonEmpty := false
 	for _, a := range as {
+		if a.Key == SequenceKey {
+			s.h.seqId = a.Value.String()
+			continue
+		}
 		if s.appendAttr(a) {
 			nonEmpty = true
 		}
@@ -171,17 +175,10 @@ func (s *handleState) appendKey(key string) {
 }
 
 func (s *handleState) appendString(str string) {
-	if s.h.json {
-		s.buf.WriteByte('"')
-		*s.buf = appendEscapedJSONString(*s.buf, str)
-		s.buf.WriteByte('"')
+	if needsQuoting(str) {
+		*s.buf = strconv.AppendQuote(*s.buf, str)
 	} else {
-		// text
-		if needsQuoting(str) {
-			*s.buf = strconv.AppendQuote(*s.buf, str)
-		} else {
-			s.buf.WriteString(str)
-		}
+		s.buf.WriteString(str)
 	}
 }
 
@@ -203,35 +200,17 @@ func (s *handleState) appendValue(v slog.Value) {
 		}
 	}()
 
-	var err error
-	if s.h.json {
-		err = appendJSONValue(s, v)
-	} else {
-		err = appendTextValue(s, v)
-	}
+	err := appendTextValue(s, v)
 	if err != nil {
 		s.appendError(err)
 	}
 }
 
 func (s *handleState) appendTime(t time.Time) {
-	if s.h.json {
-		appendJSONTime(s, t)
-	} else {
-		*s.buf = appendRFC3339Millis(*s.buf, t)
-	}
+	s.buf.WriteTime(t, "")
 }
 
 func (s *handleState) appendNonBuiltIns(r slog.Record) {
-	// preformatted Attrs
-	if pfa := s.h.preformattedAttrs; len(pfa) > 0 {
-		s.buf.WriteString(s.sep)
-		s.buf.Write(pfa)
-		s.sep = s.h.attrSep()
-		if s.h.json && pfa[len(pfa)-1] == '{' {
-			s.sep = ""
-		}
-	}
 	// Attrs in Record -- unlike the built-in ones, they are in groups started
 	// from WithGroup.
 	// If the record has no Attrs, don't output any groups.

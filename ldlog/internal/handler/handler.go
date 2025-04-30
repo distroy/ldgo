@@ -6,6 +6,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log/slog"
 	"slices"
@@ -20,31 +21,56 @@ var (
 	_ slog.Handler = (*Handler)(nil)
 )
 
-type Handler struct {
-	ch *commonHandler
+type (
+	ch = commonHandler
+)
+
+func NewHandler(w io.Writer, opts *slog.HandlerOptions) *Handler {
+	if opts == nil {
+		opts = &slog.HandlerOptions{}
+	}
+	return &Handler{
+		&commonHandler{
+			json: false,
+			w:    w,
+			opts: *opts,
+			mu:   &sync.Mutex{},
+		},
+	}
 }
 
-func (h Handler) Enabled(c context.Context, lvl slog.Level) bool  { return h.enabled(c, lvl) }
+type Handler struct {
+	*ch
+}
+
+func (h Handler) Enabled(c context.Context, lvl slog.Level) bool  { return h.enabled(lvl) }
 func (h Handler) Handle(c context.Context, rec slog.Record) error { return h.handle(c, rec) }
-func (h Handler) WithAttrs(attrs []slog.Attr) slog.Handler        { return h.withAttrs(attrs) }
-func (h Handler) WithGroup(name string) slog.Handler              { return h.withGroup(name) }
+func (h Handler) WithAttrs(attrs []slog.Attr) slog.Handler        { return Handler{h.withAttrs(attrs)} }
+func (h Handler) WithGroup(name string) slog.Handler              { return Handler{h.withGroup(name)} }
 
-func (h Handler) withAttrs(attrs []slog.Attr) Handler            { return Handler{h.ch.withAttrs(attrs)} }
-func (h Handler) withGroup(name string) Handler                  { return Handler{h.ch.withGroup(name)} }
-func (h Handler) enabled(c context.Context, lvl slog.Level) bool { return h.ch.enabled(lvl) }
-
-func (h Handler) handle(c context.Context, r slog.Record) error {
+func (h Handler) handle(_ context.Context, r slog.Record) error {
 	seqId := h.ch.seqId
 	if seqId == "" {
 		seqId = "-"
 	}
 
-	buf := newBuffer()
+	state := h.ch.newHandleState(newBuffer(), true, ",")
+	defer state.free()
+
+	buf := state.buf
+
 	buf.WriteTime(r.Time, "")
 	buf.WriteByte('|')
 	buf.WriteString(r.Level.String())
 	buf.WriteByte('|')
 	buf.WriteString(seqId)
+	buf.WriteByte('|')
+	if !h.opts.AddSource {
+		buf.WriteByte('-')
+	} else {
+		src := getRecord(&r).source()
+		buf.WriteString(fmt.Sprintf("%s:%d", src.File, src.Line))
+	}
 	buf.WriteByte('|')
 	buf.WriteString(r.Message)
 	if pfa := h.ch.preformattedAttrs; len(pfa) > 0 {
@@ -52,12 +78,18 @@ func (h Handler) handle(c context.Context, r slog.Record) error {
 		buf.Write(pfa)
 	}
 
-	buf.WriteByte('|')
+	if r.NumAttrs() > 0 {
+		buf.WriteByte('|')
+	}
 
-	state := h.ch.newHandleState(buf, true, ",")
-	defer state.free()
+	state.sep = ""
 	state.appendNonBuiltIns(r)
-	return h.ch.handle(r)
+	buf.WriteByte('\n')
+
+	h.ch.mu.Lock()
+	defer h.ch.mu.Unlock()
+	_, err := h.ch.w.Write(*state.buf)
+	return err
 }
 
 type commonHandler struct {
@@ -122,6 +154,7 @@ func (h *commonHandler) withAttrs(as []slog.Attr) *commonHandler {
 	state.openGroups()
 	if !state.appendAttrs(as) {
 		state.buf.SetLen(pos)
+
 	} else {
 		// Remember the new prefix for later keys.
 		h2.groupPrefix = state.prefix.String()
@@ -139,9 +172,7 @@ func (h *commonHandler) withGroup(name string) *commonHandler {
 }
 
 // attrSep returns the separator between attributes.
-func (h *commonHandler) attrSep() string {
-	return ","
-}
+func (h *commonHandler) attrSep() string { return "," }
 
 func (h *commonHandler) newHandleState(buf *Buffer, freeBuf bool, sep string) handleState {
 	s := handleState{
@@ -157,58 +188,4 @@ func (h *commonHandler) newHandleState(buf *Buffer, freeBuf bool, sep string) ha
 		*s.groups = append(*s.groups, h.groups[:h.nOpenGroups]...)
 	}
 	return s
-}
-
-// handle is the internal implementation of Handler.Handle
-// used by TextHandler and JSONHandler.
-func (h *commonHandler) handle(r slog.Record) error {
-	state := h.newHandleState(newBuffer(), true, "")
-	defer state.free()
-	if h.json {
-		state.buf.WriteByte('{')
-	}
-	// Built-in attributes. They are not in a group.
-	stateGroups := state.groups
-	state.groups = nil // So ReplaceAttrs sees no groups instead of the pre groups.
-	rep := h.opts.ReplaceAttr
-	// time
-	if !r.Time.IsZero() {
-		key := slog.TimeKey
-		val := r.Time.Round(0) // strip monotonic to match Attr behavior
-		if rep == nil {
-			state.appendKey(key)
-			state.appendTime(val)
-		} else {
-			state.appendAttr(slog.Time(key, val))
-		}
-	}
-	// level
-	key := slog.LevelKey
-	val := r.Level
-	if rep == nil {
-		state.appendKey(key)
-		state.appendString(val.String())
-	} else {
-		state.appendAttr(slog.Any(key, val))
-	}
-	// source
-	if h.opts.AddSource {
-		state.appendAttr(slog.Any(slog.SourceKey, getRecord(&r).source()))
-	}
-	key = slog.MessageKey
-	msg := r.Message
-	if rep == nil {
-		state.appendKey(key)
-		state.appendString(msg)
-	} else {
-		state.appendAttr(slog.String(key, msg))
-	}
-	state.groups = stateGroups // Restore groups passed to ReplaceAttrs.
-	state.appendNonBuiltIns(r)
-	state.buf.WriteByte('\n')
-
-	h.mu.Lock()
-	defer h.mu.Unlock()
-	_, err := h.w.Write(*state.buf)
-	return err
 }

@@ -19,13 +19,6 @@ type Buffer []byte
 // Having an initial size gives a dramatic speedup.
 var bufPool = ldsync.GetPool(func() []byte { return make([]byte, 0, 1024) })
 
-// var bufPool = sync.Pool{
-// 	New: func() any {
-// 		b := make([]byte, 0, 1024)
-// 		return (*Buffer)(&b)
-// 	},
-// }
-
 func newBuffer() *Buffer {
 	buf := bufPool.Get()
 	return (*Buffer)(&buf)
