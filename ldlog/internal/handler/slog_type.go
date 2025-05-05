@@ -14,7 +14,6 @@ import (
 func toType[T, S any](v S) T { return *(*T)(unsafe.Pointer(&v)) }
 
 func getAttr(v *slog.Attr) *Attr       { return toType[*Attr](v) }
-func toValue(v *slog.Value) *value     { return toType[*value](v) }
 func getValue(v *slog.Value) *Value    { return toType[*Value](v) }
 func getSource(v *slog.Source) *Source { return toType[*Source](v) }
 func getRecord(v *slog.Record) *Record { return toType[*Record]((v)) }
@@ -23,7 +22,6 @@ type (
 	Attr   slog.Attr
 	Source slog.Source
 	Record slog.Record
-	Value  slog.Value
 )
 
 //go:linkname isAttrEmpty log/slog.(*Attr).isEmpty
@@ -45,7 +43,7 @@ func (v *Value) isEmptyGroup() bool { return isValueEmptyGroup(v) }
 func getRecordSource(r Record) *slog.Source
 func (r *Record) source() *slog.Source { return getRecordSource(*r) }
 
-type value struct {
+type Value struct {
 	_ [0]func() // disallow ==
 	// num holds the value for Kinds Int64, Uint64, Float64, Bool and Duration,
 	// the string length for KindString, and nanoseconds since the epoch for KindTime.
@@ -64,7 +62,6 @@ type value struct {
 
 func init() {
 	typePairs := [][2]any{
-		{value{}, slog.Value{}},
 		{Value{}, slog.Value{}},
 		{Attr{}, slog.Attr{}},
 		{Source{}, slog.Source{}},
