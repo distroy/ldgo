@@ -20,9 +20,10 @@ type Done struct {
 
 func (p *Done) Stop() {
 	p.init()
-	stoped := once{done: &p.stoped, mutex: &p.mutex}
-	stoped.Do(func() {
+	stoped := once{mutex: &p.mutex, done: &p.stoped}
+	stoped.Do(func() error {
 		close(p.done)
+		return nil
 	})
 }
 
@@ -32,9 +33,10 @@ func (p *Done) Chan() <-chan none {
 }
 
 func (p *Done) init() {
-	inited := once{done: &p.inited, mutex: &p.mutex}
-	inited.Do(func() {
+	inited := once{mutex: &p.mutex, done: &p.inited}
+	inited.Do(func() error {
 		p.done = make(chan struct{})
+		return nil
 	})
 }
 
