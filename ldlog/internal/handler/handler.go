@@ -6,7 +6,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"log/slog"
 	"slices"
@@ -25,11 +24,11 @@ type (
 	ch = commonHandler
 )
 
-func NewHandler(w io.Writer, opts *slog.HandlerOptions) *Handler {
+func NewHandler(w io.Writer, opts *Options) Handler {
 	if opts == nil {
-		opts = &slog.HandlerOptions{}
+		opts = &Options{}
 	}
-	return &Handler{
+	return Handler{
 		&commonHandler{
 			json: false,
 			w:    w,
@@ -43,58 +42,29 @@ type Handler struct {
 	*ch
 }
 
+func (h Handler) GetSequence() string  { return h.seqId }
+func (h Handler) SetSequence(s string) { h.seqId = s }
+
 func (h Handler) Enabled(c context.Context, lvl slog.Level) bool  { return h.enabled(lvl) }
-func (h Handler) Handle(c context.Context, rec slog.Record) error { return h.handle(c, rec) }
-func (h Handler) WithAttrs(attrs []slog.Attr) slog.Handler        { return Handler{h.withAttrs(attrs)} }
+func (h Handler) Handle(c context.Context, rec slog.Record) error { return h.handle(c, GetRecord(rec)) }
+func (h Handler) WithAttrs(as []slog.Attr) slog.Handler           { return Handler{h.withAttrs(GetAttrs(as))} }
 func (h Handler) WithGroup(name string) slog.Handler              { return Handler{h.withGroup(name)} }
 
-func (h Handler) handle(_ context.Context, r slog.Record) error {
-	seqId := h.ch.seqId
-	if seqId == "" {
-		seqId = "-"
+func (h Handler) Sync() error {
+	w := h.ch.w
+	switch ww := w.(type) {
+	case interface{ Sync() error }:
+		return ww.Sync()
+
+	case interface{ Sync() }:
+		ww.Sync()
 	}
-
-	state := h.ch.newHandleState(newBuffer(), true, ",")
-	defer state.free()
-
-	buf := state.buf
-
-	buf.WriteTime(r.Time, "")
-	buf.WriteByte('|')
-	buf.WriteString(r.Level.String())
-	buf.WriteByte('|')
-	buf.WriteString(seqId)
-	buf.WriteByte('|')
-	if !h.opts.AddSource {
-		buf.WriteByte('-')
-	} else {
-		src := getRecord(&r).source()
-		buf.WriteString(fmt.Sprintf("%s:%d", src.File, src.Line))
-	}
-	buf.WriteByte('|')
-	buf.WriteString(r.Message)
-	if pfa := h.ch.preformattedAttrs; len(pfa) > 0 {
-		buf.WriteByte(',')
-		buf.Write(pfa)
-	}
-
-	if r.NumAttrs() > 0 {
-		buf.WriteByte('|')
-	}
-
-	state.sep = ""
-	state.appendNonBuiltIns(r)
-	buf.WriteByte('\n')
-
-	h.ch.mu.Lock()
-	defer h.ch.mu.Unlock()
-	_, err := h.ch.w.Write(*state.buf)
-	return err
+	return nil
 }
 
 type commonHandler struct {
 	json              bool // true => output JSON; false => output text
-	opts              slog.HandlerOptions
+	opts              Options
 	preformattedAttrs []byte
 	// groupPrefix is for the text handler only.
 	// It holds the prefix for groups that were already pre-formatted.
@@ -117,9 +87,54 @@ func (h *commonHandler) clone() *commonHandler {
 		groupPrefix:       h.groupPrefix,
 		groups:            slices.Clip(h.groups),
 		nOpenGroups:       h.nOpenGroups,
-		w:                 h.w,
 		mu:                h.mu, // mutex shared among all clones of this handler
+		w:                 h.w,
+		seqId:             h.seqId,
 	}
+}
+
+func (h *commonHandler) handle(_ context.Context, r Record) error {
+	seqId := h.seqId
+	if seqId == "" {
+		seqId = "-"
+	}
+
+	state := h.newHandleState(newBuffer(), true, ",")
+	defer state.free()
+
+	buf := state.buf
+
+	buf.WriteTime(r.Time, "")
+	buf.WriteByte('|')
+	buf.WriteString(r.Level.String())
+	buf.WriteByte('|')
+	buf.WriteString(seqId)
+	buf.WriteByte('|')
+	if !h.opts.AddSource {
+		buf.WriteByte('-')
+	} else {
+		src := r.Source()
+		buf.WriteString(src.Caller())
+	}
+	buf.WriteByte('|')
+	buf.WriteString(r.Message)
+	if pfa := h.preformattedAttrs; len(pfa) > 0 {
+		buf.WriteByte(',')
+		buf.Write(pfa)
+	}
+
+	if r.NumAttrs() > 0 {
+		buf.WriteByte('|')
+	}
+
+	state.sep = ""
+	state.appendNonBuiltIns(r)
+	buf.WriteByte('\n')
+
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	_, err := h.w.Write(*state.buf)
+	return err
 }
 
 // enabled reports whether l is greater than or equal to the
@@ -132,7 +147,7 @@ func (h *commonHandler) enabled(l slog.Level) bool {
 	return l >= minLevel
 }
 
-func (h *commonHandler) withAttrs(as []slog.Attr) *commonHandler {
+func (h *commonHandler) withAttrs(as []Attr) *commonHandler {
 	// We are going to ignore empty groups, so if the entire slice consists of
 	// them, there is nothing to do.
 	if countEmptyGroups(as) == len(as) {

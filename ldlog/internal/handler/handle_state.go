@@ -77,11 +77,11 @@ func (s *handleState) closeGroup(name string) {
 
 // appendAttrs appends the slice of Attrs.
 // It reports whether something was appended.
-func (s *handleState) appendAttrs(as []slog.Attr) bool {
+func (s *handleState) appendAttrs(as []Attr) bool {
 	nonEmpty := false
 	for _, a := range as {
 		if a.Key == SequenceKey {
-			s.h.seqId = a.Value.String()
+			s.h.seqId = a.Value.AsStr()
 			continue
 		}
 		if s.appendAttr(a) {
@@ -94,7 +94,7 @@ func (s *handleState) appendAttrs(as []slog.Attr) bool {
 // appendAttr appends the Attr's key and value.
 // It handles replacement and checking for an empty key.
 // It reports whether something was appended.
-func (s *handleState) appendAttr(a slog.Attr) bool {
+func (s *handleState) appendAttr(a Attr) bool {
 	a.Value = a.Value.Resolve()
 	if rep := s.h.opts.ReplaceAttr; rep != nil && a.Value.Kind() != slog.KindGroup {
 		var gs []string
@@ -102,21 +102,22 @@ func (s *handleState) appendAttr(a slog.Attr) bool {
 			gs = *s.groups
 		}
 		// a.Value is resolved before calling ReplaceAttr, so the user doesn't have to.
-		a = rep(gs, a)
+		a = GetAttr(rep(gs, *a.Get()))
 		// The ReplaceAttr function may return an unresolved Attr.
 		a.Value = a.Value.Resolve()
 	}
 	// Elide empty Attrs.
-	if getAttr(&a).isEmpty() {
+	if a.IsEmpty() {
 		return false
 	}
 	// Special case: Source.
 	if v := a.Value; v.Kind() == slog.KindAny {
 		if src, ok := v.Any().(*slog.Source); ok {
+			ss := GetSourcePtr(src)
 			if s.h.json {
-				a.Value = getSource(src).group()
+				a.Value = ss.Group()
 			} else {
-				a.Value = slog.StringValue(fmt.Sprintf("%s:%d", src.File, src.Line))
+				a.Value = StringValue(ss.Caller())
 			}
 		}
 	}
@@ -130,7 +131,7 @@ func (s *handleState) appendAttr(a slog.Attr) bool {
 	return true
 }
 
-func (s *handleState) appendAttrGroupType(a slog.Attr) bool {
+func (s *handleState) appendAttrGroupType(a Attr) bool {
 	attrs := a.Value.Group()
 	// Output only non-empty groups.
 	if len(attrs) > 0 {
@@ -182,7 +183,7 @@ func (s *handleState) appendString(str string) {
 	}
 }
 
-func (s *handleState) appendValue(v slog.Value) {
+func (s *handleState) appendValue(v Value) {
 	defer func() {
 		if r := recover(); r != nil {
 			// If it panics with a nil pointer, the most likely cases are
@@ -190,7 +191,7 @@ func (s *handleState) appendValue(v slog.Value) {
 			// in which case "<nil>" seems to be the feasible choice.
 			//
 			// Adapted from the code in fmt/print.go.
-			if v := reflect.ValueOf(getValue(&v).any); v.Kind() == reflect.Pointer && v.IsNil() {
+			if v := reflect.ValueOf(v.any); v.Kind() == reflect.Pointer && v.IsNil() {
 				s.appendString("<nil>")
 				return
 			}
@@ -210,7 +211,7 @@ func (s *handleState) appendTime(t time.Time) {
 	s.buf.WriteTime(t, "")
 }
 
-func (s *handleState) appendNonBuiltIns(r slog.Record) {
+func (s *handleState) appendNonBuiltIns(r Record) {
 	// Attrs in Record -- unlike the built-in ones, they are in groups started
 	// from WithGroup.
 	// If the record has no Attrs, don't output any groups.
@@ -225,7 +226,7 @@ func (s *handleState) appendNonBuiltIns(r slog.Record) {
 		s.openGroups()
 		nOpenGroups = len(s.h.groups)
 		empty := true
-		r.Attrs(func(a slog.Attr) bool {
+		r.Attrs(func(a Attr) bool {
 			if s.appendAttr(a) {
 				empty = false
 			}
