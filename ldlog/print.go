@@ -6,35 +6,34 @@ package ldlog
 
 import (
 	"fmt"
+	"log/slog"
 	"reflect"
 	"sort"
 
 	"github.com/distroy/ldgo/v3/ldref"
 	"go.uber.org/zap/buffer"
-	"go.uber.org/zap/zapcore"
 )
 
-const (
-	LevelDebug  = zapcore.DebugLevel
-	LevelInfo   = zapcore.InfoLevel
-	LevelWarn   = zapcore.WarnLevel
-	LevelError  = zapcore.ErrorLevel
-	LevelDpanic = zapcore.DPanicLevel
-	LevelPanic  = zapcore.PanicLevel
-	LevelFatal  = zapcore.FatalLevel
+var (
+	_ fmt.Stringer   = (*printWrapper)(nil)
+	_ slog.LogValuer = (*printWrapper)(nil)
 )
 
 type printWrapper struct {
-	args []interface{}
+	args []any
 }
 
 func (w printWrapper) String() string {
 	return sprintln(w.args)
 }
 
-func pw(args []interface{}) fmt.Stringer { return printWrapper{args: args} }
+func (w printWrapper) LogValue() Value {
+	return slog.StringValue(w.String())
+}
 
-func sprintln(args []interface{}) string {
+func pw(args []any) printWrapper { return printWrapper{args: args} }
+
+func sprintln(args []any) string {
 	if len(args) == 0 {
 		return ""
 	}
@@ -54,7 +53,7 @@ func sprintln(args []interface{}) string {
 	return text
 }
 
-func fprintArg(b *buffer.Buffer, val interface{}) {
+func fprintArg(b *buffer.Buffer, val any) {
 	switch v := val.(type) {
 	case fmt.Stringer:
 		b.AppendString(v.String())

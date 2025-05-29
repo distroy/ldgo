@@ -5,20 +5,16 @@
 package ldlog
 
 import (
-	"time"
-
-	"github.com/distroy/ldgo/v3/ldlog/internal/handler"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 const (
-	lvlD = zapcore.DebugLevel
-	lvlI = zapcore.InfoLevel
-	lvlW = zapcore.WarnLevel
-	lvlE = zapcore.ErrorLevel
-	lvlF = zapcore.FatalLevel
-	lvlP = zapcore.PanicLevel
+	lvlD = LevelDebug
+	lvlI = LevelInfo
+	lvlW = LevelWarn
+	lvlE = LevelError
+	lvlF = LevelFatal
+	lvlP = LevelPanic
 )
 
 func newLogger(log core) *Logger {
@@ -46,39 +42,25 @@ func (l *Logger) WithOptions(opts ...zap.Option) *Logger {
 	return l
 }
 
-func (l *Logger) With(fields ...zap.Field) *Logger {
-	if len(fields) == 0 {
+func (l *Logger) With(attrs ...Attr) *Logger {
+	if len(attrs) == 0 {
 		return l
 	}
-	log := l.Core().WithLazy(fields...)
+	log := l.Core().WithLazy(attrs...)
 	l = l.clone()
 	l.log = log
 	l.sugar = log.Sugar()
 	return l
 }
 
-func (l *Logger) GetSequence() string { return l.sequence }
 func (l *Logger) WithSequence(seq string) *Logger {
-	if seq == "" || l.sequence == seq {
+	if seq == "" || l.Sequence() == seq {
 		return l
 	}
-	log := l.Core().With(zap.String(handler.SequenceKey, seq))
 	l = l.clone()
-	l.log = log
-	l.sugar = log.Sugar()
-	l.sequence = seq
+	l.core = *l.core.withSequence(seq)
 	return l
 }
-
-// Log based on probability(rate). rate should be in [0, 1.0]
-//
-// Deprecated: use `WithEnabler` instead.
-func (l *Logger) WithRate(rate float64) *Logger { return l.WithEnabler(RateEnabler(rate)) }
-
-// Log based on time interval.
-//
-// Deprecated: use `WithEnabler` instead.
-func (l *Logger) WithInterval(d time.Duration) *Logger { return l.WithEnabler(IntervalEnabler(d)) }
 
 func (l *Logger) WithEnabler(p Enabler) *Logger {
 	if p == nil {
@@ -92,43 +74,20 @@ func (l *Logger) WithEnabler(p Enabler) *Logger {
 	return l
 }
 
-func (l *Logger) Debug(msg string, fields ...zap.Field) { l.zCore(lvlD, 1).Debug(msg, fields...) }
-func (l *Logger) Info(msg string, fields ...zap.Field)  { l.zCore(lvlI, 1).Info(msg, fields...) }
-func (l *Logger) Warn(msg string, fields ...zap.Field)  { l.zCore(lvlW, 1).Warn(msg, fields...) }
-func (l *Logger) Error(msg string, fields ...zap.Field) { l.zCore(lvlE, 1).Error(msg, fields...) }
-func (l *Logger) Panic(msg string, fields ...zap.Field) { l.zCore(lvlP, 1).Panic(msg, fields...) }
-func (l *Logger) Fatal(msg string, fields ...zap.Field) { l.zCore(lvlF, 1).Fatal(msg, fields...) }
+func (l *Logger) Debug(msg string, attrs ...Attr) { l.logAttrs(nil, lvlD, 1, msg, attrs...) }
+func (l *Logger) Info(msg string, attrs ...Attr)  { l.logAttrs(nil, lvlI, 1, msg, attrs...) }
+func (l *Logger) Warn(msg string, attrs ...Attr)  { l.logAttrs(nil, lvlW, 1, msg, attrs...) }
+func (l *Logger) Error(msg string, attrs ...Attr) { l.logAttrs(nil, lvlE, 1, msg, attrs...) }
+func (l *Logger) Panic(msg string, attrs ...Attr) { l.logAttrs(nil, lvlP, 1, msg, attrs...) }
 
-func (l *Logger) Debugf(fmt string, args ...any) {
-	l.format(fmt, args...)
-	l.zSugar(lvlD, 1).Debugf(fmt, args...)
-}
-func (l *Logger) Infof(fmt string, args ...any) {
-	l.format(fmt, args...)
-	l.zSugar(lvlI, 1).Infof(fmt, args...)
-}
-func (l *Logger) Warnf(fmt string, args ...any) {
-	l.format(fmt, args...)
-	l.zSugar(lvlW, 1).Warnf(fmt, args...)
-}
-func (l *Logger) Errorf(fmt string, args ...any) {
-	l.format(fmt, args...)
-	l.zSugar(lvlE, 1).Errorf(fmt, args...)
-}
-func (l *Logger) Panicf(fmt string, args ...any) {
-	defer l.Sync()
-	l.format(fmt, args...)
-	l.zSugar(lvlP, 1).Panicf(fmt, args...)
-}
-func (l *Logger) Fatalf(fmt string, args ...any) {
-	defer l.Sync()
-	l.format(fmt, args...)
-	l.zSugar(lvlF, 1).Fatalf(fmt, args...)
-}
+func (l *Logger) Debugf(fmt string, args ...any) { l.logFmt(nil, lvlD, 1, fmt, args...) }
+func (l *Logger) Infof(fmt string, args ...any)  { l.logFmt(nil, lvlI, 1, fmt, args...) }
+func (l *Logger) Warnf(fmt string, args ...any)  { l.logFmt(nil, lvlW, 1, fmt, args...) }
+func (l *Logger) Errorf(fmt string, args ...any) { l.logFmt(nil, lvlE, 1, fmt, args...) }
+func (l *Logger) Panicf(fmt string, args ...any) { l.logFmt(nil, lvlP, 1, fmt, args...) }
 
-func (l *Logger) Debugln(args ...any) { l.zSugar(lvlD, 1).Debug(pw(args)) }
-func (l *Logger) Infoln(args ...any)  { l.zSugar(lvlI, 1).Info(pw(args)) }
-func (l *Logger) Warnln(args ...any)  { l.zSugar(lvlW, 1).Warn(pw(args)) }
-func (l *Logger) Errorln(args ...any) { l.zSugar(lvlE, 1).Error(pw(args)) }
-func (l *Logger) Panicln(args ...any) { defer l.Sync(); l.zSugar(lvlP, 1).Panic(pw(args)) }
-func (l *Logger) Fatalln(args ...any) { defer l.Sync(); l.zSugar(lvlF, 1).Fatal(pw(args)) }
+func (l *Logger) Debugln(args ...any) { l.log(nil, lvlD, 1, pw(args)) }
+func (l *Logger) Infoln(args ...any)  { l.log(nil, lvlD, 1, pw(args)) }
+func (l *Logger) Warnln(args ...any)  { l.log(nil, lvlD, 1, pw(args)) }
+func (l *Logger) Errorln(args ...any) { l.log(nil, lvlD, 1, pw(args)) }
+func (l *Logger) Panicln(args ...any) { l.log(nil, lvlD, 1, pw(args)) }

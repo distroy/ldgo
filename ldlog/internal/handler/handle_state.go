@@ -80,8 +80,13 @@ func (s *handleState) closeGroup(name string) {
 func (s *handleState) appendAttrs(as []Attr) bool {
 	nonEmpty := false
 	for _, a := range as {
-		if a.Key == SequenceKey {
+		switch a.Key {
+		case SequenceKey:
 			s.h.seqId = a.Value.AsStr()
+			continue
+
+		case LevelKey:
+			s.h.opts.Level = Level(a.Value.Int64())
 			continue
 		}
 		if s.appendAttr(a) {

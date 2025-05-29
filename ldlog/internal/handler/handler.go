@@ -8,20 +8,18 @@ import (
 	"context"
 	"io"
 	"log/slog"
+	"os"
 	"slices"
 	"sync"
 )
 
 var (
-	SequenceKey = "request_id"
+	SequenceKey = "@@request_id"
+	LevelKey    = "@@level"
 )
 
 var (
 	_ slog.Handler = (*Handler)(nil)
-)
-
-type (
-	ch = commonHandler
 )
 
 func NewHandler(w io.Writer, opts *Options) Handler {
@@ -39,28 +37,18 @@ func NewHandler(w io.Writer, opts *Options) Handler {
 }
 
 type Handler struct {
-	*ch
+	*commonHandler
 }
 
-func (h Handler) GetSequence() string  { return h.seqId }
-func (h Handler) SetSequence(s string) { h.seqId = s }
+func (h Handler) Sequence() string { return h.seqId }
 
 func (h Handler) Enabled(c context.Context, lvl slog.Level) bool  { return h.enabled(lvl) }
 func (h Handler) Handle(c context.Context, rec slog.Record) error { return h.handle(c, GetRecord(rec)) }
 func (h Handler) WithAttrs(as []slog.Attr) slog.Handler           { return Handler{h.withAttrs(GetAttrs(as))} }
 func (h Handler) WithGroup(name string) slog.Handler              { return Handler{h.withGroup(name)} }
 
-func (h Handler) Sync() error {
-	w := h.ch.w
-	switch ww := w.(type) {
-	case interface{ Sync() error }:
-		return ww.Sync()
-
-	case interface{ Sync() }:
-		ww.Sync()
-	}
-	return nil
-}
+func (h Handler) Sync() error  { return h.sync() }
+func (h Handler) Close() error { return h.close() }
 
 type commonHandler struct {
 	json              bool // true => output JSON; false => output text
@@ -110,8 +98,9 @@ func (h *commonHandler) handle(_ context.Context, r Record) error {
 	buf.WriteByte('|')
 	buf.WriteString(seqId)
 	buf.WriteByte('|')
-	if !h.opts.AddSource {
+	if !h.opts.AddSource || r.PC == 0 {
 		buf.WriteByte('-')
+
 	} else {
 		src := r.Source()
 		buf.WriteString(src.Caller())
@@ -131,10 +120,44 @@ func (h *commonHandler) handle(_ context.Context, r Record) error {
 	state.appendNonBuiltIns(r)
 	buf.WriteByte('\n')
 
+	_, err := h.write(*state.buf)
+	// if r.Level >= LevelPanic {
+	// 	h.sync()
+	// 	panic(*state.buf)
+	// }
+	return err
+}
+
+func (h *commonHandler) write(buf []byte) (int, error) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
-	_, err := h.w.Write(*state.buf)
-	return err
+	return h.w.Write(buf)
+}
+
+func (h *commonHandler) sync() error {
+	w := h.w
+	switch ww := w.(type) {
+	case interface{ Sync() error }:
+		return ww.Sync()
+
+	case interface{ Sync() }:
+		ww.Sync()
+	}
+	return nil
+}
+func (h *commonHandler) close() error {
+	w := h.w
+	if w == os.Stdout || w == os.Stderr || w == os.Stdin {
+		return nil
+	}
+	switch ww := w.(type) {
+	case interface{ Close() error }:
+		return ww.Close()
+
+	case interface{ Close() }:
+		ww.Close()
+	}
+	return nil
 }
 
 // enabled reports whether l is greater than or equal to the

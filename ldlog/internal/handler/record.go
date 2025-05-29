@@ -22,6 +22,14 @@ const nAttrsInline = 5
 
 type Level = slog.Level
 
+const (
+	LevelDebug Level = slog.LevelDebug
+	LevelInfo  Level = slog.LevelInfo
+	LevelWarn  Level = slog.LevelWarn
+	LevelError Level = slog.LevelError
+	LevelPanic Level = 100
+)
+
 type Record struct {
 	// The time at which the output method (Log, Info, etc.) was called.
 	Time time.Time
@@ -68,6 +76,9 @@ func (r *Record) AddAttrs(attrs ...Attr) { r.Get().AddAttrs(GetSAttrs(attrs)...)
 func (r *Record) Add(args ...any)        { r.Get().Add(args...) }
 
 func (r *Record) Source() *Source {
+	if r.PC == 0 {
+		return &Source{}
+	}
 	fs := runtime.CallersFrames([]uintptr{r.PC})
 	f, _ := fs.Next()
 	return &Source{

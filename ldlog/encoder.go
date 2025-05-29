@@ -25,6 +25,7 @@ const (
 
 func SetSequenceKey(key string) { handler.SequenceKey = key }
 func GetSequenceKey() string    { return handler.SequenceKey }
+func GetLevelKey() string       { return handler.LevelKey }
 
 type loggerEncoderPool struct {
 	_pool sync.Pool
