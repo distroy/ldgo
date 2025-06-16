@@ -9,14 +9,14 @@ import "log/slog"
 type Kind = slog.Kind
 
 const (
-	KindAny Kind = iota
-	KindBool
-	KindDuration
-	KindFloat64
-	KindInt64
-	KindString
-	KindTime
-	KindUint64
-	KindGroup
-	KindLogValuer
+	KindAny       = slog.KindAny
+	KindBool      = slog.KindBool
+	KindDuration  = slog.KindDuration
+	KindFloat64   = slog.KindFloat64
+	KindInt64     = slog.KindInt64
+	KindString    = slog.KindString
+	KindTime      = slog.KindTime
+	KindUint64    = slog.KindUint64
+	KindGroup     = slog.KindGroup
+	KindLogValuer = slog.KindLogValuer
 )

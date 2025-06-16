@@ -93,31 +93,6 @@ func (v *Value) IsEmptyGroup() bool {
 	return len(v.Group()) == 0
 }
 
-func (v *Value) AsStr() string {
-	switch v.Kind() {
-	case KindString:
-		return v.String()
-	case KindInt64:
-		return strconv.FormatInt(int64(v.num), 10)
-	case KindUint64:
-		return strconv.FormatUint(v.num, 10)
-	case KindFloat64:
-		return strconv.FormatFloat(v.Float64(), 'g', -1, 64)
-	case KindBool:
-		return strconv.FormatBool(v.Bool())
-	case KindDuration:
-		return v.Duration().String()
-	case KindTime:
-		return v.Time().String()
-	case KindGroup:
-		return fmt.Sprint(v.Group())
-	case KindAny, KindLogValuer:
-		return fmt.Sprint(v.any)
-	default:
-		panic(fmt.Sprintf("bad kind: %s", v.Kind()))
-	}
-}
-
 func (v *Value) Append(dst []byte) []byte {
 	switch v.Kind() {
 	case KindString:

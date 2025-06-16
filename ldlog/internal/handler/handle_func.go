@@ -6,12 +6,24 @@ package handler
 
 import (
 	"encoding"
+	"encoding/json"
 	"fmt"
+	"io"
 	"reflect"
 	"strconv"
 	"unicode"
 	"unicode/utf8"
+
+	"github.com/distroy/ldgo/v3/ldconv"
 )
+
+type LogTextAppender interface {
+	AppendLogText(b []byte) ([]byte, error)
+}
+
+// func s2b(b string) []byte { return ldconv.StrToBytesUnsafe(b) }
+func b2s(b []byte) string   { return ldconv.BytesToStrUnsafe(b) }
+func quote(s string) string { return strconv.Quote(s) }
 
 var safeSet = [utf8.RuneSelf]bool{
 	' ':      true,
@@ -143,21 +155,27 @@ func appendTextValue(s *handleState, v Value) error {
 	case KindTime:
 		s.appendTime(v.Time())
 	case KindAny:
-		if tm, ok := v.any.(encoding.TextMarshaler); ok {
-			data, err := tm.MarshalText()
+		switch m := v.any.(type) {
+		case io.WriterTo:
+			_, err := m.WriteTo(s.buf)
+			return err
+
+		case encoding.TextMarshaler:
+			data, err := m.MarshalText()
 			if err != nil {
 				return err
 			}
 			// TODO: avoid the conversion to string.
-			s.appendString(string(data))
+			s.appendString(b2s(data))
 			return nil
 		}
 		if bs, ok := byteSlice(v.any); ok {
 			// As of Go 1.19, this only allocates for strings longer than 32 bytes.
-			s.buf.WriteString(strconv.Quote(string(bs)))
+			s.buf.WriteString(quote(b2s(bs)))
 			return nil
 		}
-		s.appendString(fmt.Sprintf("%+v", v.Any()))
+		s.appendString(fmt.Sprintf("%+v", v.any))
+		// s.appendStringWithoutQuote(fmt.Sprintf("%+v", v.any))
 	default:
 		*s.buf = v.Append(*s.buf)
 	}
@@ -174,4 +192,60 @@ func byteSlice(a any) ([]byte, bool) {
 		return reflect.ValueOf(a).Bytes(), true
 	}
 	return nil, false
+}
+
+// //go:linkname appendJSONValue log/slog.appendJSONValue
+// func appendJSONValue(s *handleState, v Value) error
+
+func appendJSONValue(s *handleState, v Value) error {
+	switch v.Kind() {
+	case KindString:
+		s.appendString(v.String())
+	case KindInt64:
+		*s.buf = strconv.AppendInt(*s.buf, v.Int64(), 10)
+	case KindUint64:
+		*s.buf = strconv.AppendUint(*s.buf, v.Uint64(), 10)
+	case KindFloat64:
+		// json.Marshal is funny about floats; it doesn't
+		// always match strconv.AppendFloat. So just call it.
+		// That's expensive, but floats are rare.
+		if err := appendJSONMarshal(s.buf, v.Float64()); err != nil {
+			return err
+		}
+	case KindBool:
+		*s.buf = strconv.AppendBool(*s.buf, v.Bool())
+	case KindDuration:
+		// Do what json.Marshal does.
+		*s.buf = strconv.AppendInt(*s.buf, int64(v.Duration()), 10)
+	case KindTime:
+		s.appendTime(v.Time())
+	case KindAny:
+		a := v.Any()
+		_, jm := a.(json.Marshaler)
+		if err, ok := a.(error); ok && !jm {
+			s.appendString(err.Error())
+		} else {
+			return appendJSONMarshal(s.buf, a)
+		}
+	default:
+		panic(fmt.Sprintf("bad kind: %s", v.Kind()))
+	}
+	return nil
+}
+
+func appendJSONMarshal(buf *Buffer, v any) error {
+	// Use a json.Encoder to avoid escaping HTML.
+	// var bb bytes.Buffer
+	bb := newBuffer()
+	defer func() {
+		bb.Free()
+	}()
+	enc := json.NewEncoder(bb)
+	enc.SetEscapeHTML(false)
+	if err := enc.Encode(v); err != nil {
+		return err
+	}
+	bs := bb.Bytes()
+	buf.Write(bs[:len(bs)-1]) // remove final newline
+	return nil
 }

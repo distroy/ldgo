@@ -19,7 +19,7 @@ func testSLogPrint(log *slog.Logger) {
 }
 
 func TestHandler(t *testing.T) {
-	opts := &Options{AddSource: true, Level: slog.LevelDebug}
+	opts := &Options{Caller: true, Level: slog.LevelDebug}
 	buf := bytes.NewBuffer(nil)
 	log := slog.New(NewHandler(buf, opts))
 	testSLogPrint(log)

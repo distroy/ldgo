@@ -11,9 +11,9 @@ type Leveler interface {
 }
 
 type Options struct {
-	// AddSource causes the handler to compute the source code position
+	// Caller causes the handler to compute the source code position
 	// of the log statement and add a SourceKey attribute to the output.
-	AddSource bool
+	Caller bool
 
 	// Level reports the minimum record level that will be logged.
 	// The handler discards records with lower levels.
@@ -48,4 +48,6 @@ type Options struct {
 	// integer seconds since the Unix epoch), sanitize personal information, or
 	// remove attributes from the output.
 	ReplaceAttr func(groups []string, a slog.Attr) slog.Attr
+
+	SeqId string
 }

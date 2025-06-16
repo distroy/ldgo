@@ -12,6 +12,17 @@ import (
 
 func toType[T, S any](v S) T { return *(*T)(unsafe.Pointer(&v)) }
 
+func asType[T any](v any, def ...T) T {
+	vv, ok := v.(T)
+	if ok {
+		return vv
+	}
+	if len(def) > 0 {
+		return def[0]
+	}
+	return vv
+}
+
 func checkTypeEqual(this, that reflect.Type) {
 	if !isTypeEqual(this, that) {
 		panic(fmt.Errorf("%s not not compatible with %s", this.String(), that.String()))

@@ -8,14 +8,8 @@ import (
 	"context"
 	"io"
 	"log/slog"
-	"os"
 	"slices"
 	"sync"
-)
-
-var (
-	SequenceKey = "@@request_id"
-	LevelKey    = "@@level"
 )
 
 var (
@@ -28,10 +22,10 @@ func NewHandler(w io.Writer, opts *Options) Handler {
 	}
 	return Handler{
 		&commonHandler{
-			json: false,
-			w:    w,
-			opts: *opts,
-			mu:   &sync.Mutex{},
+			json:   false,
+			writer: wrapWriter(w),
+			opts:   *opts,
+			mu:     &sync.Mutex{},
 		},
 	}
 }
@@ -40,15 +34,16 @@ type Handler struct {
 	*commonHandler
 }
 
-func (h Handler) Sequence() string { return h.seqId }
+func (h Handler) Sequence() string { return h.opts.SeqId }
+func (h Handler) Level() Level     { return h.opts.Level.Level() }
 
 func (h Handler) Enabled(c context.Context, lvl slog.Level) bool  { return h.enabled(lvl) }
 func (h Handler) Handle(c context.Context, rec slog.Record) error { return h.handle(c, GetRecord(rec)) }
 func (h Handler) WithAttrs(as []slog.Attr) slog.Handler           { return Handler{h.withAttrs(GetAttrs(as))} }
 func (h Handler) WithGroup(name string) slog.Handler              { return Handler{h.withGroup(name)} }
 
-func (h Handler) Sync() error  { return h.sync() }
-func (h Handler) Close() error { return h.close() }
+func (h Handler) Sync() error  { return h.writer.Sync() }
+func (h Handler) Close() error { return h.writer.Close() }
 
 type commonHandler struct {
 	json              bool // true => output JSON; false => output text
@@ -62,8 +57,7 @@ type commonHandler struct {
 	groups      []string // all groups started from WithGroup
 	nOpenGroups int      // the number of groups opened in preformattedAttrs
 	mu          *sync.Mutex
-	w           io.Writer
-	seqId       string
+	writer      logWriter
 }
 
 func (h *commonHandler) clone() *commonHandler {
@@ -76,13 +70,12 @@ func (h *commonHandler) clone() *commonHandler {
 		groups:            slices.Clip(h.groups),
 		nOpenGroups:       h.nOpenGroups,
 		mu:                h.mu, // mutex shared among all clones of this handler
-		w:                 h.w,
-		seqId:             h.seqId,
+		writer:            h.writer,
 	}
 }
 
 func (h *commonHandler) handle(_ context.Context, r Record) error {
-	seqId := h.seqId
+	seqId := h.opts.SeqId
 	if seqId == "" {
 		seqId = "-"
 	}
@@ -98,7 +91,7 @@ func (h *commonHandler) handle(_ context.Context, r Record) error {
 	buf.WriteByte('|')
 	buf.WriteString(seqId)
 	buf.WriteByte('|')
-	if !h.opts.AddSource || r.PC == 0 {
+	if !h.opts.Caller || r.PC == 0 {
 		buf.WriteByte('-')
 
 	} else {
@@ -131,33 +124,7 @@ func (h *commonHandler) handle(_ context.Context, r Record) error {
 func (h *commonHandler) write(buf []byte) (int, error) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
-	return h.w.Write(buf)
-}
-
-func (h *commonHandler) sync() error {
-	w := h.w
-	switch ww := w.(type) {
-	case interface{ Sync() error }:
-		return ww.Sync()
-
-	case interface{ Sync() }:
-		ww.Sync()
-	}
-	return nil
-}
-func (h *commonHandler) close() error {
-	w := h.w
-	if w == os.Stdout || w == os.Stderr || w == os.Stdin {
-		return nil
-	}
-	switch ww := w.(type) {
-	case interface{ Close() error }:
-		return ww.Close()
-
-	case interface{ Close() }:
-		ww.Close()
-	}
-	return nil
+	return h.writer.Write(buf)
 }
 
 // enabled reports whether l is greater than or equal to the

@@ -10,8 +10,8 @@ import (
 	"reflect"
 	"sort"
 
+	"github.com/distroy/ldgo/v3/ldlog/internal/buffer"
 	"github.com/distroy/ldgo/v3/ldref"
-	"go.uber.org/zap/buffer"
 )
 
 var (
@@ -38,11 +38,11 @@ func sprintln(args []any) string {
 		return ""
 	}
 
-	buf := bufferpool.Get()
+	buf := buffer.NewBuffer()
 
 	fprintArg(buf, args[0])
 	for _, arg := range args[1:] {
-		buf.AppendByte(' ')
+		buf.WriteByte(' ')
 		fprintArg(buf, arg)
 	}
 
@@ -56,11 +56,11 @@ func sprintln(args []any) string {
 func fprintArg(b *buffer.Buffer, val any) {
 	switch v := val.(type) {
 	case fmt.Stringer:
-		b.AppendString(v.String())
+		b.WriteString(v.String())
 		return
 
 	case error:
-		b.AppendString(v.Error())
+		b.WriteString(v.Error())
 		return
 	}
 
@@ -84,7 +84,7 @@ func fprintArg(b *buffer.Buffer, val any) {
 		fprintStruct(b, ref)
 
 	case reflect.String:
-		b.AppendString(ref.String())
+		b.WriteString(ref.String())
 
 	case reflect.Bool:
 		b.AppendBool(ref.Bool())
@@ -110,44 +110,44 @@ func fprintArg(b *buffer.Buffer, val any) {
 }
 
 func fprintSlice(b *buffer.Buffer, v reflect.Value) {
-	b.AppendString("[")
+	b.WriteString("[")
 	for i := 0; i < v.Len(); i++ {
 		if i != 0 {
-			b.AppendString(", ")
+			b.WriteString(", ")
 		}
 		fprintArg(b, v.Index(i).Interface())
 	}
-	b.AppendString("]")
+	b.WriteString("]")
 }
 
 func fprintPointer(b *buffer.Buffer, v reflect.Value) {
 	p := v.Pointer()
 
-	b.AppendByte('(')
-	b.AppendString(v.Type().String())
-	b.AppendString(")(")
+	b.WriteByte('(')
+	b.WriteString(v.Type().String())
+	b.WriteString(")(")
 	if p == 0 {
-		b.AppendString("nil")
+		b.WriteString("nil")
 	} else {
 		fmt.Fprintf(b, "0x%x", p)
 	}
-	b.AppendByte(')')
+	b.WriteByte(')')
 }
 
 func fprintStruct(b *buffer.Buffer, v reflect.Value) {
-	b.AppendByte('{')
+	b.WriteByte('{')
 	for i := 0; i < v.NumField(); i++ {
 		if i > 0 {
-			b.AppendByte(',')
+			b.WriteByte(',')
 		}
 		if name := v.Type().Field(i).Name; name != "" {
-			b.AppendString(name)
-			b.AppendByte(':')
+			b.WriteString(name)
+			b.WriteByte(':')
 		}
 		field := v.Field(i)
 		fprintArg(b, field.Interface())
 	}
-	b.AppendByte('}')
+	b.WriteByte('}')
 }
 
 func fprintMap(b *buffer.Buffer, val reflect.Value) {
@@ -158,16 +158,16 @@ func fprintMap(b *buffer.Buffer, val reflect.Value) {
 
 	sort.Sort(sortedMap(m))
 
-	b.AppendString("map[")
+	b.WriteString("map[")
 	for i, kv := range m {
 		if i > 0 {
-			b.AppendByte(',')
+			b.WriteByte(',')
 		}
 		fprintArg(b, kv[0].Interface())
-		b.AppendByte(':')
+		b.WriteByte(':')
 		fprintArg(b, kv[1].Interface())
 	}
-	b.AppendByte(']')
+	b.WriteByte(']')
 }
 
 type sortedMap [][2]reflect.Value

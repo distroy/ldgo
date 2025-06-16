@@ -2,24 +2,27 @@
  * Copyright (C) distroy
  */
 
-package field
+package attr
 
 import (
+	"fmt"
+	"io"
+	"log/slog"
 	"reflect"
 	"strconv"
 	"time"
 
 	"github.com/distroy/ldgo/v3/internal/jsontag"
 	"github.com/distroy/ldgo/v3/ldcmp"
+	"github.com/distroy/ldgo/v3/ldlog/internal/buffer"
 	"github.com/distroy/ldgo/v3/ldsort"
-	"go.uber.org/zap"
 )
 
-func BriefReflect(key string, val any) Field {
+func BriefReflect(key string, val any) Attr {
 	if val == nil {
-		return zap.Reflect(key, val)
+		return nil_f(key)
 	}
-	return zap.Inline(&BriefReflectType{Key: key, Val: val})
+	return slog.Any(key, brief_reflect_t{val})
 }
 
 func mapkey2str(v reflect.Value) string {
@@ -50,78 +53,28 @@ func mapkey2str(v reflect.Value) string {
 	return "<unknown>"
 }
 
-var (
-	_ ArrayEncoder = (*objectEncoder)(nil)
-)
-
-type objectEncoder struct {
-	Key string
-	Enc ObjectEncoder
-}
-
-func (p *objectEncoder) AppendBool(v bool) { p.Enc.AddBool(p.Key, v) }
-
-func (p *objectEncoder) AppendString(v string)     { p.Enc.AddString(p.Key, v) }
-func (p *objectEncoder) AppendByteString(v []byte) { p.Enc.AddByteString(p.Key, v) }
-
-func (p *objectEncoder) AppendFloat32(v float32) { p.Enc.AddFloat32(p.Key, v) }
-func (p *objectEncoder) AppendFloat64(v float64) { p.Enc.AddFloat64(p.Key, v) }
-
-func (p *objectEncoder) AppendComplex64(v complex64)   { p.Enc.AddComplex64(p.Key, v) }
-func (p *objectEncoder) AppendComplex128(v complex128) { p.Enc.AddComplex128(p.Key, v) }
-
-func (p *objectEncoder) AppendInt(v int)     { p.Enc.AddInt(p.Key, v) }
-func (p *objectEncoder) AppendInt8(v int8)   { p.Enc.AddInt8(p.Key, v) }
-func (p *objectEncoder) AppendInt16(v int16) { p.Enc.AddInt16(p.Key, v) }
-func (p *objectEncoder) AppendInt32(v int32) { p.Enc.AddInt32(p.Key, v) }
-func (p *objectEncoder) AppendInt64(v int64) { p.Enc.AddInt64(p.Key, v) }
-
-func (p *objectEncoder) AppendUint(v uint)       { p.Enc.AddUint(p.Key, v) }
-func (p *objectEncoder) AppendUint8(v uint8)     { p.Enc.AddUint8(p.Key, v) }
-func (p *objectEncoder) AppendUint16(v uint16)   { p.Enc.AddUint16(p.Key, v) }
-func (p *objectEncoder) AppendUint32(v uint32)   { p.Enc.AddUint32(p.Key, v) }
-func (p *objectEncoder) AppendUint64(v uint64)   { p.Enc.AddUint64(p.Key, v) }
-func (p *objectEncoder) AppendUintptr(v uintptr) { p.Enc.AddUintptr(p.Key, v) }
-
-func (p *objectEncoder) AppendTime(v time.Time)         { p.Enc.AddTime(p.Key, v) }
-func (p *objectEncoder) AppendDuration(v time.Duration) { p.Enc.AddDuration(p.Key, v) }
-
-func (p *objectEncoder) AppendArray(v ArrayMarshaler) error   { return p.Enc.AddArray(p.Key, v) }
-func (p *objectEncoder) AppendObject(v ObjectMarshaler) error { return p.Enc.AddObject(p.Key, v) }
-
-func (p *objectEncoder) AppendReflected(v any) error { return p.Enc.AddReflected(p.Key, v) }
-
-func AddRef2Log(enc ObjectEncoder, k string, v reflect.Value) error {
-	oe := &objectEncoder{
-		Key: k,
-		Enc: enc,
-	}
-	return AppendRef2Log(oe, v)
-}
-
-func AppendRef2Log(enc ArrayEncoder, v reflect.Value) error {
+func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 	switch vv := v.Interface().(type) {
 	case time.Time:
-		enc.AppendTime(vv)
-		return nil
+		b.AppendTime(vv, time.RFC3339)
+		return
 
 	case time.Duration:
-		enc.AppendDuration(vv)
-		return nil
+		b.AppendString(quote(vv.String()))
+		return
 
-	// case fmt.Stringer:
-	// 	AppendStr2Log(enc, vv.String())
-	// 	return nil
+	case fmt.Stringer:
+		b.AppendString(quote(vv.String()))
+		return
 
 	case error:
-		enc.AppendString(vv.Error())
+		b.AppendString(quote(vv.Error()))
 	}
 
 	for v.Kind() == reflect.Ptr || v.Kind() == reflect.Interface {
 		if v.IsNil() {
-			// enc.AppendString(tagNil)
-			enc.AppendReflected(nil)
-			return nil
+			b.AppendString(nil_t{}.String())
+			return
 		}
 
 		v = v.Elem()
@@ -129,46 +82,49 @@ func AppendRef2Log(enc ArrayEncoder, v reflect.Value) error {
 
 	switch v.Kind() {
 	case reflect.Invalid:
-		// enc.AppendString(tagNil)
-		enc.AppendReflected(nil)
-		return nil
+		b.AppendString(nil_t{}.String())
+		return
 
 	case reflect.String:
-		return AppendStr2Log(enc, v.String())
+		b.AppendString(v.String())
+		return
 
 	case reflect.Bool:
-		enc.AppendBool(v.Bool())
-		return nil
+		b.AppendBool(v.Bool())
+		return
 
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		enc.AppendInt64(v.Int())
-		return nil
+		b.AppendInt(v.Int())
+		return
 
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
-		enc.AppendUint64(v.Uint())
-		return nil
+		b.AppendUint(v.Uint())
+		return
 
-	case reflect.Float32, reflect.Float64:
-		enc.AppendFloat64(v.Float())
-		return nil
+	case reflect.Float32:
+		b.AppendFloat(v.Float(), 32)
+		return
+	case reflect.Float64:
+		b.AppendFloat(v.Float(), 64)
+		return
 
-	case reflect.Complex64, reflect.Complex128:
-		enc.AppendComplex128(v.Complex())
-		return nil
+	case reflect.Complex64:
+		b.AppendComplex(v.Complex(), 64)
+		return
+	case reflect.Complex128:
+		b.AppendComplex(v.Complex(), 128)
+		return
 
 	case reflect.Slice:
 		switch vv := v.Interface().(type) {
 		case []byte:
-			return AppendStr2Log(enc, bytes2str(vv))
+			addBriefStr(b, b2s(vv))
+			return
 		}
 		fallthrough
 	case reflect.Array:
-		n := briefArrayLen
-		l := v.Len()
-		if l <= n {
-			return enc.AppendArray(&briefReflectArray{Val: v, Len: l})
-		}
-		return enc.AppendObject(&briefReflectArray{Val: v, Len: n})
+		addBriefRefSlice(b, v)
+		return
 
 	case reflect.Struct:
 		return enc.AppendObject(&briefReflectStruct{Val: v})
@@ -176,18 +132,70 @@ func AppendRef2Log(enc ArrayEncoder, v reflect.Value) error {
 	case reflect.Map:
 		return enc.AppendObject(&briefReflectMap{Val: v})
 	}
-	return nil
 }
 
-type BriefReflectType struct {
-	Key string
-	Val any
+func addBriefRefSlice(b *buffer.Buffer, v reflect.Value) {
+	n := briefArrayLen
+	l := v.Len()
+	if l > n {
+		b.AppendByte('{')
+
+		b.AppendString(tagLen)
+		b.AppendByte(':')
+		b.AppendInt(int64(l))
+		b.AppendByte(',')
+
+		b.AppendString(tagType)
+		b.AppendByte(':')
+		b.AppendString("array")
+		b.AppendByte(',')
+	}
+
+	n = min(n, l)
+	for i := range n {
+		if i > 0 {
+			b.AppendByte(',')
+		}
+
+		f := v.Index(i)
+		addBriefRef(b, f)
+	}
+
+	if l > n {
+		b.AppendByte('}')
+	}
 }
 
-func (p *BriefReflectType) MarshalLogObject(enc ObjectEncoder) error {
-	vv := p.Val
-	v := reflect.ValueOf(vv)
-	return AddRef2Log(enc, p.Key, v)
+func addBriefRefStruct(b *buffer.Buffer, v reflect.Value) {
+	typ := v.Type()
+	s := jsontag.Get(typ)
+	b.AppendByte('{')
+	first := true
+	for i := range s.NumField() {
+		if !first {
+			b.AppendByte(',')
+		}
+		fs := s.Field(i)
+		if fs.Field.Anonymous {
+			continue
+		}
+	}
+}
+
+type brief_reflect_t struct {
+	val any
+}
+
+func (p brief_reflect_t) MarshalJSON() ([]byte, error)       { return s2b(p.String()), nil }
+func (p brief_reflect_t) MarshalText() ([]byte, error)       { return s2b(p.String()), nil }
+func (p brief_reflect_t) WriteTo(w io.Writer) (int64, error) { return writeStringer(w, p) }
+func (p brief_reflect_t) String() string {
+	buf := getBuf()
+	defer buf.Free()
+	if p.val == nil {
+		buf.WriteString(nil_t{}.String())
+		return buf.String()
+	}
 }
 
 type briefReflectMap struct {

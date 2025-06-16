@@ -4,16 +4,11 @@
 
 package ldlog
 
-import (
-	"go.uber.org/zap"
-)
-
 const (
 	lvlD = LevelDebug
 	lvlI = LevelInfo
 	lvlW = LevelWarn
 	lvlE = LevelError
-	lvlF = LevelFatal
 	lvlP = LevelPanic
 )
 
@@ -34,43 +29,25 @@ func (l *Logger) clone() *Logger {
 	return &cp
 }
 
-func (l *Logger) WithOptions(opts ...zap.Option) *Logger {
-	log := l.Core().WithOptions(opts...)
-	l = l.clone()
-	l.log = log
-	l.sugar = log.Sugar()
-	return l
-}
-
 func (l *Logger) With(attrs ...Attr) *Logger {
 	if len(attrs) == 0 {
 		return l
 	}
-	log := l.Core().WithLazy(attrs...)
 	l = l.clone()
-	l.log = log
-	l.sugar = log.Sugar()
+	l.handler = wrapHandler(l.handler.WithAttrs(attrs))
 	return l
 }
 
-func (l *Logger) WithSequence(seq string) *Logger {
-	if seq == "" || l.Sequence() == seq {
+func (l *Logger) WithOptions(opts ...Option) *Logger {
+	c := l.core
+	for _, opt := range opts {
+		opt(&c)
+	}
+	if c == l.core {
 		return l
 	}
 	l = l.clone()
-	l.core = *l.core.withSequence(seq)
-	return l
-}
-
-func (l *Logger) WithEnabler(p Enabler) *Logger {
-	if p == nil {
-		p = defaultEnabler{}
-	}
-	if p == l.enabler {
-		return l
-	}
-	l = l.clone()
-	l.enabler = p
+	l.core = c
 	return l
 }
 
@@ -86,8 +63,8 @@ func (l *Logger) Warnf(fmt string, args ...any)  { l.logFmt(nil, lvlW, 1, fmt, a
 func (l *Logger) Errorf(fmt string, args ...any) { l.logFmt(nil, lvlE, 1, fmt, args...) }
 func (l *Logger) Panicf(fmt string, args ...any) { l.logFmt(nil, lvlP, 1, fmt, args...) }
 
-func (l *Logger) Debugln(args ...any) { l.log(nil, lvlD, 1, pw(args)) }
-func (l *Logger) Infoln(args ...any)  { l.log(nil, lvlD, 1, pw(args)) }
-func (l *Logger) Warnln(args ...any)  { l.log(nil, lvlD, 1, pw(args)) }
-func (l *Logger) Errorln(args ...any) { l.log(nil, lvlD, 1, pw(args)) }
-func (l *Logger) Panicln(args ...any) { l.log(nil, lvlD, 1, pw(args)) }
+func (l *Logger) Debugln(args ...any) { l.logln(nil, lvlD, 1, args) }
+func (l *Logger) Infoln(args ...any)  { l.logln(nil, lvlD, 1, args) }
+func (l *Logger) Warnln(args ...any)  { l.logln(nil, lvlD, 1, args) }
+func (l *Logger) Errorln(args ...any) { l.logln(nil, lvlD, 1, args) }
+func (l *Logger) Panicln(args ...any) { l.logln(nil, lvlD, 1, args) }

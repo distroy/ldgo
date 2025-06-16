@@ -14,7 +14,13 @@ import (
 	"github.com/distroy/ldgo/v3/ldsync"
 )
 
-var groupPool = ldsync.GetPool(func() []string { return make([]string, 0, 10) })
+var (
+	LevelKey    = "@@level"
+	CallerKey   = "@@Caller"
+	SequenceKey = "@@request_id"
+)
+
+var groupPool = ldsync.GetPool(func() []string { return make([]string, 0, 16) })
 
 // Separator for group names and keys.
 const keyComponentSep = '.'
@@ -81,16 +87,19 @@ func (s *handleState) appendAttrs(as []Attr) bool {
 	nonEmpty := false
 	for _, a := range as {
 		switch a.Key {
-		case SequenceKey:
-			s.h.seqId = a.Value.AsStr()
-			continue
-
 		case LevelKey:
-			s.h.opts.Level = Level(a.Value.Int64())
-			continue
-		}
-		if s.appendAttr(a) {
-			nonEmpty = true
+			s.h.opts.Level = asType(a.Value.Any(), s.h.opts.Level)
+
+		case CallerKey:
+			s.h.opts.Caller = asType(a.Value.Any(), s.h.opts.Caller)
+
+		case SequenceKey:
+			s.h.opts.SeqId = asType(a.Value.Any(), s.h.opts.SeqId)
+
+		default:
+			if s.appendAttr(a) {
+				nonEmpty = true
+			}
 		}
 	}
 	return nonEmpty
@@ -188,6 +197,10 @@ func (s *handleState) appendString(str string) {
 	}
 }
 
+func (s *handleState) appendStringWithoutQuote(str string) {
+	s.buf.WriteString(str)
+}
+
 func (s *handleState) appendValue(v Value) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -206,7 +219,13 @@ func (s *handleState) appendValue(v Value) {
 		}
 	}()
 
-	err := appendTextValue(s, v)
+	var err error
+	if s.h.json {
+		err = appendJSONValue(s, v)
+	} else {
+		err = appendTextValue(s, v)
+	}
+	// err := appendTextValue(s, v)
 	if err != nil {
 		s.appendError(err)
 	}
