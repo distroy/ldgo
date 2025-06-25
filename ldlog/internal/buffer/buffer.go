@@ -10,8 +10,9 @@ import (
 	"time"
 
 	"github.com/distroy/ldgo/v3/ldsync"
-	"go.uber.org/zap/buffer"
 )
+
+const smallBufferSize = 64
 
 // Buffer is a byte buffer.
 //
@@ -41,7 +42,6 @@ func (b *Buffer) Grow(n int) {
 		return
 	}
 	*b = slices.Grow(*b, n)
-	buffer.Buffer
 }
 
 // TrimNewline trims any final "\n" byte from the end of the buffer.
@@ -103,4 +103,10 @@ func (b *Buffer) AppendComplex(v complex128, bitSize int) {
 	*b = append(*b, s...)
 }
 
-func (b *Buffer) AppendTime(t time.Time, layout string) { *b = t.AppendFormat(*b, layout) }
+func (b *Buffer) AppendTime(t time.Time, layout string) {
+	if layout == "" {
+		b.AppendString(strconv.Quote(t.String()))
+		return
+	}
+	b.AppendString(strconv.Quote(t.Format(layout)))
+}

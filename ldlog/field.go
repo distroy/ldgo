@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/distroy/ldgo/v3/ldlog/internal/attr"
-	"github.com/distroy/ldgo/v3/ldlog/internal/field"
 )
 
 func Skip() Attr { return attr.Skip() }
@@ -117,13 +116,13 @@ func Integer[Int ~int | ~int8 | ~int16 | ~int32 | ~int64 |
 
 func Float[T ~float32 | ~float64](key string, val T) Attr { return Float64(key, float64(val)) }
 
-func BriefString(key string, val string) Attr         { return field.BriefString(key, val) }
-func BriefByteString(key string, val []byte) Attr     { return field.BriefByteString(key, val) }
-func BriefStringer(key string, val fmt.Stringer) Attr { return field.BriefStringer(key, val) }
+func BriefString(key string, val string) Attr         { return attr.BriefString(key, val) }
+func BriefByteString(key string, val []byte) Attr     { return attr.BriefByteString(key, val) }
+func BriefStringer(key string, val fmt.Stringer) Attr { return attr.BriefStringer(key, val) }
 
-func BriefStringp(key string, val *string) Attr               { return field.BriefStringp(key, val) }
-func BriefStrings(key string, val []string) Attr              { return field.BriefStrings(key, val) }
-func BriefByteStrings(key string, val [][]byte) Attr          { return field.BriefByteStrings(key, val) }
-func BriefStringers[T fmt.Stringer](key string, val []T) Attr { return field.BriefStringers(key, val) }
+func BriefStringp(key string, val *string) Attr               { return attr.BriefStringp(key, val) }
+func BriefStrings(key string, val []string) Attr              { return attr.BriefStrings(key, val) }
+func BriefByteStrings(key string, val [][]byte) Attr          { return attr.BriefByteStrings(key, val) }
+func BriefStringers[T fmt.Stringer](key string, val []T) Attr { return attr.BriefStringers(key, val) }
 
-func BriefReflect(key string, val any) Attr { return field.BriefReflect(key, val) }
+func BriefReflect(key string, val any) Attr { return attr.BriefReflect(key, val) }

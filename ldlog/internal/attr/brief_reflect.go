@@ -56,7 +56,8 @@ func mapkey2str(v reflect.Value) string {
 func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 	switch vv := v.Interface().(type) {
 	case time.Time:
-		b.AppendTime(vv, time.RFC3339)
+		// b.AppendTime(vv, time.RFC3339)
+		b.AppendTime(vv, "")
 		return
 
 	case time.Duration:
@@ -69,6 +70,7 @@ func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 
 	case error:
 		b.AppendString(quote(vv.Error()))
+		return
 	}
 
 	for v.Kind() == reflect.Ptr || v.Kind() == reflect.Interface {
@@ -86,7 +88,7 @@ func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 		return
 
 	case reflect.String:
-		b.AppendString(v.String())
+		addBriefStr(b, v.String())
 		return
 
 	case reflect.Bool:
@@ -127,42 +129,54 @@ func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 		return
 
 	case reflect.Struct:
-		return enc.AppendObject(&briefReflectStruct{Val: v})
+		addBriefRefStruct(b, v)
+		return
 
 	case reflect.Map:
-		return enc.AppendObject(&briefReflectMap{Val: v})
+		addBriefRefMap(b, v)
+		return
 	}
 }
 
 func addBriefRefSlice(b *buffer.Buffer, v reflect.Value) {
 	n := briefArrayLen
 	l := v.Len()
-	if l > n {
-		b.AppendByte('{')
-
-		b.AppendString(tagLen)
-		b.AppendByte(':')
-		b.AppendInt(int64(l))
-		b.AppendByte(',')
-
-		b.AppendString(tagType)
-		b.AppendByte(':')
-		b.AppendString("array")
-		b.AppendByte(',')
+	if l <= n {
+		b.AppendByte('[')
+		addBriefRefSliceData(b, v, l)
+		b.AppendByte(']')
+		return
 	}
 
-	n = min(n, l)
-	for i := range n {
+	b.AppendByte('{')
+
+	b.AppendString(tagLen)
+	b.AppendByte(':')
+	b.AppendInt(int64(l))
+	b.AppendByte(',')
+
+	b.AppendString(tagType)
+	b.AppendByte(':')
+	b.AppendString("array")
+	b.AppendByte(',')
+
+	b.AppendString(tagBrief)
+	b.AppendByte(':')
+
+	b.AppendByte('[')
+	addBriefRefSliceData(b, v, n)
+	b.AppendByte(']')
+
+	b.AppendByte('}')
+}
+
+func addBriefRefSliceData(b *buffer.Buffer, v reflect.Value, l int) {
+	for i := range l {
 		if i > 0 {
 			b.AppendByte(',')
 		}
-
 		f := v.Index(i)
 		addBriefRef(b, f)
-	}
-
-	if l > n {
-		b.AppendByte('}')
 	}
 }
 
@@ -170,16 +184,103 @@ func addBriefRefStruct(b *buffer.Buffer, v reflect.Value) {
 	typ := v.Type()
 	s := jsontag.Get(typ)
 	b.AppendByte('{')
-	first := true
+	addBriefRefStructData(b, v, s)
+	b.AppendByte('}')
+}
+
+func addBriefRefStructData(b *buffer.Buffer, v reflect.Value, s *jsontag.Struct) {
 	for i := range s.NumField() {
-		if !first {
+		ft := s.Field(i)
+		fv := v.Field(i)
+		addBriefRefStructField(b, fv, ft)
+	}
+}
+
+func addBriefRefStructField(b *buffer.Buffer, v reflect.Value, f *jsontag.Field) {
+	if f.Field.Anonymous {
+		addBriefRefStructFieldEmbeded(b, v, f)
+		return
+	}
+	if f.OmitEmpty && v.IsZero() {
+		return
+	}
+	addBriefRefKeyValue(b, f.Name, v)
+}
+
+func addBriefRefStructFieldEmbeded(b *buffer.Buffer, v reflect.Value, f *jsontag.Field) {
+	if f.Type.Kind() == reflect.Ptr {
+		if v.IsNil() {
+			return
+		}
+		v = v.Elem()
+	}
+	typ := v.Type()
+	s := jsontag.Get(typ)
+	addBriefRefStructData(b, v, s)
+}
+
+func addBriefRefMap(b *buffer.Buffer, v reflect.Value) {
+	n := briefMapLen
+	l := v.Len()
+	if n == 0 || l <= n {
+		b.AppendByte('{')
+		addBriefRefMapData(b, v, l)
+		b.AppendByte('}')
+		return
+	}
+
+	b.AppendByte('{')
+
+	b.AppendString(tagLen)
+	b.AppendByte(':')
+	b.AppendInt(int64(l))
+	b.AppendByte(',')
+
+	b.AppendString(tagType)
+	b.AppendByte(':')
+	b.AppendString("map")
+	b.AppendByte(',')
+
+	b.AppendString(tagBrief)
+	b.AppendByte(':')
+
+	b.AppendByte('{')
+	addBriefRefMapData(b, v, n)
+	b.AppendByte('}')
+
+	b.AppendByte('}')
+}
+
+func addBriefRefMapData(b *buffer.Buffer, v reflect.Value, l int) {
+	type data struct {
+		Key string
+		Val reflect.Value
+	}
+	s := make([]data, 0, v.Len())
+	for it := v.MapRange(); it.Next(); {
+		k := mapkey2str(it.Key())
+		v := it.Value()
+		s = append(s, data{Key: k, Val: v})
+	}
+
+	ldsort.Sort(s, func(a, b data) int { return ldcmp.CompareString(a.Key, b.Key) })
+	for i := range l {
+		d := &s[i]
+		addBriefRefKeyValue(b, d.Key, d.Val)
+	}
+}
+
+func addBriefRefKeyValue(b *buffer.Buffer, key string, val reflect.Value) {
+	l := b.Len()
+	if l > 0 {
+		switch b.Bytes()[l-1] {
+		case '{':
 			b.AppendByte(',')
 		}
-		fs := s.Field(i)
-		if fs.Field.Anonymous {
-			continue
-		}
 	}
+	b.AppendString(key)
+	b.AppendByte(':')
+	addBriefRef(b, val)
 }
 
 type brief_reflect_t struct {
@@ -190,134 +291,17 @@ func (p brief_reflect_t) MarshalJSON() ([]byte, error)       { return s2b(p.Stri
 func (p brief_reflect_t) MarshalText() ([]byte, error)       { return s2b(p.String()), nil }
 func (p brief_reflect_t) WriteTo(w io.Writer) (int64, error) { return writeStringer(w, p) }
 func (p brief_reflect_t) String() string {
+	if p.val == nil {
+		return nil_t{}.String()
+	}
+
 	buf := getBuf()
 	defer buf.Free()
-	if p.val == nil {
-		buf.WriteString(nil_t{}.String())
-		return buf.String()
+
+	v, ok := p.val.(reflect.Value)
+	if !ok {
+		v = reflect.ValueOf(v)
 	}
-}
-
-type briefReflectMap struct {
-	Val reflect.Value
-	Len int
-}
-
-func (p *briefReflectMap) MarshalLogObject(enc ObjectEncoder) error {
-	if p.Len > 0 {
-		return p.marshalLogObject(enc, p.Len)
-	}
-
-	n := briefMapLen
-	l := p.Val.Len()
-	if l <= n {
-		return p.marshalLogObject(enc, l)
-	}
-
-	enc.AddInt(tagLen, l)
-	enc.AddString(tagType, "map")
-	return enc.AddObject(tagBrief, &briefReflectMap{Val: p.Val, Len: n})
-}
-
-func (p *briefReflectMap) marshalLogObject(enc ObjectEncoder, n int) error {
-	type data struct {
-		Key string
-		Val reflect.Value
-	}
-	l := make([]data, 0, p.Val.Len())
-	for it := p.Val.MapRange(); it.Next(); {
-		k := mapkey2str(it.Key())
-		v := it.Value()
-		l = append(l, data{Key: k, Val: v})
-	}
-
-	ldsort.Sort(l, func(a, b data) int { return ldcmp.CompareString(a.Key, b.Key) })
-	for i := 0; i < n; i++ {
-		d := &l[i]
-		err := AddRef2Log(enc, d.Key, d.Val)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-type briefReflectArray struct {
-	Val reflect.Value
-	Len int
-}
-
-func (p *briefReflectArray) MarshalLogObject(enc ObjectEncoder) error {
-	enc.AddInt(tagLen, p.Val.Len())
-	enc.AddString(tagType, "array")
-	return enc.AddArray(tagBrief, p)
-}
-
-func (p *briefReflectArray) MarshalLogArray(enc ArrayEncoder) error {
-	for i := 0; i < p.Len; i++ {
-		v := p.Val.Index(i)
-		err := AppendRef2Log(enc, v)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-type briefReflectStruct struct {
-	Val reflect.Value
-}
-
-func (p *briefReflectStruct) MarshalLogObject(enc ObjectEncoder) error {
-	return marshalReflectStruct(enc, p.Val)
-}
-
-func marshalReflectStruct(enc ObjectEncoder, obj reflect.Value) error {
-	typ := obj.Type()
-	s := jsontag.Get(typ)
-	for i := 0; i < s.NumField(); i++ {
-		f := s.Field(i)
-		err := marshalReflectStructField(enc, obj, f)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func marshalReflectStructField(enc ObjectEncoder, obj reflect.Value, f *jsontag.Field) error {
-	k := f.Name
-	v := obj.Field(f.Index)
-
-	// log.Printf(" === field begin. field: %s", k)
-	// defer log.Printf(" === field end. field: %s", k)
-
-	// if !f.Field.IsExported() {
-	// 	addr := unsafe.Pointer(v.UnsafeAddr())
-	// 	v = reflect.NewAt(v.Type(), addr).Elem()
-	// }
-
-	if f.Field.Anonymous {
-		return marshalReflectStructEmbedded(enc, v, f)
-	}
-
-	if f.OmitEmpty && v.IsZero() {
-		return nil
-	}
-
-	return AddRef2Log(enc, k, v)
-}
-
-func marshalReflectStructEmbedded(enc ObjectEncoder, v reflect.Value, f *jsontag.Field) error {
-	if v.Kind() == reflect.Ptr {
-		if v.IsNil() {
-			return nil
-		}
-		v = v.Elem()
-	}
-	// if !f.Field.IsExported() {
-	// 	addr := unsafe.Pointer(v.UnsafeAddr())
-	// 	v = reflect.NewAt(v.Type(), addr).Elem()
-	// }
-	return marshalReflectStruct(enc, v)
+	addBriefRef(buf, v)
+	return buf.String()
 }
