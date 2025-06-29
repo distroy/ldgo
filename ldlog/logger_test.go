@@ -11,9 +11,9 @@ import (
 	"unsafe"
 
 	"github.com/distroy/ldgo/v3/ldhook"
+	"github.com/distroy/ldgo/v3/ldlog/internal/attr"
 	"github.com/distroy/ldgo/v3/ldptr"
 	"github.com/smartystreets/goconvey/convey"
-	"go.uber.org/zap"
 )
 
 func TestLogger(t *testing.T) {
@@ -32,8 +32,8 @@ func TestLogger(t *testing.T) {
 		}
 
 		writer := bytes.NewBuffer(nil)
-		l := New(Writer(writer))
-		l = l.With(zap.String("abc", "xxx"))
+		l := New(writer)
+		l = l.With(attr.String("abc", "xxx"))
 
 		c.Convey("error", func(c convey.C) {
 			l.Error("error message")
@@ -42,7 +42,7 @@ func TestLogger(t *testing.T) {
 		})
 
 		c.Convey("warn", func(c convey.C) {
-			l.Warn("warn message", zap.Int("int", 123))
+			l.Warn("warn message", attr.Int("int", 123))
 			c.So(writer.String(), convey.ShouldEqual,
 				"2021-08-22T13:30:58.000+0800|WARN|-|ldlog/logger_test.go:45|warn message,abc=xxx|int=123\n")
 		})

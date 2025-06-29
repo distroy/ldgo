@@ -5,23 +5,25 @@
 package ldlog
 
 import (
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
+	"context"
+	"math"
 )
 
 func newDiscard() *Logger {
-	core := discardCore{}
-	zlog := zap.New(core)
-	return newLogger(newCore(zlog, zlog.Sugar()))
+	h := discardHandler{}
+	return newLogger(newCore(h))
 }
 
-var _ zapcore.Core = (*discardCore)(nil)
+var _ logHandler = (*discardHandler)(nil)
 
-type discardCore struct{}
+type discardHandler struct{}
 
-func (_ discardCore) Enabled(l zapcore.Level) bool                   { return false }
-func (_ discardCore) With(f []zapcore.Field) zapcore.Core            { return discardCore{} }
-func (_ discardCore) Write(e zapcore.Entry, f []zapcore.Field) error { return nil }
-func (_ discardCore) Sync() error                                    { return nil }
+func (_ discardHandler) Enabled(context.Context, Level) bool  { return false }
+func (_ discardHandler) Handle(context.Context, Record) error { return nil }
+func (h discardHandler) WithAttrs(attrs []Attr) Handler       { return h }
+func (h discardHandler) WithGroup(name string) Handler        { return h }
 
-func (_ discardCore) Check(e zapcore.Entry, c *zapcore.CheckedEntry) *zapcore.CheckedEntry { return c }
+func (_ discardHandler) Sync() error      { return nil }
+func (_ discardHandler) Close() error     { return nil }
+func (_ discardHandler) Level() Level     { return math.MaxInt }
+func (_ discardHandler) Sequence() string { return "" }

@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/smartystreets/goconvey/convey"
-	"go.uber.org/zap/zapcore"
 )
 
 func TestRateEnabler(t *testing.T) {
@@ -39,8 +38,8 @@ func TestIntervalEnabler(t *testing.T) {
 		})
 		c.Convey("50ms", func(c convey.C) {
 			const (
-				info = zapcore.InfoLevel
-				err  = zapcore.ErrorLevel
+				info = LevelInfo
+				err  = LevelError
 
 				interval = time.Millisecond * 50
 			)
@@ -67,8 +66,8 @@ func Test_rateEnabler_Enable(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
 		l := &rateEnabler{}
 		const (
-			info = zapcore.InfoLevel
-			err  = zapcore.ErrorLevel
+			info = LevelInfo
+			err  = LevelError
 		)
 
 		c.Convey("1", func(c convey.C) {
@@ -93,8 +92,8 @@ func Test_rateEnabler_Enable(t *testing.T) {
 
 func testRateEnabler_HalfEnable(c convey.C, l Enabler) {
 	const (
-		info = zapcore.InfoLevel
-		err  = zapcore.ErrorLevel
+		info = LevelInfo
+		err  = LevelError
 	)
 	c.Convey("info log", func(c convey.C) {
 		var (
@@ -120,8 +119,10 @@ func testRateEnabler_HalfEnable(c convey.C, l Enabler) {
 func Test_intervalEnabler_Enable(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
 		l := &intervalEnabler{}
-		info := zapcore.InfoLevel
-		err := zapcore.ErrorLevel
+		const (
+			info = LevelInfo
+			err  = LevelError
+		)
 
 		c.Convey("0", func(c convey.C) {
 			l.interval = 0

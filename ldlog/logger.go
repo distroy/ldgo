@@ -30,7 +30,7 @@ func (l *Logger) clone() *Logger {
 }
 
 func (l *Logger) With(attrs ...Attr) *Logger {
-	if len(attrs) == 0 {
+	if len(attrs) == 0 || l == nil || l.handler == nil {
 		return l
 	}
 	l = l.clone()
@@ -39,6 +39,9 @@ func (l *Logger) With(attrs ...Attr) *Logger {
 }
 
 func (l *Logger) WithOptions(opts ...Option) *Logger {
+	if len(opts) == 0 || l == nil || l.handler == nil {
+		return l
+	}
 	c := l.core
 	for _, opt := range opts {
 		opt(&c)
@@ -63,8 +66,8 @@ func (l *Logger) Warnf(fmt string, args ...any)  { l.logFmt(nil, lvlW, 1, fmt, a
 func (l *Logger) Errorf(fmt string, args ...any) { l.logFmt(nil, lvlE, 1, fmt, args...) }
 func (l *Logger) Panicf(fmt string, args ...any) { l.logFmt(nil, lvlP, 1, fmt, args...) }
 
-func (l *Logger) Debugln(args ...any) { l.logln(nil, lvlD, 1, args) }
-func (l *Logger) Infoln(args ...any)  { l.logln(nil, lvlD, 1, args) }
-func (l *Logger) Warnln(args ...any)  { l.logln(nil, lvlD, 1, args) }
-func (l *Logger) Errorln(args ...any) { l.logln(nil, lvlD, 1, args) }
-func (l *Logger) Panicln(args ...any) { l.logln(nil, lvlD, 1, args) }
+func (l *Logger) Debugln(args ...any) { l.logln(nil, lvlD, 1, args...) }
+func (l *Logger) Infoln(args ...any)  { l.logln(nil, lvlI, 1, args...) }
+func (l *Logger) Warnln(args ...any)  { l.logln(nil, lvlW, 1, args...) }
+func (l *Logger) Errorln(args ...any) { l.logln(nil, lvlE, 1, args...) }
+func (l *Logger) Panicln(args ...any) { l.logln(nil, lvlP, 1, args...) }

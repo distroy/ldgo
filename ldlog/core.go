@@ -49,7 +49,7 @@ func (l *core) ctx(c context.Context) context.Context {
 
 func (l *core) Enabled(c context.Context, lvl Level) bool { return l.enabled(l.ctx(c), lvl, 1) }
 func (l *core) enabled(c context.Context, lvl Level, skip int) bool {
-	if !l.handler.Enabled(c, lvl) {
+	if l == nil || l.handler == nil || !l.handler.Enabled(c, lvl) {
 		return false
 	}
 	return l.enabler.Enable(lvl, skip+1)
@@ -64,7 +64,7 @@ func (l *core) format(format string, args ...any) {
 func (l *core) getCaller(skip int) uintptr {
 	var pcs [1]uintptr
 	// skip [runtime.Callers, this function, this function's caller]
-	runtime.Callers(skip+1+l.stackSkip, pcs[:])
+	runtime.Callers(skip+2+l.stackSkip, pcs[:])
 	return pcs[0]
 }
 
@@ -80,7 +80,7 @@ func (l *core) writeRecord(c context.Context, lvl Level, r *Record) {
 
 func (l *core) log(c context.Context, lvl Level, skip int, msg string, args ...any) {
 	c = l.ctx(c)
-	if l == nil || !l.enabled(c, lvl, skip+1) {
+	if !l.enabled(c, lvl, skip+1) {
 		return
 	}
 	pc := l.getCaller(skip + 1)
@@ -91,7 +91,7 @@ func (l *core) log(c context.Context, lvl Level, skip int, msg string, args ...a
 
 func (l *core) logFmt(c context.Context, lvl Level, skip int, format string, args ...any) {
 	c = l.ctx(c)
-	if l == nil || !l.enabled(c, lvl, skip+1) {
+	if !l.enabled(c, lvl, skip+1) {
 		return
 	}
 	pc := l.getCaller(skip + 1)
@@ -103,7 +103,7 @@ func (l *core) logFmt(c context.Context, lvl Level, skip int, format string, arg
 
 func (l *core) logAttrs(c context.Context, lvl Level, skip int, msg string, attrs ...Attr) {
 	c = l.ctx(c)
-	if l == nil || !l.enabled(c, lvl, skip+1) {
+	if !l.enabled(c, lvl, skip+1) {
 		return
 	}
 	pc := l.getCaller(skip + 1)
@@ -114,11 +114,11 @@ func (l *core) logAttrs(c context.Context, lvl Level, skip int, msg string, attr
 
 func (l *core) logln(c context.Context, lvl Level, skip int, args ...any) {
 	c = l.ctx(c)
-	if l == nil || !l.enabled(c, lvl, skip+1) {
+	if !l.enabled(c, lvl, skip+1) {
 		return
 	}
 	pc := l.getCaller(skip + 1)
-	msg := pw(args).String()
+	msg := sprintln(args)
 	r := slog.NewRecord(time.Now(), lvl, msg, pc)
 	// r.Add(args...)
 	l.writeRecord(c, lvl, &r)

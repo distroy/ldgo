@@ -17,6 +17,9 @@ type logHandler interface {
 }
 
 func wrapHandler(h slog.Handler) logHandler {
+	if h == nil {
+		return nil
+	}
 	if hh, _ := h.(logHandler); hh != nil {
 		return hh
 	}
