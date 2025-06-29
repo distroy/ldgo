@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"go.uber.org/zap"
+	"github.com/distroy/ldgo/v3/ldlog"
 )
 
 type Options struct {
@@ -42,9 +42,9 @@ func isCallerFilePath(file string) bool {
 	return false
 }
 
-func GetCallerField(caller bool) zap.Field {
+func GetCallerField(caller bool) ldlog.Attr {
 	if !caller {
-		return zap.Skip()
+		return ldlog.Skip()
 	}
 	for i := 2; i < 15; i++ {
 		_, file, line, ok := runtime.Caller(i)
@@ -54,8 +54,8 @@ func GetCallerField(caller bool) zap.Field {
 		if !isCallerFilePath(file) {
 			continue
 		}
-		return zap.String("caller", fmt.Sprintf("%s:%d", file, line))
+		return ldlog.String("caller", fmt.Sprintf("%s:%d", file, line))
 	}
 
-	return zap.String("caller", "overflow")
+	return ldlog.String("caller", "overflow")
 }

@@ -505,7 +505,7 @@ func TestGormDb_WithLogger(t *testing.T) {
 			defer db.Close()
 
 			buf := &strings.Builder{}
-			db = db.WithLogger(ldlog.New(ldlog.Writer(buf)).Wrapper())
+			db = db.WithLogger(ldlog.New(buf).Wrapper())
 
 			db = db.UseSlaver()
 
@@ -531,7 +531,7 @@ func TestGormDb_WithLogger(t *testing.T) {
 				db = db.UseSlaver()
 
 				buf := &strings.Builder{}
-				db = db.WithLogger(ldlog.New(ldlog.Writer(buf)).Wrapper())
+				db = db.WithLogger(ldlog.New(buf).Wrapper())
 
 				db.Save(&testTable{
 					ProjectId: 1001,
@@ -554,7 +554,7 @@ func TestGormDb_WithLogger(t *testing.T) {
 				db = db.UseSlaver(1)
 
 				buf := &strings.Builder{}
-				db = db.WithLogger(ldlog.New(ldlog.Writer(buf)).Wrapper())
+				db = db.WithLogger(ldlog.New(buf).Wrapper())
 
 				db.Save(&testTable{
 					ProjectId: 1001,

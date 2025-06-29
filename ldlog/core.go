@@ -38,7 +38,7 @@ func (l *core) close() error { return l.handler.Close() }
 func (l *core) Level() Level     { return l.handler.Level() }
 func (l *core) Sequence() string { return l.handler.Sequence() }
 
-func (l *core) setAttr(attr ...Attr) { l.handler = wrapHandler(l.handler.WithAttrs(attr)) }
+func (l *core) withAttrs(attr ...Attr) { l.handler = wrapHandler(l.handler.WithAttrs(attr)) }
 
 func (l *core) ctx(c context.Context) context.Context {
 	if c == nil {

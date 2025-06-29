@@ -267,14 +267,14 @@ func (n *rbtreeNode[T]) checkParent(sentinel *rbtreeNode[T]) bool {
 	}
 	if n.Parent != sentinel {
 		if n.Parent.Left != n && n.Parent.Right != n {
-			// ldlog.Default().Info("check parent fail", zap.Any("node", n.Data), zap.Any("parent", n.Parent.Data), zap.Uintptr("sentinel", uintptr(unsafe.Pointer(sentinel))))
+			// ldlog.Default().Info("check parent fail", ldlog.Any("node", n.Data), ldlog.Any("parent", n.Parent.Data), ldlog.Uintptr("sentinel", uintptr(unsafe.Pointer(sentinel))))
 			return false
 		}
 	}
 
 	if n.Left != sentinel {
 		if n.Left.Parent != n {
-			// ldlog.Default().Info("check parent fail", zap.Any("node", n.Data), zap.Any("left", n.Left.Data))
+			// ldlog.Default().Info("check parent fail", ldlog.Any("node", n.Data), ldlog.Any("left", n.Left.Data))
 			return false
 		} else if !n.Left.checkParent(sentinel) {
 			return false
@@ -283,7 +283,7 @@ func (n *rbtreeNode[T]) checkParent(sentinel *rbtreeNode[T]) bool {
 
 	if n.Right != sentinel {
 		if n.Right.Parent != n {
-			// ldlog.Default().Info("check parent fail", zap.Any("node", n.Data), zap.Any("right", n.Right.Data))
+			// ldlog.Default().Info("check parent fail", ldlog.Any("node", n.Data), ldlog.Any("right", n.Right.Data))
 			return false
 		} else if !n.Right.checkParent(sentinel) {
 			return false
@@ -301,7 +301,7 @@ func (n *rbtreeNode[T]) checkColor(sentinel *rbtreeNode[T]) bool {
 func (n *rbtreeNode[T]) walkColor(sentinel *rbtreeNode[T], wantBlacks, currentBlacks int) bool {
 	if n.Color == colorRed {
 		if n.Left == nil || n.Right == nil || n.Left.Color != colorBlack || n.Right.Color != colorBlack {
-			// ldlog.Default().Info("the children of red node is not black", zap.Reflect("node", n.toMap(sentinel)))
+			// ldlog.Default().Info("the children of red node is not black", ldlog.Reflect("node", n.toMap(sentinel)))
 			return false
 		}
 	}

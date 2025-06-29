@@ -10,8 +10,6 @@ import (
 	_ "unsafe"
 
 	"github.com/distroy/ldgo/v3/ldlog"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 const (
@@ -37,30 +35,27 @@ type stringer interface {
 	String() string
 }
 
-func syncLog(c context.Context) {
-	GetLogger(c).Sync()
+//go:linkname logFmt github.com/distroy/ldgo/v3/ldlog.logFmt
+func logFmt(l *ldlog.Logger, lvl ldlog.Level, skip int, fmt string, args ...any)
+
+//go:linkname logAttrs github.com/distroy/ldgo/v3/ldlog.logAttrs
+func logAttrs(l *ldlog.Logger, lvl ldlog.Level, skip int, msg string, args ...ldlog.Attr)
+
+func ctxLogFmt(c Context, lvl ldlog.Level, fmt string, args ...any) {
+	format(fmt, args...)
+	logFmt(GetLogger(c), lvl, 2, fmt, args...)
 }
 
-//go:linkname zCoreByLogger github.com/distroy/ldgo/v3/ldlog.zCoreByLogger
-func zCoreByLogger(l *ldlog.Logger, lvl zapcore.Level, skip int) *zap.Logger
-
-//go:linkname zSugarByLogger github.com/distroy/ldgo/v3/ldlog.zSugarByLogger
-func zSugarByLogger(l *ldlog.Logger, lvl zapcore.Level, skip int) *zap.SugaredLogger
-
-func zCore(c context.Context, lvl zapcore.Level, skip int) *zap.Logger {
-	return zCoreByLogger(GetLogger(c), lvl, skip+1)
-}
-func zSugar(c context.Context, lvl zapcore.Level, skip int) *zap.SugaredLogger {
-	return zSugarByLogger(GetLogger(c), lvl, skip+1)
+func ctxLogAttr(c Context, lvl ldlog.Level, msg string, args ...ldlog.Attr) {
+	logAttrs(GetLogger(c), lvl, 2, msg, args...)
 }
 
 const (
-	lvlD = zapcore.DebugLevel
-	lvlI = zapcore.InfoLevel
-	lvlW = zapcore.WarnLevel
-	lvlE = zapcore.ErrorLevel
-	lvlP = zapcore.PanicLevel
-	lvlF = zapcore.FatalLevel
+	lvlD = ldlog.LevelDebug
+	lvlI = ldlog.LevelInfo
+	lvlW = ldlog.LevelWarn
+	lvlE = ldlog.LevelError
+	lvlP = ldlog.LevelPanic
 )
 
 func format(format string, args ...any) {
@@ -69,42 +64,14 @@ func format(format string, args ...any) {
 	}
 }
 
-func LogD(c Context, msg string, fields ...zap.Field) { zCore(c, lvlD, 1).Debug(msg, fields...) }
-func LogI(c Context, msg string, fields ...zap.Field) { zCore(c, lvlI, 1).Info(msg, fields...) }
-func LogW(c Context, msg string, fields ...zap.Field) { zCore(c, lvlW, 1).Warn(msg, fields...) }
-func LogE(c Context, msg string, fields ...zap.Field) { zCore(c, lvlE, 1).Error(msg, fields...) }
-func LogP(c Context, msg string, fields ...zap.Field) {
-	defer syncLog(c)
-	zCore(c, lvlP, 1).Panic(msg, fields...)
-}
-func LogF(c Context, msg string, fields ...zap.Field) {
-	defer syncLog(c)
-	zCore(c, lvlF, 1).Fatal(msg, fields...)
-}
+func LogD(c Context, msg string, fields ...ldlog.Attr) { ctxLogAttr(c, lvlD, msg, fields...) }
+func LogI(c Context, msg string, fields ...ldlog.Attr) { ctxLogAttr(c, lvlI, msg, fields...) }
+func LogW(c Context, msg string, fields ...ldlog.Attr) { ctxLogAttr(c, lvlW, msg, fields...) }
+func LogE(c Context, msg string, fields ...ldlog.Attr) { ctxLogAttr(c, lvlE, msg, fields...) }
+func LogP(c Context, msg string, fields ...ldlog.Attr) { ctxLogAttr(c, lvlP, msg, fields...) }
 
-func LogDf(c Context, fmt string, args ...any) {
-	format(fmt, args...)
-	zSugar(c, lvlD, 1).Debugf(fmt, args...)
-}
-func LogIf(c Context, fmt string, args ...any) {
-	format(fmt, args...)
-	zSugar(c, lvlI, 1).Infof(fmt, args...)
-}
-func LogWf(c Context, fmt string, args ...any) {
-	format(fmt, args...)
-	zSugar(c, lvlW, 1).Warnf(fmt, args...)
-}
-func LogEf(c Context, fmt string, args ...any) {
-	format(fmt, args...)
-	zSugar(c, lvlE, 1).Errorf(fmt, args...)
-}
-func LogPf(c Context, fmt string, args ...any) {
-	defer syncLog(c)
-	format(fmt, args...)
-	zSugar(c, lvlP, 1).Panicf(fmt, args...)
-}
-func LogFf(c Context, fmt string, args ...any) {
-	defer syncLog(c)
-	format(fmt, args...)
-	zSugar(c, lvlF, 1).Fatalf(fmt, args...)
-}
+func LogDf(c Context, fmt string, args ...any) { ctxLogFmt(c, lvlD, fmt, args...) }
+func LogIf(c Context, fmt string, args ...any) { ctxLogFmt(c, lvlI, fmt, args...) }
+func LogWf(c Context, fmt string, args ...any) { ctxLogFmt(c, lvlW, fmt, args...) }
+func LogEf(c Context, fmt string, args ...any) { ctxLogFmt(c, lvlE, fmt, args...) }
+func LogPf(c Context, fmt string, args ...any) { ctxLogFmt(c, lvlP, fmt, args...) }

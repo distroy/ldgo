@@ -10,9 +10,9 @@ import (
 
 	"github.com/distroy/ldgo/v3/ldctx"
 	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldlog"
 	"github.com/distroy/ldgo/v3/ldref"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 var (
@@ -135,7 +135,7 @@ func wrapGinBindFunc(fn func(g *gin.Context, o interface{}) error) func(c *Conte
 	return func(c *Context, reqType *requestType, reqBind *requestBind, reqVal reflect.Value) error {
 		reqNew := newRequest(reqType)
 		if err := fn(c.Gin(), reqNew.Interface()); err != nil {
-			ldctx.LogE(c, "ShouldBind() fail", zap.String("tag", reqBind.Tag), zap.Error(err))
+			ldctx.LogE(c, "ShouldBind() fail", ldlog.String("tag", reqBind.Tag), ldlog.Error(err))
 			delRequest(reqType, reqNew)
 			return lderr.ErrParseRequest
 		}

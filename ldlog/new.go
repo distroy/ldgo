@@ -6,6 +6,7 @@ package ldlog
 
 import (
 	"io"
+	"os"
 
 	"github.com/distroy/ldgo/v3/ldlog/internal/handler"
 )
@@ -20,6 +21,9 @@ func newHandler(w io.Writer) Handler {
 }
 
 func New(w io.Writer, opts ...Option) *Logger {
+	if w == nil {
+		w = os.Stderr
+	}
 	core := newCore(newHandler(w))
 	for _, opt := range opts {
 		opt(&core)

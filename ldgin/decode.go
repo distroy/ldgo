@@ -9,14 +9,14 @@ import (
 
 	"github.com/distroy/ldgo/v3/ldctx"
 	"github.com/distroy/ldgo/v3/lderr"
-	"go.uber.org/zap"
+	"github.com/distroy/ldgo/v3/ldlog"
 )
 
 // shouldBind will decode header/uri/json/query(form)
 func shouldBind(c *Context, req interface{}) error {
 	reqVal := reflect.ValueOf(req)
 	if reqVal.Kind() != reflect.Ptr || reqVal.Elem().Kind() != reflect.Struct {
-		ldctx.LogE(c, "input request type must be pointer to struct", zap.Stringer("type", reqVal.Kind()))
+		ldctx.LogE(c, "input request type must be pointer to struct", ldlog.Stringer("type", reqVal.Kind()))
 		return lderr.ErrInvalidRequestType
 	}
 
