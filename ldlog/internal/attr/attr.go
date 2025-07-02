@@ -7,8 +7,9 @@ package attr
 import (
 	"fmt"
 	"log/slog"
-	"strconv"
 	"time"
+
+	"github.com/distroy/ldgo/v3/ldlog/internal/buffer"
 )
 
 type (
@@ -19,7 +20,7 @@ type (
 )
 
 var (
-	_ LogValuer = string_t(nil)
+	_ LogValuer = string_value_t(nil)
 )
 
 func Any(k string, v any) Attr                { return slog.Any(k, v) }
@@ -35,11 +36,11 @@ func Duration(k string, v time.Duration) Attr { return slog.Duration(k, v) }
 func Skip() Attr          { return Attr{} }
 func nil_f(k string) Attr { return slog.Any(k, nil_t{}) }
 
-func string_f(k string, f func() string) Attr { return slog.Any(k, string_t(f)) }
+func string_f(k string, f func() string) Attr { return slog.Any(k, string_value_t(f)) }
 
-type string_t func() string
+type string_value_t func() string
 
-func (f string_t) LogValue() Value { return slog.StringValue(f()) }
+func (f string_value_t) LogValue() Value { return slog.StringValue(f()) }
 
 func Binary(key string, val []byte) Attr     { return string_f(key, func() string { return b64(val) }) }
 func ByteString(key string, val []byte) Attr { return slog.String(key, b2s(val)) }
@@ -69,25 +70,25 @@ func Stringp(key string, val *string) Attr {
 func Bools(key string, val []bool) Attr {
 	return slog.Any(key, &slice_t[bool]{
 		data: val,
-		text: func(buf []byte, v bool) []byte { return strconv.AppendBool(buf, v) },
+		text: func(buf *buffer.Buffer, v bool) { buf.AppendBool(v) },
 	})
 }
 func Strings(key string, val []string) Attr {
 	return slog.Any(key, &slice_t[string]{
 		data: val,
-		text: func(buf []byte, v string) []byte { return strconv.AppendQuote(buf, v) },
+		text: func(buf *buffer.Buffer, v string) { buf.AppendQuote(v) },
 	})
 }
 func Stringers[T fmt.Stringer](key string, val []T) Attr {
 	return slog.Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf []byte, v T) []byte { return strconv.AppendQuote(buf, v.String()) },
+		text: func(buf *buffer.Buffer, v T) { buf.AppendQuote(v.String()) },
 	})
 }
 func ByteStrings(key string, val [][]byte) Attr {
 	return slog.Any(key, &slice_t[[]byte]{
 		data: val,
-		text: func(buf []byte, v []byte) []byte { return strconv.AppendQuote(buf, b2s(v)) },
+		text: func(buf *buffer.Buffer, v []byte) { buf.AppendQuote(b2s(v)) },
 	})
 }
 
@@ -144,7 +145,7 @@ func ints_f[T int | int8 | int16 | int32 | int64](key string, val []T) Attr {
 	}
 	return slog.Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf []byte, v T) []byte { return strconv.AppendInt(buf, int64(v), 10) },
+		text: func(buf *buffer.Buffer, v T) { buf.AppendInt(int64(v)) },
 	})
 }
 
@@ -160,7 +161,7 @@ func uints_f[T uint | uint8 | uint16 | uint32 | uint64 | uintptr](key string, va
 	}
 	return slog.Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf []byte, v T) []byte { return strconv.AppendUint(buf, uint64(v), 10) },
+		text: func(buf *buffer.Buffer, v T) { buf.AppendUint(uint64(v)) },
 	})
 }
 func Uints(key string, val []uint) Attr       { return uints_f(key, val) }
@@ -176,7 +177,7 @@ func floats_f[T float32 | float64](key string, val []T) Attr {
 	}
 	return slog.Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf []byte, v T) []byte { return strconv.AppendFloat(buf, float64(v), 'g', -1, 64) },
+		text: func(buf *buffer.Buffer, v T) { buf.AppendFloat(float64(v), 64) },
 	})
 }
 
@@ -189,7 +190,7 @@ func complexs_f[T complex64 | complex128](key string, val []T) Attr {
 	}
 	return slog.Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf []byte, v T) []byte { return append(buf, complex_t(v).String()...) },
+		text: func(buf *buffer.Buffer, v T) { buf.AppendString(complex_t(v).String()) },
 	})
 }
 
@@ -212,12 +213,17 @@ func Durationp(key string, val *time.Duration) Attr {
 func Times(key string, val []time.Time) Attr         { return Stringers(key, val) }
 func Durations(key string, val []time.Duration) Attr { return Stringers(key, val) }
 
-func Error(err error) Attr              { return NamedError("error", err) }
-func NamedError(k string, e error) Attr { return string_f(k, func() string { return e2s(e) }) }
+func Error(err error) Attr { return NamedError("error", err) }
+func NamedError(k string, e error) Attr {
+	if e == nil {
+		return nil_f(k)
+	}
+	return string_f(k, e.Error)
+}
 func Errors(key string, err []error) Attr {
 	return slog.Any(key, &slice_t[error]{
 		data: err,
-		text: func(buf []byte, v error) []byte { return strconv.AppendQuote(buf, e2s(v)) },
+		text: func(buf *buffer.Buffer, v error) { buf.AppendQuote(e2s(v)) },
 	})
 }
 

@@ -50,7 +50,7 @@ func TestIntervalEnabler(t *testing.T) {
 			time.Sleep(interval)
 			c.So(l.Enable(info, 1), convey.ShouldBeTrue)
 			c.So(l.Enable(err, 1), convey.ShouldBeTrue)
-			for i := 0; i < 100; i++ {
+			for range 100 {
 				c.So(l.Enable(info, 1), convey.ShouldBeFalse)
 				c.So(l.Enable(err, 1), convey.ShouldBeTrue)
 			}
@@ -72,13 +72,13 @@ func Test_rateEnabler_Enable(t *testing.T) {
 
 		c.Convey("1", func(c convey.C) {
 			l.rate = 1
-			for i := 0; i < 100; i++ {
+			for range 100 {
 				c.So(l.Enable(info), convey.ShouldBeTrue)
 			}
 		})
 		c.Convey("0", func(c convey.C) {
 			l.rate = 0
-			for i := 0; i < 100; i++ {
+			for range 100 {
 				c.So(l.Enable(info), convey.ShouldBeFalse)
 			}
 			c.So(l.Enable(err), convey.ShouldBeTrue)
@@ -101,7 +101,7 @@ func testRateEnabler_HalfEnable(c convey.C, l Enabler) {
 			diff     = 1000
 		)
 		trueCnt := 0
-		for i := 0; i < totalCnt; i++ {
+		for range totalCnt {
 			if l.Enable(info) {
 				trueCnt++
 			}
@@ -110,7 +110,7 @@ func testRateEnabler_HalfEnable(c convey.C, l Enabler) {
 		c.So(trueCnt, convey.ShouldBeBetweenOrEqual, half-diff, half+diff)
 	})
 	c.Convey("error log", func(c convey.C) {
-		for i := 0; i < 100; i++ {
+		for range 100 {
 			c.So(l.Enable(err), convey.ShouldBeTrue)
 		}
 	})
@@ -126,7 +126,7 @@ func Test_intervalEnabler_Enable(t *testing.T) {
 
 		c.Convey("0", func(c convey.C) {
 			l.interval = 0
-			for i := 0; i < 100; i++ {
+			for range 100 {
 				c.So(l.Enable(info, 0), convey.ShouldBeTrue)
 				c.So(l.Enable(err, 0), convey.ShouldBeTrue)
 			}
@@ -138,7 +138,7 @@ func Test_intervalEnabler_Enable(t *testing.T) {
 			time.Sleep(interval)
 			c.So(l.Enable(info, 1), convey.ShouldBeTrue)
 			c.So(l.Enable(err, 1), convey.ShouldBeTrue)
-			for i := 0; i < 100; i++ {
+			for range 100 {
 				c.So(l.Enable(info, 1), convey.ShouldBeFalse)
 				c.So(l.Enable(err, 1), convey.ShouldBeTrue)
 			}

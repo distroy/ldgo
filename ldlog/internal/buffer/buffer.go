@@ -12,6 +12,10 @@ import (
 	"github.com/distroy/ldgo/v3/ldsync"
 )
 
+const (
+	TimeLayout = "2006-01-02T15:04:05.000Z0700"
+)
+
 const smallBufferSize = 64
 
 // Buffer is a byte buffer.
@@ -58,10 +62,10 @@ func (b *Buffer) Reset() { b.SetLen(0) }
 
 func (b *Buffer) WriteTime(t time.Time, layout string) (int, error) {
 	if layout == "" {
-		layout = "2006-01-02T15:04:05.000Z0700"
+		layout = TimeLayout
 	}
 	l0 := len(*b)
-	*b = t.AppendFormat(*b, layout)
+	b.AppendTime(t, layout)
 	l1 := len(*b)
 	return l1 - l0, nil
 }
@@ -74,6 +78,12 @@ func (b *Buffer) Write(p []byte) (int, error) {
 func (b *Buffer) WriteString(s string) (int, error) {
 	*b = append(*b, s...)
 	return len(s), nil
+}
+
+func (b *Buffer) WriteQuote(s string) (int, error) {
+	l0 := len(*b)
+	*b = strconv.AppendQuote(*b, s)
+	return len(*b) - l0, nil
 }
 
 func (b *Buffer) WriteByte(c byte) error {
@@ -92,6 +102,7 @@ func (b *Buffer) AppendBool(v bool)     { *b = strconv.AppendBool(*b, v) }
 func (b *Buffer) AppendByte(v byte)     { *b = append(*b, v) }
 func (b *Buffer) AppendBytes(v []byte)  { *b = append(*b, v...) }
 func (b *Buffer) AppendString(v string) { *b = append(*b, v...) }
+func (b *Buffer) AppendQuote(v string)  { *b = strconv.AppendQuote(*b, v) }
 
 func (b *Buffer) AppendInt(v int64)   { *b = strconv.AppendInt(*b, v, 10) }
 func (b *Buffer) AppendUint(v uint64) { *b = strconv.AppendUint(*b, v, 10) }
@@ -105,8 +116,7 @@ func (b *Buffer) AppendComplex(v complex128, bitSize int) {
 
 func (b *Buffer) AppendTime(t time.Time, layout string) {
 	if layout == "" {
-		b.AppendString(strconv.Quote(t.String()))
-		return
+		layout = TimeLayout
 	}
-	b.AppendString(strconv.Quote(t.Format(layout)))
+	*b = t.AppendFormat(*b, layout)
 }

@@ -33,7 +33,7 @@ func (l *core) Enabler() Enabler { return l.enabler }
 func (l *core) Handler() Handler { return l.handler }
 
 func (l *core) Sync() error  { return l.handler.Sync() }
-func (l *core) close() error { return l.handler.Close() }
+func (l *core) Close() error { return l.handler.Close() }
 
 func (l *core) Level() Level     { return l.handler.Level() }
 func (l *core) Sequence() string { return l.handler.Sequence() }
@@ -55,12 +55,6 @@ func (l *core) enabled(c context.Context, lvl Level, skip int) bool {
 	return l.enabler.Enable(lvl, skip+1)
 }
 
-func (l *core) format(format string, args ...any) {
-	if formatFlag {
-		_ = fmt.Sprintf(format, args...)
-	}
-}
-
 func (l *core) getCaller(skip int) uintptr {
 	var pcs [1]uintptr
 	// skip [runtime.Callers, this function, this function's caller]
@@ -68,7 +62,7 @@ func (l *core) getCaller(skip int) uintptr {
 	return pcs[0]
 }
 
-func (l *core) writeRecord(c context.Context, lvl Level, r *Record) {
+func (l *core) writeRecord(c context.Context, _ Level, r *Record) {
 	c = l.ctx(c)
 	_ = l.Handler().Handle(c, *r)
 	// if lvl < LevelPanic {

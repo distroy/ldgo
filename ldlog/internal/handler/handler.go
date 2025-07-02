@@ -18,7 +18,10 @@ var (
 
 func NewHandler(w io.Writer, opts *Options) Handler {
 	if opts == nil {
-		opts = &Options{}
+		opts = &Options{
+			Caller: true,
+			Level:  slog.LevelInfo,
+		}
 	}
 	return Handler{
 		&commonHandler{

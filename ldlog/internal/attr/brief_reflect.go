@@ -54,22 +54,36 @@ func mapkey2str(v reflect.Value) string {
 }
 
 func addBriefRef(b *buffer.Buffer, v reflect.Value) {
+	// log.Printf(`===== kind 1: %s`, v.Kind().String())
+	// log.Printf(`===== type 1: %s`, v.Type().String())
 	switch vv := v.Interface().(type) {
 	case time.Time:
 		// b.AppendTime(vv, time.RFC3339)
+		b.AppendByte('"')
 		b.AppendTime(vv, "")
+		b.AppendByte('"')
 		return
 
 	case time.Duration:
-		b.AppendString(quote(vv.String()))
+		b.AppendByte('"')
+		b.AppendString(vv.String())
+		b.AppendByte('"')
 		return
 
 	case fmt.Stringer:
-		b.AppendString(quote(vv.String()))
+		if vv != nil {
+			addBriefStr(b, vv.String())
+		} else {
+			b.AppendString(nil_t{}.String())
+		}
 		return
 
 	case error:
-		b.AppendString(quote(vv.Error()))
+		if vv != nil {
+			b.AppendQuote(vv.Error())
+		} else {
+			b.AppendString(nil_t{}.String())
+		}
 		return
 	}
 
@@ -81,6 +95,7 @@ func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 
 		v = v.Elem()
 	}
+	// log.Printf(`===== kind 2: %s`, v.Kind().String())
 
 	switch v.Kind() {
 	case reflect.Invalid:
@@ -111,10 +126,9 @@ func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 		return
 
 	case reflect.Complex64:
-		b.AppendComplex(v.Complex(), 64)
-		return
+		fallthrough
 	case reflect.Complex128:
-		b.AppendComplex(v.Complex(), 128)
+		complex_t(v.Complex()).WriteTo(b)
 		return
 
 	case reflect.Slice:
@@ -126,6 +140,7 @@ func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 		fallthrough
 	case reflect.Array:
 		addBriefRefSlice(b, v)
+		// log.Printf(`===== slice: %s`, b.Bytes())
 		return
 
 	case reflect.Struct:
@@ -134,6 +149,7 @@ func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 
 	case reflect.Map:
 		addBriefRefMap(b, v)
+		// log.Printf(`===== map: %s`, b.Bytes())
 		return
 	}
 }
@@ -148,26 +164,11 @@ func addBriefRefSlice(b *buffer.Buffer, v reflect.Value) {
 		return
 	}
 
-	b.AppendByte('{')
-
-	b.AppendString(tagLen)
-	b.AppendByte(':')
-	b.AppendInt(int64(l))
-	b.AppendByte(',')
-
-	b.AppendString(tagType)
-	b.AppendByte(':')
-	b.AppendString("array")
-	b.AppendByte(',')
-
-	b.AppendString(tagBrief)
-	b.AppendByte(':')
-
-	b.AppendByte('[')
-	addBriefRefSliceData(b, v, n)
-	b.AppendByte(']')
-
-	b.AppendByte('}')
+	writeBrief(b, l, "array", func(b *buffer.Buffer) {
+		b.AppendByte('[')
+		addBriefRefSliceData(b, v, n)
+		b.AppendByte(']')
+	})
 }
 
 func addBriefRefSliceData(b *buffer.Buffer, v reflect.Value, l int) {
@@ -201,6 +202,7 @@ func addBriefRefStructField(b *buffer.Buffer, v reflect.Value, f *jsontag.Field)
 		addBriefRefStructFieldEmbeded(b, v, f)
 		return
 	}
+	// log.Printf("===== map data. type:%T, value:%v", v.Interface(), v.Interface())
 	if f.OmitEmpty && v.IsZero() {
 		return
 	}
@@ -208,7 +210,7 @@ func addBriefRefStructField(b *buffer.Buffer, v reflect.Value, f *jsontag.Field)
 }
 
 func addBriefRefStructFieldEmbeded(b *buffer.Buffer, v reflect.Value, f *jsontag.Field) {
-	if f.Type.Kind() == reflect.Ptr {
+	if f.Field.Type.Kind() == reflect.Ptr {
 		if v.IsNil() {
 			return
 		}
@@ -229,26 +231,11 @@ func addBriefRefMap(b *buffer.Buffer, v reflect.Value) {
 		return
 	}
 
-	b.AppendByte('{')
-
-	b.AppendString(tagLen)
-	b.AppendByte(':')
-	b.AppendInt(int64(l))
-	b.AppendByte(',')
-
-	b.AppendString(tagType)
-	b.AppendByte(':')
-	b.AppendString("map")
-	b.AppendByte(',')
-
-	b.AppendString(tagBrief)
-	b.AppendByte(':')
-
-	b.AppendByte('{')
-	addBriefRefMapData(b, v, n)
-	b.AppendByte('}')
-
-	b.AppendByte('}')
+	writeBrief(b, l, "map", func(b *buffer.Buffer) {
+		b.AppendByte('{')
+		addBriefRefMapData(b, v, n)
+		b.AppendByte('}')
+	})
 }
 
 func addBriefRefMapData(b *buffer.Buffer, v reflect.Value, l int) {
@@ -275,10 +262,11 @@ func addBriefRefKeyValue(b *buffer.Buffer, key string, val reflect.Value) {
 	if l > 0 {
 		switch b.Bytes()[l-1] {
 		case '{':
+		default:
 			b.AppendByte(',')
 		}
 	}
-	b.AppendString(key)
+	b.AppendQuote(key)
 	b.AppendByte(':')
 	addBriefRef(b, val)
 }
@@ -289,19 +277,24 @@ type brief_reflect_t struct {
 
 func (p brief_reflect_t) MarshalJSON() ([]byte, error)       { return s2b(p.String()), nil }
 func (p brief_reflect_t) MarshalText() ([]byte, error)       { return s2b(p.String()), nil }
-func (p brief_reflect_t) WriteTo(w io.Writer) (int64, error) { return writeStringer(w, p) }
+func (p brief_reflect_t) WriteTo(w io.Writer) (int64, error) { return writeTo(w, p) }
 func (p brief_reflect_t) String() string {
 	if p.val == nil {
 		return nil_t{}.String()
 	}
-
 	buf := getBuf()
 	defer buf.Free()
-
+	p.WriteToBuffer(buf)
+	return buf.String()
+}
+func (p brief_reflect_t) WriteToBuffer(buf *buffer.Buffer) {
+	if p.val == nil {
+		buf.AppendString(nil_t{}.String())
+		return
+	}
 	v, ok := p.val.(reflect.Value)
 	if !ok {
-		v = reflect.ValueOf(v)
+		v = reflect.ValueOf(p.val)
 	}
 	addBriefRef(buf, v)
-	return buf.String()
 }

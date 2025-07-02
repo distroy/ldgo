@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"log/slog"
 	"reflect"
-	"strconv"
 	"time"
 
 	"github.com/distroy/ldgo/v3/ldsync"
@@ -191,14 +190,10 @@ func (s *handleState) appendKey(key string) {
 
 func (s *handleState) appendString(str string) {
 	if needsQuoting(str) {
-		*s.buf = strconv.AppendQuote(*s.buf, str)
+		s.buf.AppendQuote(str)
 	} else {
 		s.buf.WriteString(str)
 	}
-}
-
-func (s *handleState) appendStringWithoutQuote(str string) {
-	s.buf.WriteString(str)
 }
 
 func (s *handleState) appendValue(v Value) {
