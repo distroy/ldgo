@@ -65,8 +65,6 @@ func GetValue(v slog.Value) Value      { return _slogtype.GetValue(v) }
 
 func CountEmptyGroups(as []Attr) int { return _slogtype.CountEmptyGroups(as) }
 
-func StringValue(value string) Value { return _slogtype.StringValue(value) }
-
 // *** value end ****
 
 // *** attr begin ****

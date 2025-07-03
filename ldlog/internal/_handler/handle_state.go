@@ -130,7 +130,7 @@ func (s *handleState) appendAttr(a Attr) bool {
 			if s.h.json {
 				a.Value = ss.Group()
 			} else {
-				a.Value = StringValue(ss.Caller())
+				a.Value = GetValue(slog.StringValue(ss.Caller()))
 			}
 		}
 	}

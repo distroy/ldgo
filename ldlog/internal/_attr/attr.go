@@ -12,83 +12,65 @@ import (
 
 type (
 	Attr = slog.Attr
-
-	Value     = slog.Value
-	LogValuer = slog.LogValuer
 )
 
-var (
-	_ LogValuer = string_value_t(nil)
-)
+func attr(k string, v Value) Attr { return Attr{Key: k, Value: v} }
 
-func Any(k string, v any) Attr                { return slog.Any(k, v) }
-func Bool(k string, v bool) Attr              { return slog.Bool(k, v) }
-func String(k string, v string) Attr          { return slog.String(k, v) }
-func Int(k string, v int) Attr                { return slog.Int(k, v) }
-func Int64(k string, v int64) Attr            { return slog.Int64(k, v) }
-func Uint64(k string, v uint64) Attr          { return slog.Uint64(k, v) }
-func Float64(k string, v float64) Attr        { return slog.Float64(k, v) }
-func Duration(k string, v time.Duration) Attr { return slog.Duration(k, v) }
+func Any(k string, v any) Attr                { return attr(k, AnyValue(v)) }
+func Bool(k string, v bool) Attr              { return attr(k, BoolValue(v)) }
+func String(k string, v string) Attr          { return attr(k, StringValue(v)) }
+func Int(k string, v int) Attr                { return attr(k, IntValue(v)) }
+func Int64(k string, v int64) Attr            { return attr(k, Int64Value(v)) }
+func Uint64(k string, v uint64) Attr          { return attr(k, Uint64Value(v)) }
+func Float64(k string, v float64) Attr        { return attr(k, Float64Value(v)) }
+func Duration(k string, v time.Duration) Attr { return attr(k, DurationValue(v)) }
+func Time(k string, v time.Time) Attr         { return attr(k, TimeValue(v)) }
 
-// func Time(k string, v time.Time) Attr         { return slog.Time(k, v) }
-func Time(k string, v time.Time) Attr {
-	return string_f(k, func() string { return v.Format(TimeLayout) })
-}
+func Reflect(k string, v any) Attr { return attr(k, ReflectValue(v)) }
 
-func Skip() Attr          { return Attr{} }
-func nil_f(k string) Attr { return Any(k, nil_t{}) }
+func Skip() Attr        { return Attr{} }
+func Nil(k string) Attr { return attr(k, NilValue()) }
 
-func string_f(k string, f func() string) Attr { return Any(k, string_value_t(f)) }
+func Binary(k string, v []byte) Attr         { return attr(k, StrFnValue(func() string { return b64(v) })) }
+func ByteString(k string, v []byte) Attr     { return String(k, b2s(v)) }
+func Stringer(k string, v fmt.Stringer) Attr { return attr(k, StringerValue(v)) }
 
-type string_value_t func() string
-
-func (f string_value_t) LogValue() Value { return slog.StringValue(f()) }
-
-func Binary(key string, val []byte) Attr     { return string_f(key, func() string { return b64(val) }) }
-func ByteString(key string, val []byte) Attr { return String(key, b2s(val)) }
-func Stringer(key string, val fmt.Stringer) Attr {
-	if val == nil {
-		return nil_f(key)
-	}
-	return string_f(key, val.String)
-}
-
-func Complex64(key string, val complex64) Attr   { return Any(key, complex_t(val)) }
-func Complex128(key string, val complex128) Attr { return Any(key, complex_t(val)) }
+func Complex64(key string, val complex64) Attr   { return attr(key, Complex64Value(val)) }
+func Complex128(key string, val complex128) Attr { return attr(key, Complex128Value(val)) }
 
 func Boolp(key string, val *bool) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
 	return Bool(key, *val)
 }
 func Stringp(key string, val *string) Attr {
 	if val == nil {
-		return Any(key, nil)
+		return Nil(key)
 	}
 	return String(key, *val)
 }
 
 func Bools(key string, val []bool) Attr {
-	return Any(key, &slice_t[bool]{
+	return Reflect(key, &slice_t[bool]{
 		data: val,
 		text: func(buf *Buffer, v bool) { buf.AppendBool(v) },
 	})
 }
 func Strings(key string, val []string) Attr {
-	return Any(key, &slice_t[string]{
+	return Reflect(key, &slice_t[string]{
 		data: val,
 		text: func(buf *Buffer, v string) { buf.AppendQuote(v) },
 	})
 }
 func Stringers[T fmt.Stringer](key string, val []T) Attr {
-	return Any(key, &slice_t[T]{
+	return Reflect(key, &slice_t[T]{
 		data: val,
 		text: func(buf *Buffer, v T) { buf.AppendQuote(v.String()) },
 	})
 }
 func ByteStrings(key string, val [][]byte) Attr {
-	return Any(key, &slice_t[[]byte]{
+	return Reflect(key, &slice_t[[]byte]{
 		data: val,
 		text: func(buf *Buffer, v []byte) { buf.AppendQuote(b2s(v)) },
 	})
@@ -96,7 +78,7 @@ func ByteStrings(key string, val [][]byte) Attr {
 
 func intptr_f[T int | int8 | int16 | int32 | int64](key string, val *T) Attr {
 	if val == nil {
-		return Any(key, nil)
+		return Nil(key)
 	}
 	return Int64(key, int64(*val))
 }
@@ -109,7 +91,7 @@ func Int64p(key string, val *int64) Attr { return intptr_f(key, val) }
 
 func uintptr_f[T uint | uint8 | uint16 | uint32 | uint64 | uintptr](key string, val *T) Attr {
 	if val == nil {
-		return Any(key, nil)
+		return Nil(key)
 	}
 	return Uint64(key, uint64(*val))
 }
@@ -123,7 +105,7 @@ func Uintptrp(key string, val *uintptr) Attr { return uintptr_f(key, val) }
 
 func float_f[T float32 | float64](key string, val *T) Attr {
 	if val == nil {
-		return Any(key, nil)
+		return Nil(key)
 	}
 	return Float64(key, float64(*val))
 }
@@ -133,7 +115,7 @@ func Float64p(key string, val *float64) Attr { return float_f(key, val) }
 
 func complexptr_f[T complex64 | complex128](key string, val *T) Attr {
 	if val == nil {
-		return Any(key, nil)
+		return Nil(key)
 	}
 	return Complex128(key, complex128(*val))
 }
@@ -143,9 +125,9 @@ func Complex128p(key string, val *complex128) Attr { return complexptr_f(key, va
 
 func ints_f[T int | int8 | int16 | int32 | int64](key string, val []T) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
-	return Any(key, &slice_t[T]{
+	return Reflect(key, &slice_t[T]{
 		data: val,
 		text: func(buf *Buffer, v T) { buf.AppendInt(int64(v)) },
 	})
@@ -159,9 +141,9 @@ func Int64s(key string, val []int64) Attr { return ints_f(key, val) }
 
 func uints_f[T uint | uint8 | uint16 | uint32 | uint64 | uintptr](key string, val []T) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
-	return Any(key, &slice_t[T]{
+	return Reflect(key, &slice_t[T]{
 		data: val,
 		text: func(buf *Buffer, v T) { buf.AppendUint(uint64(v)) },
 	})
@@ -175,9 +157,9 @@ func Uintptrs(key string, val []uintptr) Attr { return uints_f(key, val) }
 
 func floats_f[T float32 | float64](key string, val []T) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
-	return Any(key, &slice_t[T]{
+	return Reflect(key, &slice_t[T]{
 		data: val,
 		text: func(buf *Buffer, v T) { buf.AppendFloat(float64(v), 64) },
 	})
@@ -188,11 +170,11 @@ func Float64s(key string, val []float64) Attr { return floats_f(key, val) }
 
 func complexs_f[T complex64 | complex128](key string, val []T) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
-	return Any(key, &slice_t[T]{
+	return Reflect(key, &slice_t[T]{
 		data: val,
-		text: func(buf *Buffer, v T) { buf.AppendString(complex_t(v).String()) },
+		text: func(buf *Buffer, v T) { buf.AppendString(complex128_t(v).String()) },
 	})
 }
 
@@ -201,13 +183,13 @@ func Complex128s(key string, val []complex128) Attr { return complexs_f(key, val
 
 func Timep(key string, val *time.Time) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
 	return Time(key, *val)
 }
 func Durationp(key string, val *time.Duration) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
 	return Duration(key, *val)
 }
@@ -215,7 +197,7 @@ func Durationp(key string, val *time.Duration) Attr {
 func Durations(key string, val []time.Duration) Attr { return Stringers(key, val) }
 func Times(key string, val []time.Time) Attr {
 	// return Stringers(key, val)
-	return Any(key, &slice_t[time.Time]{
+	return Reflect(key, &slice_t[time.Time]{
 		data: val,
 		text: func(buf *Buffer, v time.Time) {
 			buf.AppendByte('"')
@@ -226,14 +208,14 @@ func Times(key string, val []time.Time) Attr {
 }
 
 func Error(err error) Attr { return NamedError("error", err) }
-func NamedError(k string, e error) Attr {
-	if e == nil {
-		return nil_f(k)
+func NamedError(k string, v error) Attr {
+	if v == nil {
+		return Nil(k)
 	}
-	return string_f(k, e.Error)
+	return attr(k, StrFnValue(v.Error))
 }
 func Errors(key string, err []error) Attr {
-	return Any(key, &slice_t[error]{
+	return Reflect(key, &slice_t[error]{
 		data: err,
 		text: func(buf *Buffer, v error) {
 			if v == nil {

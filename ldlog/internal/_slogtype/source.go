@@ -36,7 +36,7 @@ func (s *Source) Group() Value {
 	var as []Attr
 	caller := s.Caller()
 	if caller != "" {
-		as = append(as, String("caller", caller))
+		as = append(as, GetAttr(slog.String("caller", caller)))
 	}
 	// if s.Function != "" {
 	// 	as = append(as, String("function", s.Function))
@@ -47,7 +47,7 @@ func (s *Source) Group() Value {
 	// if s.Line != 0 {
 	// 	as = append(as, Int("line", s.Line))
 	// }
-	return GroupValue(as...)
+	return GetValue(slog.GroupValue(GetSAttrs(as)...))
 }
 
 func (s *Source) Caller() string {

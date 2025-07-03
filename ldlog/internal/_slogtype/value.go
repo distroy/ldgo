@@ -19,6 +19,8 @@ func init() {
 func GetValuePtr(v *slog.Value) *Value { return toType[*Value](v) }
 func GetValue(v slog.Value) Value      { return *GetValuePtr(&v) }
 
+func GetSValue(v Value) slog.Value { return *toType[*slog.Value](&v) }
+
 func CountEmptyGroups(as []Attr) int {
 	n := 0
 	for _, a := range as {
@@ -29,19 +31,12 @@ func CountEmptyGroups(as []Attr) int {
 	return n
 }
 
-func BoolValue(v bool) Value         { return GetValue(slog.BoolValue(v)) }
-func StringValue(value string) Value { return GetValue(slog.StringValue(value)) }
-func Float64Value(v float64) Value   { return GetValue(slog.Float64Value(v)) }
-
-func IntValue(v int) Value       { return Int64Value(int64(v)) }
-func Int64Value(v int64) Value   { return GetValue(slog.Int64Value(v)) }
-func Uint64Value(v uint64) Value { return GetValue(slog.Uint64Value(v)) }
-
-func TimeValue(v time.Time) Value         { return GetValue(slog.TimeValue(v)) }
-func DurationValue(v time.Duration) Value { return GetValue(slog.DurationValue(v)) }
-
-func GroupValue(as ...Attr) Value { return GetValue(slog.GroupValue(GetSAttrs(as)...)) }
-func AnyValue(v any) Value        { return GetValue(slog.AnyValue(v)) }
+func NewValue(num uint64, any any) Value {
+	return Value{
+		num: num,
+		any: any,
+	}
+}
 
 type Value struct {
 	_ [0]func() // disallow ==

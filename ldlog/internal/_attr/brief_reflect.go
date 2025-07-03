@@ -7,7 +7,6 @@ package _attr
 import (
 	"fmt"
 	"io"
-	"log/slog"
 	"reflect"
 	"strconv"
 	"time"
@@ -19,9 +18,9 @@ import (
 
 func BriefReflect(key string, val any) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
-	return slog.Any(key, brief_reflect_t{val})
+	return Reflect(key, brief_reflect_t{val})
 }
 
 func mapkey2str(v reflect.Value) string {
@@ -127,7 +126,7 @@ func addBriefRef(b *Buffer, v reflect.Value) {
 	case reflect.Complex64:
 		fallthrough
 	case reflect.Complex128:
-		complex_t(v.Complex()).WriteTo(b)
+		complex128_t(v.Complex()).WriteTo(b)
 		return
 
 	case reflect.Slice:

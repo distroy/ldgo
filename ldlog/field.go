@@ -100,7 +100,7 @@ func Stack(key string) Attr               { return _attr.StackSkip(key, 1) }
 func StackSkip(key string, skip int) Attr { return _attr.StackSkip(key, skip+1) }
 
 func Any(key string, val any) Attr     { return _attr.Any(key, val) }
-func Reflect(key string, val any) Attr { return _attr.Any(key, val) }
+func Reflect(key string, val any) Attr { return _attr.Reflect(key, val) }
 
 func Integer[Int ~int | ~int8 | ~int16 | ~int32 | ~int64 |
 	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr,

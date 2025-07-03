@@ -7,7 +7,6 @@ package _attr
 import (
 	"fmt"
 	"io"
-	"log/slog"
 )
 
 const (
@@ -127,35 +126,35 @@ func (p *brief_slice_t[T]) String() string {
 	return buf.String()
 }
 
-func BriefString(key, val string) Attr            { return slog.Any(key, brief_stringer_t{string_t(val)}) }
+func BriefString(key, val string) Attr            { return Reflect(key, brief_stringer_t{string_t(val)}) }
 func BriefByteString(key string, val []byte) Attr { return BriefString(key, b2s(val)) }
 func BriefStringer(key string, val fmt.Stringer) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
-	return slog.Any(key, brief_stringer_t{val})
+	return Reflect(key, brief_stringer_t{val})
 }
 
 func BriefStringp(key string, val *string) Attr {
 	if val == nil {
-		return nil_f(key)
+		return Nil(key)
 	}
 	return BriefString(key, *val)
 }
 func BriefStrings(key string, val []string) Attr {
-	return slog.Any(key, &brief_slice_t[string]{
+	return Reflect(key, &brief_slice_t[string]{
 		data: val,
 		text: func(buf *Buffer, v string) { addBriefStr(buf, v) },
 	})
 }
 func BriefByteStrings(key string, val [][]byte) Attr {
-	return slog.Any(key, &brief_slice_t[[]byte]{
+	return Reflect(key, &brief_slice_t[[]byte]{
 		data: val,
 		text: func(buf *Buffer, v []byte) { addBriefStr(buf, b2s(v)) },
 	})
 }
 func BriefStringers[T fmt.Stringer](key string, val []T) Attr {
-	return slog.Any(key, &brief_slice_t[T]{
+	return Reflect(key, &brief_slice_t[T]{
 		data: val,
 		text: func(buf *Buffer, v T) { addBriefStr(buf, v.String()) },
 	})

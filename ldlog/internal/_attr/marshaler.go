@@ -30,7 +30,8 @@ type Marshaler interface {
 
 var (
 	_ Marshaler = nil_t{}
-	_ Marshaler = complex_t(0)
+	_ Marshaler = complex64_t(0)
+	_ Marshaler = complex128_t(0)
 	_ Marshaler = (*slice_t[int])(nil)
 )
 
@@ -67,12 +68,20 @@ func (p nil_t) MarshalText() ([]byte, error)       { return s2b(p.String()), nil
 func (p nil_t) WriteTo(w io.Writer) (int64, error) { return writeTo(w, p) }
 func (p nil_t) WriteToBuffer(w *Buffer)            { w.WriteString(p.String()) }
 
-type complex_t complex128
+type complex64_t complex64
 
-func (n complex_t) MarshalJSON() ([]byte, error)       { return s2b(n.String()), nil }
-func (n complex_t) MarshalText() ([]byte, error)       { return s2b(n.String()), nil }
-func (p complex_t) WriteTo(w io.Writer) (int64, error) { return writeTo(w, p) }
-func (n complex_t) WriteToBuffer(b *Buffer) {
+func (n complex64_t) MarshalJSON() ([]byte, error)       { return s2b(n.String()), nil }
+func (n complex64_t) MarshalText() ([]byte, error)       { return s2b(n.String()), nil }
+func (p complex64_t) WriteTo(w io.Writer) (int64, error) { return writeTo(w, p) }
+func (n complex64_t) WriteToBuffer(b *Buffer)            { complex128_t(n).WriteToBuffer(b) }
+func (n complex64_t) String() string                     { return complex128_t(n).String() }
+
+type complex128_t complex128
+
+func (n complex128_t) MarshalJSON() ([]byte, error)       { return s2b(n.String()), nil }
+func (n complex128_t) MarshalText() ([]byte, error)       { return s2b(n.String()), nil }
+func (p complex128_t) WriteTo(w io.Writer) (int64, error) { return writeTo(w, p) }
+func (n complex128_t) WriteToBuffer(b *Buffer) {
 	s := strconv.FormatComplex(complex128(n), 'f', -1, 128)
 	l := len(s) - 1
 	if s[0] == '(' && s[l] == ')' {
@@ -80,7 +89,7 @@ func (n complex_t) WriteToBuffer(b *Buffer) {
 	}
 	b.AppendQuote(s)
 }
-func (n complex_t) String() string {
+func (n complex128_t) String() string {
 	b := getBuf()
 	defer b.Free()
 	n.WriteToBuffer(b)
