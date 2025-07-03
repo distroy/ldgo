@@ -204,7 +204,7 @@ func (s *handleState) appendValue(v Value) {
 			// in which case "<nil>" seems to be the feasible choice.
 			//
 			// Adapted from the code in fmt/print.go.
-			if v := reflect.ValueOf(v.any); v.Kind() == reflect.Pointer && v.IsNil() {
+			if v := reflect.ValueOf(v.DirectlyAny()); v.Kind() == reflect.Pointer && v.IsNil() {
 				s.appendString("<nil>")
 				return
 			}

@@ -2,7 +2,7 @@
  * Copyright (C) distroy
  */
 
-package handler
+package _slogtype
 
 import (
 	"fmt"
@@ -16,10 +16,10 @@ func init() {
 	checkTypeEqual(reflect.TypeOf(Value{}), reflect.TypeOf(slog.Value{}))
 }
 
-func getValuePtr(v *slog.Value) *Value { return toType[*Value](v) }
-func getValue(v slog.Value) Value      { return *getValuePtr(&v) }
+func GetValuePtr(v *slog.Value) *Value { return toType[*Value](v) }
+func GetValue(v slog.Value) Value      { return *GetValuePtr(&v) }
 
-func countEmptyGroups(as []Attr) int {
+func CountEmptyGroups(as []Attr) int {
 	n := 0
 	for _, a := range as {
 		if a.Value.IsEmptyGroup() {
@@ -29,19 +29,19 @@ func countEmptyGroups(as []Attr) int {
 	return n
 }
 
-func BoolValue(v bool) Value         { return getValue(slog.BoolValue(v)) }
-func StringValue(value string) Value { return getValue(slog.StringValue(value)) }
-func Float64Value(v float64) Value   { return getValue(slog.Float64Value(v)) }
+func BoolValue(v bool) Value         { return GetValue(slog.BoolValue(v)) }
+func StringValue(value string) Value { return GetValue(slog.StringValue(value)) }
+func Float64Value(v float64) Value   { return GetValue(slog.Float64Value(v)) }
 
 func IntValue(v int) Value       { return Int64Value(int64(v)) }
-func Int64Value(v int64) Value   { return getValue(slog.Int64Value(v)) }
-func Uint64Value(v uint64) Value { return getValue(slog.Uint64Value(v)) }
+func Int64Value(v int64) Value   { return GetValue(slog.Int64Value(v)) }
+func Uint64Value(v uint64) Value { return GetValue(slog.Uint64Value(v)) }
 
-func TimeValue(v time.Time) Value         { return getValue(slog.TimeValue(v)) }
-func DurationValue(v time.Duration) Value { return getValue(slog.DurationValue(v)) }
+func TimeValue(v time.Time) Value         { return GetValue(slog.TimeValue(v)) }
+func DurationValue(v time.Duration) Value { return GetValue(slog.DurationValue(v)) }
 
-func GroupValue(as ...Attr) Value { return getValue(slog.GroupValue(GetSAttrs(as)...)) }
-func AnyValue(v any) Value        { return getValue(slog.AnyValue(v)) }
+func GroupValue(as ...Attr) Value { return GetValue(slog.GroupValue(GetSAttrs(as)...)) }
+func AnyValue(v any) Value        { return GetValue(slog.AnyValue(v)) }
 
 type Value struct {
 	_ [0]func() // disallow ==
@@ -61,6 +61,9 @@ type Value struct {
 }
 
 func (v *Value) Get() *slog.Value { return toType[*slog.Value](v) }
+
+func (v *Value) DirectlyNum() uint64 { return v.num }
+func (v *Value) DirectlyAny() any    { return v.any }
 
 func (v *Value) Kind() Kind { return v.Get().Kind() }
 

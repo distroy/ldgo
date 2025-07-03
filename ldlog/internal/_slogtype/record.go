@@ -2,7 +2,7 @@
  * Copyright (C) distroy
  */
 
-package handler
+package _slogtype
 
 import (
 	"log/slog"
@@ -19,16 +19,6 @@ func GetRecordPtr(v *slog.Record) *Record { return toType[*Record]((v)) }
 func GetRecord(v slog.Record) Record      { return *GetRecordPtr(&v) }
 
 const nAttrsInline = 5
-
-type Level = slog.Level
-
-const (
-	LevelDebug Level = slog.LevelDebug
-	LevelInfo  Level = slog.LevelInfo
-	LevelWarn  Level = slog.LevelWarn
-	LevelError Level = slog.LevelError
-	LevelPanic Level = 100
-)
 
 type Record struct {
 	// The time at which the output method (Log, Info, etc.) was called.

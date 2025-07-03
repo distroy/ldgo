@@ -155,7 +155,8 @@ func appendTextValue(s *handleState, v Value) error {
 	case KindTime:
 		s.appendTime(v.Time())
 	case KindAny:
-		switch m := v.any.(type) {
+		vv := v.DirectlyAny()
+		switch m := vv.(type) {
 		case io.WriterTo:
 			_, err := m.WriteTo(s.buf)
 			return err
@@ -169,12 +170,12 @@ func appendTextValue(s *handleState, v Value) error {
 			s.appendString(b2s(data))
 			return nil
 		}
-		if bs, ok := byteSlice(v.any); ok {
+		if bs, ok := byteSlice(vv); ok {
 			// As of Go 1.19, this only allocates for strings longer than 32 bytes.
 			s.buf.WriteString(quote(b2s(bs)))
 			return nil
 		}
-		s.appendString(fmt.Sprintf("%+v", v.any))
+		s.appendString(fmt.Sprintf("%+v", vv))
 		// s.appendStringWithoutQuote(fmt.Sprintf("%+v", v.any))
 	default:
 		*s.buf = v.Append(*s.buf)

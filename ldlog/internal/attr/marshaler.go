@@ -39,12 +39,6 @@ func getBuf() *buffer.Buffer { return buffer.NewBuffer() }
 func b2s(b []byte) string { return ldconv.BytesToStrUnsafe(b) }
 func s2b(b string) []byte { return ldconv.StrToBytesUnsafe(b) }
 func b64(b []byte) string { return base64.StdEncoding.EncodeToString(b) }
-func e2s(e error) string {
-	if e == nil {
-		return nil_t{}.String()
-	}
-	return e.Error()
-}
 
 type BufferWriter interface {
 	fmt.Stringer

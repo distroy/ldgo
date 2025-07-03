@@ -2,7 +2,7 @@
  * Copyright (C) distroy
  */
 
-package handler
+package _logref
 
 import (
 	"fmt"
@@ -10,9 +10,9 @@ import (
 	"unsafe"
 )
 
-func toType[T, S any](v S) T { return *(*T)(unsafe.Pointer(&v)) }
+func ToType[T, S any](v S) T { return *(*T)(unsafe.Pointer(&v)) }
 
-func asType[T any](v any, def ...T) T {
+func AsType[T any](v any, def ...T) T {
 	vv, ok := v.(T)
 	if ok {
 		return vv
@@ -23,7 +23,7 @@ func asType[T any](v any, def ...T) T {
 	return vv
 }
 
-func checkTypeEqual(this, that reflect.Type) {
+func CheckTypeEqual(this, that reflect.Type) {
 	if !isTypeEqual(this, that) {
 		panic(fmt.Errorf("%s not not compatible with %s", this.String(), that.String()))
 	}

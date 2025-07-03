@@ -24,7 +24,7 @@ go-format:
   # file-line: 1000
   # import: true
   # formated: true
-  # package: true
+  package: false
   func-input-num: 5
   # func-output-num: 3
   # func-named-output: true

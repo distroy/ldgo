@@ -2,7 +2,7 @@
  * Copyright (C) distroy
  */
 
-package handler
+package _slogtype
 
 import (
 	"log/slog"
