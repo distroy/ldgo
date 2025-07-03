@@ -5,7 +5,7 @@
 package ldlog
 
 import (
-	"github.com/distroy/ldgo/v3/ldlog/internal/handler"
+	"github.com/distroy/ldgo/v3/ldlog/internal/_handler"
 )
 
 const (
@@ -13,11 +13,11 @@ const (
 	defaultLogEnableCaller = true
 )
 
-func GetLevelKey() string  { return handler.LevelKey }
-func GetCallerKey() string { return handler.CallerKey }
+func GetLevelKey() string  { return _handler.LevelKey }
+func GetCallerKey() string { return _handler.CallerKey }
 
-func SetSequenceKey(key string) { handler.SequenceKey = key }
-func GetSequenceKey() string    { return handler.SequenceKey }
+func SetSequenceKey(key string) { _handler.SequenceKey = key }
+func GetSequenceKey() string    { return _handler.SequenceKey }
 
 type Option func(l *core)
 

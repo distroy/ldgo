@@ -2,7 +2,7 @@
  * Copyright (C) distroy
  */
 
-package buffer
+package _buffer
 
 import (
 	"slices"

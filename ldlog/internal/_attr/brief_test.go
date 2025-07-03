@@ -2,7 +2,7 @@
  * Copyright (C) distroy
  */
 
-package attr
+package _attr
 
 import (
 	"bytes"

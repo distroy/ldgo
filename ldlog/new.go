@@ -8,13 +8,13 @@ import (
 	"io"
 	"os"
 
-	"github.com/distroy/ldgo/v3/ldlog/internal/handler"
+	"github.com/distroy/ldgo/v3/ldlog/internal/_handler"
 )
 
 func GetLogger(h Handler) *Logger { return newLogger(newCore(h)) }
 
 func newHandler(w io.Writer) Handler {
-	return handler.NewHandler(w, &handler.Options{
+	return _handler.NewHandler(w, &_handler.Options{
 		Caller: true,
 		Level:  LevelInfo,
 	})

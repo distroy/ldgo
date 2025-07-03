@@ -10,7 +10,7 @@ import (
 	"reflect"
 	"sort"
 
-	"github.com/distroy/ldgo/v3/ldlog/internal/buffer"
+	"github.com/distroy/ldgo/v3/ldlog/internal/_buffer"
 	"github.com/distroy/ldgo/v3/ldref"
 )
 
@@ -38,7 +38,7 @@ func sprintln(args []any) string {
 		return ""
 	}
 
-	buf := buffer.NewBuffer()
+	buf := _buffer.NewBuffer()
 
 	fprintArg(buf, args[0])
 	for _, arg := range args[1:] {
@@ -53,7 +53,7 @@ func sprintln(args []any) string {
 	return text
 }
 
-func fprintArg(b *buffer.Buffer, val any) {
+func fprintArg(b *_buffer.Buffer, val any) {
 	switch v := val.(type) {
 	case fmt.Stringer:
 		b.WriteString(v.String())
@@ -109,7 +109,7 @@ func fprintArg(b *buffer.Buffer, val any) {
 	}
 }
 
-func fprintSlice(b *buffer.Buffer, v reflect.Value) {
+func fprintSlice(b *_buffer.Buffer, v reflect.Value) {
 	b.WriteString("[")
 	for i := 0; i < v.Len(); i++ {
 		if i != 0 {
@@ -120,7 +120,7 @@ func fprintSlice(b *buffer.Buffer, v reflect.Value) {
 	b.WriteString("]")
 }
 
-func fprintPointer(b *buffer.Buffer, v reflect.Value) {
+func fprintPointer(b *_buffer.Buffer, v reflect.Value) {
 	p := v.Pointer()
 
 	b.WriteByte('(')
@@ -134,7 +134,7 @@ func fprintPointer(b *buffer.Buffer, v reflect.Value) {
 	b.WriteByte(')')
 }
 
-func fprintStruct(b *buffer.Buffer, v reflect.Value) {
+func fprintStruct(b *_buffer.Buffer, v reflect.Value) {
 	b.WriteByte('{')
 	for i := 0; i < v.NumField(); i++ {
 		if i > 0 {
@@ -150,7 +150,7 @@ func fprintStruct(b *buffer.Buffer, v reflect.Value) {
 	b.WriteByte('}')
 }
 
-func fprintMap(b *buffer.Buffer, val reflect.Value) {
+func fprintMap(b *_buffer.Buffer, val reflect.Value) {
 	m := make([][2]reflect.Value, 0, val.Len())
 	for it := val.MapRange(); it.Next(); {
 		m = append(m, [2]reflect.Value{it.Key(), it.Value()})

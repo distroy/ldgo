@@ -2,14 +2,12 @@
  * Copyright (C) distroy
  */
 
-package attr
+package _attr
 
 import (
 	"fmt"
 	"log/slog"
 	"time"
-
-	"github.com/distroy/ldgo/v3/ldlog/internal/buffer"
 )
 
 type (
@@ -34,7 +32,7 @@ func Duration(k string, v time.Duration) Attr { return slog.Duration(k, v) }
 
 // func Time(k string, v time.Time) Attr         { return slog.Time(k, v) }
 func Time(k string, v time.Time) Attr {
-	return string_f(k, func() string { return v.Format(buffer.TimeLayout) })
+	return string_f(k, func() string { return v.Format(TimeLayout) })
 }
 
 func Skip() Attr          { return Attr{} }
@@ -74,25 +72,25 @@ func Stringp(key string, val *string) Attr {
 func Bools(key string, val []bool) Attr {
 	return Any(key, &slice_t[bool]{
 		data: val,
-		text: func(buf *buffer.Buffer, v bool) { buf.AppendBool(v) },
+		text: func(buf *Buffer, v bool) { buf.AppendBool(v) },
 	})
 }
 func Strings(key string, val []string) Attr {
 	return Any(key, &slice_t[string]{
 		data: val,
-		text: func(buf *buffer.Buffer, v string) { buf.AppendQuote(v) },
+		text: func(buf *Buffer, v string) { buf.AppendQuote(v) },
 	})
 }
 func Stringers[T fmt.Stringer](key string, val []T) Attr {
 	return Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf *buffer.Buffer, v T) { buf.AppendQuote(v.String()) },
+		text: func(buf *Buffer, v T) { buf.AppendQuote(v.String()) },
 	})
 }
 func ByteStrings(key string, val [][]byte) Attr {
 	return Any(key, &slice_t[[]byte]{
 		data: val,
-		text: func(buf *buffer.Buffer, v []byte) { buf.AppendQuote(b2s(v)) },
+		text: func(buf *Buffer, v []byte) { buf.AppendQuote(b2s(v)) },
 	})
 }
 
@@ -149,7 +147,7 @@ func ints_f[T int | int8 | int16 | int32 | int64](key string, val []T) Attr {
 	}
 	return Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf *buffer.Buffer, v T) { buf.AppendInt(int64(v)) },
+		text: func(buf *Buffer, v T) { buf.AppendInt(int64(v)) },
 	})
 }
 
@@ -165,7 +163,7 @@ func uints_f[T uint | uint8 | uint16 | uint32 | uint64 | uintptr](key string, va
 	}
 	return Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf *buffer.Buffer, v T) { buf.AppendUint(uint64(v)) },
+		text: func(buf *Buffer, v T) { buf.AppendUint(uint64(v)) },
 	})
 }
 func Uints(key string, val []uint) Attr       { return uints_f(key, val) }
@@ -181,7 +179,7 @@ func floats_f[T float32 | float64](key string, val []T) Attr {
 	}
 	return Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf *buffer.Buffer, v T) { buf.AppendFloat(float64(v), 64) },
+		text: func(buf *Buffer, v T) { buf.AppendFloat(float64(v), 64) },
 	})
 }
 
@@ -194,7 +192,7 @@ func complexs_f[T complex64 | complex128](key string, val []T) Attr {
 	}
 	return Any(key, &slice_t[T]{
 		data: val,
-		text: func(buf *buffer.Buffer, v T) { buf.AppendString(complex_t(v).String()) },
+		text: func(buf *Buffer, v T) { buf.AppendString(complex_t(v).String()) },
 	})
 }
 
@@ -219,7 +217,7 @@ func Times(key string, val []time.Time) Attr {
 	// return Stringers(key, val)
 	return Any(key, &slice_t[time.Time]{
 		data: val,
-		text: func(buf *buffer.Buffer, v time.Time) {
+		text: func(buf *Buffer, v time.Time) {
 			buf.AppendByte('"')
 			buf.AppendTime(v, "")
 			buf.AppendByte('"')
@@ -237,7 +235,7 @@ func NamedError(k string, e error) Attr {
 func Errors(key string, err []error) Attr {
 	return Any(key, &slice_t[error]{
 		data: err,
-		text: func(buf *buffer.Buffer, v error) {
+		text: func(buf *Buffer, v error) {
 			if v == nil {
 				buf.AppendString(nil_t{}.String())
 				return

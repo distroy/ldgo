@@ -2,7 +2,7 @@
  * Copyright (C) distroy
  */
 
-package attr
+package _attr
 
 import (
 	"fmt"
@@ -14,7 +14,6 @@ import (
 
 	"github.com/distroy/ldgo/v3/internal/jsontag"
 	"github.com/distroy/ldgo/v3/ldcmp"
-	"github.com/distroy/ldgo/v3/ldlog/internal/buffer"
 	"github.com/distroy/ldgo/v3/ldsort"
 )
 
@@ -53,7 +52,7 @@ func mapkey2str(v reflect.Value) string {
 	return "<unknown>"
 }
 
-func addBriefRef(b *buffer.Buffer, v reflect.Value) {
+func addBriefRef(b *Buffer, v reflect.Value) {
 	// log.Printf(`===== kind 1: %s`, v.Kind().String())
 	// log.Printf(`===== type 1: %s`, v.Type().String())
 	switch vv := v.Interface().(type) {
@@ -154,7 +153,7 @@ func addBriefRef(b *buffer.Buffer, v reflect.Value) {
 	}
 }
 
-func addBriefRefSlice(b *buffer.Buffer, v reflect.Value) {
+func addBriefRefSlice(b *Buffer, v reflect.Value) {
 	n := briefArrayLen
 	l := v.Len()
 	if l <= n {
@@ -164,14 +163,14 @@ func addBriefRefSlice(b *buffer.Buffer, v reflect.Value) {
 		return
 	}
 
-	writeBrief(b, l, "array", func(b *buffer.Buffer) {
+	writeBrief(b, l, "array", func(b *Buffer) {
 		b.AppendByte('[')
 		addBriefRefSliceData(b, v, n)
 		b.AppendByte(']')
 	})
 }
 
-func addBriefRefSliceData(b *buffer.Buffer, v reflect.Value, l int) {
+func addBriefRefSliceData(b *Buffer, v reflect.Value, l int) {
 	for i := range l {
 		if i > 0 {
 			b.AppendByte(',')
@@ -181,7 +180,7 @@ func addBriefRefSliceData(b *buffer.Buffer, v reflect.Value, l int) {
 	}
 }
 
-func addBriefRefStruct(b *buffer.Buffer, v reflect.Value) {
+func addBriefRefStruct(b *Buffer, v reflect.Value) {
 	typ := v.Type()
 	s := jsontag.Get(typ)
 	b.AppendByte('{')
@@ -189,7 +188,7 @@ func addBriefRefStruct(b *buffer.Buffer, v reflect.Value) {
 	b.AppendByte('}')
 }
 
-func addBriefRefStructData(b *buffer.Buffer, v reflect.Value, s *jsontag.Struct) {
+func addBriefRefStructData(b *Buffer, v reflect.Value, s *jsontag.Struct) {
 	for i := range s.NumField() {
 		ft := s.Field(i)
 		fv := v.Field(i)
@@ -197,7 +196,7 @@ func addBriefRefStructData(b *buffer.Buffer, v reflect.Value, s *jsontag.Struct)
 	}
 }
 
-func addBriefRefStructField(b *buffer.Buffer, v reflect.Value, f *jsontag.Field) {
+func addBriefRefStructField(b *Buffer, v reflect.Value, f *jsontag.Field) {
 	if f.Field.Anonymous {
 		addBriefRefStructFieldEmbeded(b, v, f)
 		return
@@ -209,7 +208,7 @@ func addBriefRefStructField(b *buffer.Buffer, v reflect.Value, f *jsontag.Field)
 	addBriefRefKeyValue(b, f.Name, v)
 }
 
-func addBriefRefStructFieldEmbeded(b *buffer.Buffer, v reflect.Value, f *jsontag.Field) {
+func addBriefRefStructFieldEmbeded(b *Buffer, v reflect.Value, f *jsontag.Field) {
 	if f.Field.Type.Kind() == reflect.Ptr {
 		if v.IsNil() {
 			return
@@ -221,7 +220,7 @@ func addBriefRefStructFieldEmbeded(b *buffer.Buffer, v reflect.Value, f *jsontag
 	addBriefRefStructData(b, v, s)
 }
 
-func addBriefRefMap(b *buffer.Buffer, v reflect.Value) {
+func addBriefRefMap(b *Buffer, v reflect.Value) {
 	n := briefMapLen
 	l := v.Len()
 	if n == 0 || l <= n {
@@ -231,14 +230,14 @@ func addBriefRefMap(b *buffer.Buffer, v reflect.Value) {
 		return
 	}
 
-	writeBrief(b, l, "map", func(b *buffer.Buffer) {
+	writeBrief(b, l, "map", func(b *Buffer) {
 		b.AppendByte('{')
 		addBriefRefMapData(b, v, n)
 		b.AppendByte('}')
 	})
 }
 
-func addBriefRefMapData(b *buffer.Buffer, v reflect.Value, l int) {
+func addBriefRefMapData(b *Buffer, v reflect.Value, l int) {
 	type data struct {
 		Key string
 		Val reflect.Value
@@ -257,7 +256,7 @@ func addBriefRefMapData(b *buffer.Buffer, v reflect.Value, l int) {
 	}
 }
 
-func addBriefRefKeyValue(b *buffer.Buffer, key string, val reflect.Value) {
+func addBriefRefKeyValue(b *Buffer, key string, val reflect.Value) {
 	l := b.Len()
 	if l > 0 {
 		switch b.Bytes()[l-1] {
@@ -287,7 +286,7 @@ func (p brief_reflect_t) String() string {
 	p.WriteToBuffer(buf)
 	return buf.String()
 }
-func (p brief_reflect_t) WriteToBuffer(buf *buffer.Buffer) {
+func (p brief_reflect_t) WriteToBuffer(buf *Buffer) {
 	if p.val == nil {
 		buf.AppendString(nil_t{}.String())
 		return

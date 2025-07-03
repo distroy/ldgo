@@ -2,14 +2,12 @@
  * Copyright (C) distroy
  */
 
-package attr
+package _attr
 
 import (
 	"fmt"
 	"io"
 	"log/slog"
-
-	"github.com/distroy/ldgo/v3/ldlog/internal/buffer"
 )
 
 const (
@@ -37,8 +35,8 @@ var (
 	_ Marshaler = (*brief_slice_t[int])(nil)
 )
 
-func writeBrief(b *buffer.Buffer, l int, typ string, f func(b *buffer.Buffer)) {
-	writeKey := func(b *buffer.Buffer, key string) {
+func writeBrief(b *Buffer, l int, typ string, f func(b *Buffer)) {
+	writeKey := func(b *Buffer, key string) {
 		b.AppendByte('"')
 		b.AppendString(key)
 		b.AppendByte('"')
@@ -64,19 +62,19 @@ func writeBrief(b *buffer.Buffer, l int, typ string, f func(b *buffer.Buffer)) {
 	b.AppendByte('}')
 }
 
-func addBriefStr(b *buffer.Buffer, s string) {
+func addBriefStr(b *Buffer, s string) {
 	n := briefStringLen
 	l := len(s)
 	if l <= n {
 		b.AppendQuote(s)
 		return
 	}
-	writeBrief(b, l, "string", func(b *buffer.Buffer) {
+	writeBrief(b, l, "string", func(b *Buffer) {
 		b.AppendQuote(s[:n])
 	})
 }
 
-func addBriefSlice[T any](b *buffer.Buffer, s *brief_slice_t[T]) {
+func addBriefSlice[T any](b *Buffer, s *brief_slice_t[T]) {
 	n := briefArrayLen
 	l := len(s.data)
 	if l <= n {
@@ -88,7 +86,7 @@ func addBriefSlice[T any](b *buffer.Buffer, s *brief_slice_t[T]) {
 		return
 	}
 
-	writeBrief(b, l, "array", func(b *buffer.Buffer) {
+	writeBrief(b, l, "array", func(b *Buffer) {
 		x := &slice_t[T]{
 			data: s.data[:n],
 			text: s.text,
@@ -108,7 +106,7 @@ type brief_stringer_t struct {
 func (p brief_stringer_t) MarshalJSON() ([]byte, error)       { return s2b(p.String()), nil }
 func (p brief_stringer_t) MarshalText() ([]byte, error)       { return s2b(p.String()), nil }
 func (p brief_stringer_t) WriteTo(w io.Writer) (int64, error) { return writeTo(w, p) }
-func (p brief_stringer_t) WriteToBuffer(buf *buffer.Buffer)   { addBriefStr(buf, p.val.String()) }
+func (p brief_stringer_t) WriteToBuffer(buf *Buffer)          { addBriefStr(buf, p.val.String()) }
 func (p brief_stringer_t) String() string {
 	buf := getBuf()
 	defer buf.Free()
@@ -121,7 +119,7 @@ type brief_slice_t[T any] slice_t[T]
 func (p *brief_slice_t[T]) MarshalJSON() ([]byte, error)       { return s2b(p.String()), nil }
 func (p *brief_slice_t[T]) MarshalText() ([]byte, error)       { return s2b(p.String()), nil }
 func (p *brief_slice_t[T]) WriteTo(w io.Writer) (int64, error) { return writeTo(w, p) }
-func (p *brief_slice_t[T]) WriteToBuffer(buf *buffer.Buffer)   { addBriefSlice(buf, p) }
+func (p *brief_slice_t[T]) WriteToBuffer(buf *Buffer)          { addBriefSlice(buf, p) }
 func (p *brief_slice_t[T]) String() string {
 	buf := getBuf()
 	defer buf.Free()
@@ -147,18 +145,18 @@ func BriefStringp(key string, val *string) Attr {
 func BriefStrings(key string, val []string) Attr {
 	return slog.Any(key, &brief_slice_t[string]{
 		data: val,
-		text: func(buf *buffer.Buffer, v string) { addBriefStr(buf, v) },
+		text: func(buf *Buffer, v string) { addBriefStr(buf, v) },
 	})
 }
 func BriefByteStrings(key string, val [][]byte) Attr {
 	return slog.Any(key, &brief_slice_t[[]byte]{
 		data: val,
-		text: func(buf *buffer.Buffer, v []byte) { addBriefStr(buf, b2s(v)) },
+		text: func(buf *Buffer, v []byte) { addBriefStr(buf, b2s(v)) },
 	})
 }
 func BriefStringers[T fmt.Stringer](key string, val []T) Attr {
 	return slog.Any(key, &brief_slice_t[T]{
 		data: val,
-		text: func(buf *buffer.Buffer, v T) { addBriefStr(buf, v.String()) },
+		text: func(buf *Buffer, v T) { addBriefStr(buf, v.String()) },
 	})
 }

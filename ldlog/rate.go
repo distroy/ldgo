@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/distroy/ldgo/v3/ldatomic"
-	"github.com/distroy/ldgo/v3/ldlog/internal/attr"
 	"github.com/distroy/ldgo/v3/ldsync"
 )
 
@@ -62,7 +61,7 @@ func getIntervaler(skip int) *intervaler {
 	c := getIntervalerByKey(key)
 	if c == nil {
 		Default().Error("reached the limit of interval callers, drop it",
-			attr.String("file", file), attr.Int("line", line))
+			String("file", file), Int("line", line))
 	}
 	return c
 }
