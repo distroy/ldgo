@@ -77,7 +77,7 @@ func testRemoveLogPrefix(b []byte) []byte {
 
 func TestBrief(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
-		buf := bytes.NewBuffer(nil)
+		buf := bytes.NewBuffer(make([]byte, 0, 1024))
 		log := newTestLog(buf)
 
 		SetBriefStringLen(10)
@@ -140,7 +140,6 @@ func TestBrief(t *testing.T) {
 		c.Convey("brief string ptr", func(c convey.C) {
 			c.Convey("brief string len 15", func(c convey.C) {
 				SetBriefStringLen(15)
-				New := func(s string) *string { return &s }
 
 				c.Convey("nil", func(c convey.C) {
 					log.Info("test", BriefStringp("key", nil))
@@ -149,19 +148,19 @@ func TestBrief(t *testing.T) {
 					c.So(s, convey.ShouldEqual, `{"key":null}`)
 				})
 				c.Convey("string len 10", func(c convey.C) {
-					log.Info("test", BriefStringp("key", New("0123456789")))
+					log.Info("test", BriefStringp("key", testNewPtr("0123456789")))
 					s := getLogString()
 					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|info|test|{"key": "0123456789"}`)
 					c.So(s, convey.ShouldEqual, `{"key":"0123456789"}`)
 				})
 				c.Convey("string len 15", func(c convey.C) {
-					log.Warn("test", BriefStringp("key", New("012345678901234")))
+					log.Warn("test", BriefStringp("key", testNewPtr("012345678901234")))
 					s := getLogString()
 					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|warn|test|{"key": "012345678901234"}`)
 					c.So(s, convey.ShouldEqual, `{"key":"012345678901234"}`)
 				})
 				c.Convey("string len 16", func(c convey.C) {
-					log.Error("test", BriefStringp("key", New("0123456789012345")))
+					log.Error("test", BriefStringp("key", testNewPtr("0123456789012345")))
 					s := getLogString()
 					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|error|test|{"key": {"<len>": 16, "<type>": "string", "<brief>": "012345678901234"}}`)
 					c.So(s, convey.ShouldEqual, `{"key":{"<len>":16,"<type>":"string","<brief>":"012345678901234"}}`)
