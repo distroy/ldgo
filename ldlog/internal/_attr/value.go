@@ -95,8 +95,12 @@ func AnyValue(v any) Value {
 		return slog.AnyValue(v)
 	case Value:
 		return v
+	case []byte:
+		return StringValue(b2s(v))
 	case fmt.Stringer:
 		return StringerValue(v)
+	case error:
+		return ErrorValue(v)
 	default:
 		return ReflectValue(v)
 	}
@@ -110,9 +114,10 @@ func NilValue() Value { return ReflectValue(nil_t{}) }
 
 type string_value_t func() string
 
-func (f string_value_t) LogValue() Value { return slog.StringValue(f()) }
+func (f string_value_t) LogValue() Value { return StringValue(f()) }
 
 func StrFnValue(v func() string) Value { return ReflectValue(string_value_t(v)) }
+func ByteStringValue(v []byte) Value   { return StringValue(b2s(v)) }
 func StringerValue(v fmt.Stringer) Value {
 	if v == nil {
 		return NilValue()
@@ -122,3 +127,10 @@ func StringerValue(v fmt.Stringer) Value {
 
 func Complex64Value(v complex64) Value   { return ReflectValue(complex64_t(v)) }
 func Complex128Value(v complex128) Value { return ReflectValue(complex128_t(v)) }
+
+func ErrorValue(v error) Value {
+	if v == nil {
+		return NilValue()
+	}
+	return ReflectValue(string_value_t(v.Error))
+}

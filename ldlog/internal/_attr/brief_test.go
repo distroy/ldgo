@@ -137,6 +137,53 @@ func TestBrief(t *testing.T) {
 				})
 			})
 		})
+		c.Convey("brief string ptr", func(c convey.C) {
+			c.Convey("brief string len 15", func(c convey.C) {
+				SetBriefStringLen(15)
+				New := func(s string) *string { return &s }
+
+				c.Convey("nil", func(c convey.C) {
+					log.Info("test", BriefStringp("key", nil))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|info|test|{"key": "0123456789"}`)
+					c.So(s, convey.ShouldEqual, `{"key":null}`)
+				})
+				c.Convey("string len 10", func(c convey.C) {
+					log.Info("test", BriefStringp("key", New("0123456789")))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|info|test|{"key": "0123456789"}`)
+					c.So(s, convey.ShouldEqual, `{"key":"0123456789"}`)
+				})
+				c.Convey("string len 15", func(c convey.C) {
+					log.Warn("test", BriefStringp("key", New("012345678901234")))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|warn|test|{"key": "012345678901234"}`)
+					c.So(s, convey.ShouldEqual, `{"key":"012345678901234"}`)
+				})
+				c.Convey("string len 16", func(c convey.C) {
+					log.Error("test", BriefStringp("key", New("0123456789012345")))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|error|test|{"key": {"<len>": 16, "<type>": "string", "<brief>": "012345678901234"}}`)
+					c.So(s, convey.ShouldEqual, `{"key":{"<len>":16,"<type>":"string","<brief>":"012345678901234"}}`)
+				})
+			})
+			c.Convey("brief string len 10", func(c convey.C) {
+				SetBriefStringLen(10)
+
+				c.Convey("string len 10", func(c convey.C) {
+					log.Info("test", BriefString("key", "0123456789"))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": "0123456789"}`)
+					c.So(s, convey.ShouldEqual, `{"key":"0123456789"}`)
+				})
+				c.Convey("string len 15", func(c convey.C) {
+					log.Info("test", BriefString("key", "012345678901234"))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": {"<len>": 15, "<type>": "string", "<brief>": "0123456789"}}`)
+					c.So(s, convey.ShouldEqual, `{"key":{"<len>":15,"<type>":"string","<brief>":"0123456789"}}`)
+				})
+			})
+		})
 		c.Convey("brief byte string", func(c convey.C) {
 			c.Convey("byte string len 10", func(c convey.C) {
 				log.Info("test", BriefByteString("key", []byte("0123456789")))
@@ -149,6 +196,52 @@ func TestBrief(t *testing.T) {
 				s := getLogString()
 				// c.So(s, convey.ShouldEqual, `{"key": {"<len>": 15, "<type>": "string", "<brief>": "0123456789"}}`)
 				c.So(s, convey.ShouldEqual, `{"key":{"<len>":15,"<type>":"string","<brief>":"0123456789"}}`)
+			})
+		})
+		c.Convey("brief stringer", func(c convey.C) {
+			c.Convey("brief string len 15", func(c convey.C) {
+				SetBriefStringLen(15)
+
+				c.Convey("nil", func(c convey.C) {
+					log.Info("test", BriefStringer("key", nil))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|info|test|{"key": "0123456789"}`)
+					c.So(s, convey.ShouldEqual, `{"key":null}`)
+				})
+				c.Convey("string len 10", func(c convey.C) {
+					log.Info("test", BriefStringer("key", string_t("0123456789")))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|info|test|{"key": "0123456789"}`)
+					c.So(s, convey.ShouldEqual, `{"key":"0123456789"}`)
+				})
+				c.Convey("string len 15", func(c convey.C) {
+					log.Warn("test", BriefStringer("key", string_t("012345678901234")))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|warn|test|{"key": "012345678901234"}`)
+					c.So(s, convey.ShouldEqual, `{"key":"012345678901234"}`)
+				})
+				c.Convey("string len 16", func(c convey.C) {
+					log.Error("test", BriefStringer("key", string_t("0123456789012345")))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `2024-06-13T10:50:01.011+0800|error|test|{"key": {""len"": 16, "<type>": "string", "<brief>": "012345678901234"}}`)
+					c.So(s, convey.ShouldEqual, `{"key":{"<len>":16,"<type>":"string","<brief>":"012345678901234"}}`)
+				})
+			})
+			c.Convey("brief string len 10", func(c convey.C) {
+				SetBriefStringLen(10)
+
+				c.Convey("string len 10", func(c convey.C) {
+					log.Info("test", BriefString("key", "0123456789"))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": "0123456789"}`)
+					c.So(s, convey.ShouldEqual, `{"key":"0123456789"}`)
+				})
+				c.Convey("string len 15", func(c convey.C) {
+					log.Info("test", BriefString("key", "012345678901234"))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": {"<len>": 15, "<type>": "string", "<brief>": "0123456789"}}`)
+					c.So(s, convey.ShouldEqual, `{"key":{"<len>":15,"<type>":"string","<brief>":"0123456789"}}`)
+				})
 			})
 		})
 		c.Convey("brief strings", func(c convey.C) {
@@ -179,6 +272,74 @@ func TestBrief(t *testing.T) {
 				})
 				c.Convey("strings len 3", func(c convey.C) {
 					log.Info("test", BriefStrings("key", []string{"0123456789", "012345678901234", "abcdefghijklmnopqrstuvwxyz"}))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": {"<len>": 3, "<type>": "array", "<brief>": ["0123456789"]}}`)
+					c.So(s, convey.ShouldEqual, `{"key":{"<len>":3,"<type>":"array","<brief>":["0123456789"]}}`)
+				})
+			})
+		})
+		c.Convey("brief byte strings", func(c convey.C) {
+			c.Convey("brief array len 2", func(c convey.C) {
+				SetBriefArrayLen(2)
+
+				c.Convey("strings len 2", func(c convey.C) {
+					log.Info("test", BriefByteStrings("key", [][]byte{[]byte("0123456789"), []byte("012345678901234")}))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": ["0123456789", {"<len>": 15, "<type>": "string", "<brief>": "0123456789"}]}`)
+					c.So(s, convey.ShouldEqual, `{"key":["0123456789",{"<len>":15,"<type>":"string","<brief>":"0123456789"}]}`)
+				})
+				c.Convey("strings len 3", func(c convey.C) {
+					log.Info("test", BriefByteStrings("key", [][]byte{[]byte("0123456789"), []byte("012345678901234"), []byte("abcdefghijklmnopqrstuvwxyz")}))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": {"<len>": 3, "<type>": "array", "<brief>": ["0123456789", {"<len>": 15, "<type>": "string", "<brief>": "0123456789"}]}}`)
+					c.So(s, convey.ShouldEqual, `{"key":{"<len>":3,"<type>":"array","<brief>":["0123456789",{"<len>":15,"<type>":"string","<brief>":"0123456789"}]}}`)
+				})
+			})
+			c.Convey("brief array len 1", func(c convey.C) {
+				SetBriefArrayLen(1)
+
+				c.Convey("strings len 1", func(c convey.C) {
+					log.Info("test", BriefByteStrings("key", [][]byte{[]byte("0123456789")}))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": ["0123456789"]}`)
+					c.So(s, convey.ShouldEqual, `{"key":["0123456789"]}`)
+				})
+				c.Convey("strings len 3", func(c convey.C) {
+					log.Info("test", BriefByteStrings("key", [][]byte{[]byte("0123456789"), []byte("012345678901234"), []byte("abcdefghijklmnopqrstuvwxyz")}))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": {"<len>": 3, "<type>": "array", "<brief>": ["0123456789"]}}`)
+					c.So(s, convey.ShouldEqual, `{"key":{"<len>":3,"<type>":"array","<brief>":["0123456789"]}}`)
+				})
+			})
+		})
+		c.Convey("brief stringers", func(c convey.C) {
+			c.Convey("brief array len 2", func(c convey.C) {
+				SetBriefArrayLen(2)
+
+				c.Convey("strings len 2", func(c convey.C) {
+					log.Info("test", BriefStringers("key", []string_t{"0123456789", "012345678901234"}))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": ["0123456789", {"<len>": 15, "<type>": "string", "<brief>": "0123456789"}]}`)
+					c.So(s, convey.ShouldEqual, `{"key":["0123456789",{"<len>":15,"<type>":"string","<brief>":"0123456789"}]}`)
+				})
+				c.Convey("strings len 3", func(c convey.C) {
+					log.Info("test", BriefStringers("key", []string_t{"0123456789", "012345678901234", "abcdefghijklmnopqrstuvwxyz"}))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": {"<len>": 3, "<type>": "array", "<brief>": ["0123456789", {"<len>": 15, "<type>": "string", "<brief>": "0123456789"}]}}`)
+					c.So(s, convey.ShouldEqual, `{"key":{"<len>":3,"<type>":"array","<brief>":["0123456789",{"<len>":15,"<type>":"string","<brief>":"0123456789"}]}}`)
+				})
+			})
+			c.Convey("brief array len 1", func(c convey.C) {
+				SetBriefArrayLen(1)
+
+				c.Convey("strings len 1", func(c convey.C) {
+					log.Info("test", BriefStringers("key", []string_t{"0123456789"}))
+					s := getLogString()
+					// c.So(s, convey.ShouldEqual, `{"key": ["0123456789"]}`)
+					c.So(s, convey.ShouldEqual, `{"key":["0123456789"]}`)
+				})
+				c.Convey("strings len 3", func(c convey.C) {
+					log.Info("test", BriefStringers("key", []string_t{"0123456789", "012345678901234", "abcdefghijklmnopqrstuvwxyz"}))
 					s := getLogString()
 					// c.So(s, convey.ShouldEqual, `{"key": {"<len>": 3, "<type>": "array", "<brief>": ["0123456789"]}}`)
 					c.So(s, convey.ShouldEqual, `{"key":{"<len>":3,"<type>":"array","<brief>":["0123456789"]}}`)

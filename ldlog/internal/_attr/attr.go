@@ -32,7 +32,7 @@ func Skip() Attr        { return Attr{} }
 func Nil(k string) Attr { return attr(k, NilValue()) }
 
 func Binary(k string, v []byte) Attr         { return attr(k, StrFnValue(func() string { return b64(v) })) }
-func ByteString(k string, v []byte) Attr     { return String(k, b2s(v)) }
+func ByteString(k string, v []byte) Attr     { return attr(k, ByteStringValue(v)) }
 func Stringer(k string, v fmt.Stringer) Attr { return attr(k, StringerValue(v)) }
 
 func Complex64(key string, val complex64) Attr   { return attr(key, Complex64Value(val)) }
@@ -207,16 +207,11 @@ func Times(key string, val []time.Time) Attr {
 	})
 }
 
-func Error(err error) Attr { return NamedError("error", err) }
-func NamedError(k string, v error) Attr {
-	if v == nil {
-		return Nil(k)
-	}
-	return attr(k, StrFnValue(v.Error))
-}
-func Errors(key string, err []error) Attr {
-	return Reflect(key, &slice_t[error]{
-		data: err,
+func Error(v error) Attr                { return NamedError("error", v) }
+func NamedError(k string, v error) Attr { return attr(k, ErrorValue(v)) }
+func Errors(k string, v []error) Attr {
+	return Reflect(k, &slice_t[error]{
+		data: v,
 		text: func(buf *Buffer, v error) {
 			if v == nil {
 				buf.AppendString(nil_t{}.String())
@@ -227,5 +222,5 @@ func Errors(key string, err []error) Attr {
 	})
 }
 
-func Stack(key string) Attr               { return StackSkip(key, 1) }
-func StackSkip(key string, skip int) Attr { return String(key, stack(skip+1, 10)) }
+func Stack(k string) Attr               { return StackSkip(k, 1) }
+func StackSkip(k string, skip int) Attr { return String(k, stack(skip+1, 10)) }
