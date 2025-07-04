@@ -28,6 +28,7 @@ ok      github.com/distroy/ldgo/v2/ldref        7.611s
 type testCloneStruct struct {
 	String string
 	Int    int
+	Boolp  *bool
 	Struct *testCloneStruct
 }
 
@@ -44,7 +45,7 @@ func testCloneFunc(t *testing.T, cloneFunc func(v any) any) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
 		c.Convey("nil", func(c convey.C) {
 			c.Convey("interface{}", func(c convey.C) {
-				v0 := interface{}(nil)
+				v0 := any(nil)
 				// v1 := Clone(v0)
 				v1 := cloneWithFuncForTest(v0, cloneFunc)
 				c.So(v1, convey.ShouldBeNil)

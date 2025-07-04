@@ -17,31 +17,27 @@ goos: darwin
 goarch: amd64
 pkg: github.com/distroy/ldgo/v2/ldref
 cpu: VirtualApple @ 2.50GHz
-Benchmark_mergeV1
-Benchmark_mergeV1-10                    21379281                54.55 ns/op
-Benchmark_mergeV2
-Benchmark_mergeV2-10                    23590855                54.51 ns/op
-Benchmark_mergeV1WithClone
-Benchmark_mergeV1WithClone-10              16126             98721 ns/op
-Benchmark_mergeV2WithClone
-Benchmark_mergeV2WithClone-10              21660             52806 ns/op
+Benchmark_mergeV1-14                    19436870                64.77 ns/op
+Benchmark_mergeV2-14                    19884709                60.27 ns/op
+Benchmark_mergeV1WithClone-14              14818             79945 ns/op
+Benchmark_mergeV2WithClone-14              18276             65128 ns/op
 PASS
-ok      github.com/distroy/ldgo/v2/ldref        14.325s
+ok      github.com/distroy/ldgo/v2/ldref        15.581s
 */
 
 type testErrorStruct struct {
-	value interface{}
+	value any
 }
 
 func (testErrorStruct) Error() string { return "" }
 
 type testErrorStruct2 struct {
-	value interface{}
+	value any
 }
 
 func (*testErrorStruct2) Error() string { return "" }
 
-func testMergeWithFunc(t *testing.T, fnMerge func(target, source interface{}, cfg ...*MergeConfig) error) {
+func testMergeWithFunc(t *testing.T, fnMerge func(target, source any, cfg ...*MergeConfig) error) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
 		c.Convey("fail", func(c convey.C) {
 			c.Convey("to invalid type", func(c convey.C) {
@@ -138,13 +134,16 @@ func testMergeWithFunc(t *testing.T, fnMerge func(target, source interface{}, cf
 			})
 
 			c.Convey("struct", func(c convey.C) {
+				nb := func(v bool) *bool { return &v }
 				var (
 					target = &testCloneStruct{
 						String: "abc",
+						Boolp:  nb(true),
 					}
 					source = &testCloneStruct{
 						Int:    1234,
 						String: "xyz",
+						Boolp:  nb(false),
 					}
 				)
 
@@ -153,6 +152,7 @@ func testMergeWithFunc(t *testing.T, fnMerge func(target, source interface{}, cf
 				c.So(target, convey.ShouldResemble, &testCloneStruct{
 					Int:    1234,
 					String: "abc",
+					Boolp:  nb(false),
 				})
 			})
 
@@ -252,7 +252,7 @@ func TestMerge(t *testing.T)    { testMergeWithFunc(t, Merge) }
 func Test_mergeV1(t *testing.T) { testMergeWithFunc(t, mergeV1) }
 func Test_mergeV2(t *testing.T) { testMergeWithFunc(t, mergeV2) }
 
-func benchMergeFunc(b *testing.B, fnMerge func(target, source interface{}, cfg ...*MergeConfig) error, clone bool) {
+func benchMergeFunc(b *testing.B, fnMerge func(target, source any, cfg ...*MergeConfig) error, clone bool) {
 	size := 1024
 	mask := size - 1
 	objs := benchPrepareObjects(size)
