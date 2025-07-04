@@ -12,9 +12,9 @@ import (
 func DeepClone[T any](d T) T { return deepCloneV2(d) }
 
 func deepCloneV1[T any](d T) T {
-	var i interface{} = d
+	var i any = d
 	if x, ok := i.(reflect.Value); ok {
-		var r interface{} = deepCloneRef(x)
+		var r any = deepCloneRef(x)
 		return r.(T)
 	}
 
@@ -27,9 +27,9 @@ func deepCloneV1[T any](d T) T {
 	return x.Interface().(T)
 }
 func deepCloneV2[T any](d T) T {
-	var i interface{} = d
+	var i any = d
 	if x, ok := i.(reflect.Value); ok {
-		var r interface{} = deepCloneRefV2(x)
+		var r any = deepCloneRefV2(x)
 		return r.(T)
 	}
 

@@ -24,10 +24,10 @@ type MergeConfig struct {
 //   - Merge(*structA, *structA)
 //   - Merge(*map, map)
 //   - Merge(*map, *map)
-func Merge(target, source interface{}, cfg ...*MergeConfig) error {
+func Merge(target, source any, cfg ...*MergeConfig) error {
 	return mergeV2(target, source, cfg...)
 }
-func mergeV1(target, source interface{}, cfg ...*MergeConfig) error {
+func mergeV1(target, source any, cfg ...*MergeConfig) error {
 	c := &mergeContext{
 		MergeConfig: &MergeConfig{},
 	}
@@ -37,7 +37,7 @@ func mergeV1(target, source interface{}, cfg ...*MergeConfig) error {
 
 	return mergeWithContext(c, target, source, mergeReflect)
 }
-func mergeV2(target, source interface{}, cfg ...*MergeConfig) error {
+func mergeV2(target, source any, cfg ...*MergeConfig) error {
 	c := &mergeContext{
 		MergeConfig: &MergeConfig{},
 	}
@@ -45,6 +45,7 @@ func mergeV2(target, source interface{}, cfg ...*MergeConfig) error {
 		c.MergeConfig = cfg[0]
 	}
 
+	// log.Printf(" === clone:%v", c.Clone)
 	return mergeWithContext(c, target, source, mergeReflectV2)
 }
 
@@ -56,7 +57,7 @@ type mergeFuncType = func(c *mergeContext, target, source reflect.Value)
 
 var mergePool = &commFuncPool[reflect.Type, mergeFuncType]{}
 
-func mergeWithContext(c *mergeContext, target, source interface{}, fnMerge mergeFuncType) error {
+func mergeWithContext(c *mergeContext, target, source any, fnMerge mergeFuncType) error {
 	tVal := valueOf(target)
 	sVal := valueOf(source)
 
@@ -66,7 +67,6 @@ func mergeWithContext(c *mergeContext, target, source interface{}, fnMerge merge
 	if tTyp.Kind() != reflect.Ptr {
 		return lderr.ErrReflectTargetNotPtr
 	}
-
 	if tVal.IsNil() {
 		return lderr.ErrReflectTargetNilPtr
 	}
@@ -78,6 +78,7 @@ func mergeWithContext(c *mergeContext, target, source interface{}, fnMerge merge
 
 	case tTyp == sTyp ||
 		(tElemType.Kind() == reflect.Interface && sTyp.Kind() == reflect.Ptr && sTyp.Elem().Implements(tElemType)):
+		// log.Printf(" === clone:%v", c.Clone)
 
 		if sVal.IsNil() {
 			// do not need to merge
@@ -89,25 +90,30 @@ func mergeWithContext(c *mergeContext, target, source interface{}, fnMerge merge
 
 	case tElemType == sTyp ||
 		(tElemType.Kind() == reflect.Interface && sTyp.Implements(tElemType)):
+		// log.Printf(" === clone:%v", c.Clone)
 		tVal = tVal.Elem()
 	}
 
+	// log.Printf(" === clone:%v", c.Clone)
 	// mergeReflect(c, tVal, sVal)
 	fnMerge(c, tVal, sVal)
 	return nil
 }
 
 func cloneForMerge(c *mergeContext, x reflect.Value) reflect.Value {
+	// log.Printf(" === clone:%v", c.Clone)
 	v := x
 	if c.Clone {
 		v = deepCloneRef(v)
 	}
 	return v
 }
-func getMergeFuncByClone(c *mergeContext, typ reflect.Type) mergeFuncType {
+func getMergeFuncByClone(_ *mergeContext, typ reflect.Type) mergeFuncType {
+	// func is saved by pool without clone flag
 	pfClone, done := getCloneFuncByPool(typ, true)
 	return func(c *mergeContext, target, source reflect.Value) {
 		if c.Clone {
+			// log.Printf(" === clone:%v", c.Clone)
 			done()
 			val := (*pfClone)(source)
 			target.Set(val)
@@ -117,37 +123,61 @@ func getMergeFuncByClone(c *mergeContext, typ reflect.Type) mergeFuncType {
 	}
 }
 
-func mergeReflect(c *mergeContext, target, source reflect.Value) {
-	switch target.Kind() {
-	default:
-		mergeReflectNormal(c, target, source)
+var (
+	mergeKindMapV1 []mergeFuncType
+	mergeKindMapV2 []func(c *mergeContext, typ reflect.Type) mergeFuncType
+)
 
-	case reflect.Invalid:
-		break
-
-	case reflect.Interface:
-		mergeReflectIface(c, target, source)
-
-	case reflect.Ptr:
-		mergeReflectPtr(c, target, source)
-
-	case reflect.Func, reflect.Chan:
-		mergeReflectFunc(c, target, source)
-
-	case reflect.Map:
-		mergeReflectMap(c, target, source)
-
-	case reflect.Slice:
-		mergeReflectSlice(c, target, source)
-
-	case reflect.Array:
-		mergeReflectArray(c, target, source)
-
-	case reflect.Struct:
-		mergeReflectStruct(c, target, source)
+func init() {
+	type mergeKindData struct {
+		Kind    reflect.Kind
+		MergeV1 mergeFuncType
+		MergeV2 func(c *mergeContext, typ reflect.Type) mergeFuncType
+	}
+	s := []mergeKindData{
+		{reflect.Invalid, mergeReflectInvalid, getMergeFuncInvalid},
+		{reflect.Interface, mergeReflectIface, getMergeFuncIface},
+		{reflect.Ptr, mergeReflectPtr, getMergeFuncPtr},
+		{reflect.Func, mergeReflectFunc, getMergeFuncChan},
+		{reflect.Chan, mergeReflectFunc, getMergeFuncChan},
+		{reflect.Map, mergeReflectMap, getMergeFuncMap},
+		{reflect.Slice, mergeReflectSlice, getMergeFuncSlice},
+		{reflect.Array, mergeReflectArray, getMergeFuncArray},
+		{reflect.Struct, mergeReflectStruct, getMergeFuncStruct},
+	}
+	l := reflect.Invalid
+	for _, v := range s {
+		if l < v.Kind {
+			l = v.Kind
+		}
+	}
+	mergeKindMapV1 = make([]mergeFuncType, l+1)
+	mergeKindMapV2 = make([]func(c *mergeContext, typ reflect.Type) mergeFuncType, l+1)
+	for _, v := range s {
+		mergeKindMapV1[v.Kind] = v.MergeV1
+		mergeKindMapV2[v.Kind] = v.MergeV2
 	}
 }
+
+func isNormailTypeForMerge(kind reflect.Kind) bool {
+	m := mergeKindMapV2
+	return int(kind) >= len(m) || m[kind] == nil
+}
+
+func mergeReflect(c *mergeContext, target, source reflect.Value) {
+	// log.Printf(" === type:%s", target.Type())
+	kind := target.Kind()
+	fn := mergeReflectNormal
+	if m := mergeKindMapV1; int(kind) <= len(m) {
+		tmp := m[kind]
+		if tmp != nil {
+			fn = tmp
+		}
+	}
+	fn(c, target, source)
+}
 func mergeReflectV2(c *mergeContext, target, source reflect.Value) {
+	// log.Printf(" === type:%s", target.Type())
 	pf, done := getMergeFuncByPool(c, target.Type())
 	done()
 	(*pf)(c, target, source)
@@ -159,34 +189,16 @@ func getMergeFuncByPool(c *mergeContext, typ reflect.Type) (*mergeFuncType, func
 	})
 }
 func getMergeFunc(c *mergeContext, typ reflect.Type) mergeFuncType {
-	switch refKindOfType(typ) {
-	default:
-		return getMergeFuncNormal(c, typ)
-
-	case reflect.Invalid:
-		return func(c *mergeContext, target, source reflect.Value) {}
-
-	case reflect.Interface:
-		return getMergeFuncIface(c, typ)
-
-	case reflect.Ptr:
-		return getMergeFuncPtr(c, typ)
-
-	case reflect.Func, reflect.Chan:
-		return getMergeFuncChan(c, typ)
-
-	case reflect.Map:
-		return getMergeFuncMap(c, typ)
-
-	case reflect.Slice:
-		return getMergeFuncSlice(c, typ)
-
-	case reflect.Array:
-		return getMergeFuncArray(c, typ)
-
-	case reflect.Struct:
-		return getMergeFuncStruct(c, typ)
+	// log.Printf(" === type:%s", typ)
+	kind := typ.Kind()
+	fn := getMergeFuncNormal
+	if m := mergeKindMapV2; int(kind) <= len(m) {
+		tmp := m[kind]
+		if tmp != nil {
+			fn = tmp
+		}
 	}
+	return fn(c, typ)
 }
 
 func mergeReflectIface(c *mergeContext, target, source reflect.Value) {
@@ -249,6 +261,7 @@ func getMergeFuncIface(c *mergeContext, typ reflect.Type) mergeFuncType {
 }
 
 func mergeReflectPtr(c *mergeContext, target, source reflect.Value) {
+	// log.Printf(" === clone:%v", c.Clone)
 	if target.IsNil() {
 		source = cloneForMerge(c, source)
 		target.Set(source)
@@ -259,24 +272,44 @@ func mergeReflectPtr(c *mergeContext, target, source reflect.Value) {
 		return
 	}
 
-	mergeReflect(c, target.Elem(), source.Elem())
+	target = target.Elem()
+	source = source.Elem()
+	if isNormailTypeForMerge(target.Kind()) {
+		target.Set(source)
+		return
+	}
+
+	mergeReflect(c, target, source)
 }
 func getMergeFuncPtr(c *mergeContext, typ reflect.Type) mergeFuncType {
+	// log.Printf(" === clone:%v", c.Clone)
 	tElem := typ.Elem()
 	pfClone := getMergeFuncByClone(c, typ)
 	pfElem, dElem := getMergeFuncByPool(c, tElem)
 	return func(c *mergeContext, target, source reflect.Value) {
+		// log.Printf(" === type:%s", target.Type())
 		if source.IsNil() {
+			// log.Printf(" === clone:%v", c.Clone)
 			return
 		}
 
 		if target.IsNil() {
+			// log.Printf(" === clone:%v", c.Clone)
 			pfClone(c, target, source)
+			return
+		}
+		// log.Printf(" === clone:%v", c.Clone)
+
+		target = target.Elem()
+		source = source.Elem()
+		if isNormailTypeForMerge(target.Kind()) {
+			// log.Printf(" === clone:%v", c.Clone)
+			target.Set(source)
 			return
 		}
 
 		dElem()
-		(*pfElem)(c, target.Elem(), source.Elem())
+		(*pfElem)(c, target, source)
 	}
 }
 
@@ -514,11 +547,16 @@ func getMergeFuncStruct(c *mergeContext, typ reflect.Type) mergeFuncType {
 	}
 }
 
+func mergeReflectInvalid(_ *mergeContext, _, _ reflect.Value) {}
+func getMergeFuncInvalid(_ *mergeContext, _ reflect.Type) mergeFuncType {
+	return mergeReflectInvalid
+}
+
 func mergeReflectNormal(_ *mergeContext, target, source reflect.Value) {
 	if IsValZero(target) {
 		target.Set(source)
 	}
 }
-func getMergeFuncNormal(c *mergeContext, typ reflect.Type) mergeFuncType {
+func getMergeFuncNormal(_ *mergeContext, _ reflect.Type) mergeFuncType {
 	return mergeReflectNormal
 }

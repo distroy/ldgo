@@ -5,11 +5,16 @@
 package ldref
 
 import (
+	"log"
 	"testing"
 	"unsafe"
 
 	"github.com/smartystreets/goconvey/convey"
 )
+
+func init() {
+	log.SetFlags(log.Flags() | log.Lshortfile)
+}
 
 func TestIsZero(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
