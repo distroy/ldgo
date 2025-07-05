@@ -48,10 +48,8 @@ func Time(k string, v time.Time) Attr {
 
 // func Group(k string, v ...any) Attr { return slog.Group(k, v...) }
 func Group(k string, v ...Attr) Attr {
-	if len(v) == 0 {
-		return Skip()
-	}
-	return attr(k, slog.GroupValue(v...))
+	vv := slog.GroupValue(v...)
+	return attr(k, vv)
 }
 
 // func Any(k string, v any) Attr                { return attr(k, AnyValue(v)) }
@@ -460,4 +458,4 @@ func Errors(k string, v []error) Attr {
 }
 
 func Stack(k string) Attr               { return StackSkip(k, 1) }
-func StackSkip(k string, skip int) Attr { return String(k, stack(skip+1, 10)) }
+func StackSkip(k string, skip int) Attr { return Reflect(k, stack(skip+1, 20)) }

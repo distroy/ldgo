@@ -67,9 +67,16 @@ func testGetLogString(buf *bytes.Buffer, _ *slog.Logger) []byte {
 }
 
 func testRemoveLogPrefix(b []byte) []byte {
+	// log.Printf(" === %s", b)
 	i0 := bytes.Index(b, []byte(`"msg"`))
 	b = b[i0:]
 	i1 := bytes.Index(b, []byte(`,`))
+	if i1 < 0 {
+		i1 = bytes.Index(b, []byte(`""`))
+		if i1 < 0 {
+			return nil
+		}
+	}
 	b = b[i1:]
 	b[0] = '{'
 	return b
