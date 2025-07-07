@@ -28,6 +28,7 @@ ok      github.com/distroy/ldgo/v2/ldref        7.611s
 type testCloneStruct struct {
 	String string
 	Int    int
+	Uintp  *uint
 	Boolp  *bool
 	Struct *testCloneStruct
 }
