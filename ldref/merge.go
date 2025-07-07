@@ -18,6 +18,7 @@ type MergeConfig struct {
 }
 
 // Merge will merge the data from source to target
+// where target or field of target is zero
 //   - Merge(*int, int)
 //   - Merge(*int, *int)
 //   - Merge(*structA, structA)
@@ -104,7 +105,10 @@ func cloneForMerge(c *mergeContext, x reflect.Value) reflect.Value {
 	// log.Printf(" === clone:%v", c.Clone)
 	v := x
 	if c.Clone {
-		v = deepCloneRef(v)
+		// v = deepCloneRef(v)
+		pfClone, done := getCloneFuncByPool(v.Type(), true)
+		done()
+		v = (*pfClone)(v)
 	}
 	return v
 }
@@ -274,17 +278,40 @@ func mergeReflectPtr(c *mergeContext, target, source reflect.Value) {
 
 	target = target.Elem()
 	source = source.Elem()
-	if isNormailTypeForMerge(target.Kind()) {
-		target.Set(source)
-		return
+	kind := target.Kind()
+	if m := mergeKindMapV1; int(kind) <= len(m) {
+		fn := m[kind]
+		if fn != nil {
+			fn(c, target, source)
+		}
 	}
-
-	mergeReflect(c, target, source)
+	// target.Set(source)
 }
 func getMergeFuncPtr(c *mergeContext, typ reflect.Type) mergeFuncType {
 	// log.Printf(" === clone:%v", c.Clone)
 	tElem := typ.Elem()
 	pfClone := getMergeFuncByClone(c, typ)
+	if isNormailTypeForMerge(tElem.Kind()) {
+		return func(c *mergeContext, target, source reflect.Value) {
+			// log.Printf(" === type:%s", target.Type())
+			if source.IsNil() {
+				// log.Printf(" === clone:%v", c.Clone)
+				return
+			}
+
+			if target.IsNil() {
+				// log.Printf(" === clone:%v", c.Clone)
+				pfClone(c, target, source)
+				return
+			}
+			// log.Printf(" === clone:%v", c.Clone)
+
+			// target = target.Elem()
+			// source = source.Elem()
+			// // log.Printf(" === clone:%v", c.Clone)
+			// target.Set(source)
+		}
+	}
 	pfElem, dElem := getMergeFuncByPool(c, tElem)
 	return func(c *mergeContext, target, source reflect.Value) {
 		// log.Printf(" === type:%s", target.Type())
@@ -302,11 +329,6 @@ func getMergeFuncPtr(c *mergeContext, typ reflect.Type) mergeFuncType {
 
 		target = target.Elem()
 		source = source.Elem()
-		if isNormailTypeForMerge(target.Kind()) {
-			// log.Printf(" === clone:%v", c.Clone)
-			target.Set(source)
-			return
-		}
 
 		dElem()
 		(*pfElem)(c, target, source)
@@ -396,7 +418,7 @@ func getMergeFuncMap(c *mergeContext, typ reflect.Type) mergeFuncType {
 }
 
 func mergeReflectSlice(c *mergeContext, target, source reflect.Value) {
-	if source.IsNil() {
+	if source.IsNil() || source.Len() == 0 {
 		return
 	}
 
@@ -434,7 +456,7 @@ func getMergeFuncSlice(c *mergeContext, typ reflect.Type) mergeFuncType {
 	pfCloneElem := getMergeFuncByClone(c, typ.Elem())
 	return func(c *mergeContext, target, source reflect.Value) {
 		switch {
-		case source.IsNil():
+		case source.IsNil() || source.Len() == 0:
 			return
 
 		case target.IsNil():

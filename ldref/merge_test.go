@@ -17,12 +17,16 @@ goos: darwin
 goarch: amd64
 pkg: github.com/distroy/ldgo/v2/ldref
 cpu: VirtualApple @ 2.50GHz
-Benchmark_mergeV1-14                    19436870                64.77 ns/op
-Benchmark_mergeV2-14                    19884709                60.27 ns/op
-Benchmark_mergeV1WithClone-14              14818             79945 ns/op
-Benchmark_mergeV2WithClone-14              18276             65128 ns/op
+BenchmarkMerge/v1-empty-target-14               40739823                29.41 ns/op
+BenchmarkMerge/v2-empty-target-14               46734962                29.65 ns/op
+BenchmarkMerge/v1-value-target-14                 113146             10999 ns/op
+BenchmarkMerge/v2-value-target-14                 208208              6498 ns/op
+BenchmarkMerge/v1-empty-target-with-clone-14               40005             29611 ns/op
+BenchmarkMerge/v2-empty-target-with-clone-14               40640             29867 ns/op
+BenchmarkMerge/v1-value-target-with-clone-14               68564             17961 ns/op
+BenchmarkMerge/v2-value-target-with-clone-14              212548              6226 ns/op
 PASS
-ok      github.com/distroy/ldgo/v2/ldref        15.581s
+ok      github.com/distroy/ldgo/v2/ldref        18.859s
 */
 
 type testErrorStruct struct {
@@ -134,25 +138,26 @@ func testMergeWithFunc(t *testing.T, fnMerge func(target, source any, cfg ...*Me
 			})
 
 			c.Convey("struct", func(c convey.C) {
-				nb := func(v bool) *bool { return &v }
 				var (
 					target = &testCloneStruct{
 						String: "abc",
-						Boolp:  nb(true),
+						Boolp:  testNew(false),
 					}
 					source = &testCloneStruct{
-						Int:    1234,
 						String: "xyz",
-						Boolp:  nb(false),
+						Int:    1234,
+						Uintp:  testNew[uint](2345),
+						Boolp:  testNew(true),
 					}
 				)
 
 				err := fnMerge(target, source)
 				c.So(err, convey.ShouldBeNil)
 				c.So(target, convey.ShouldResemble, &testCloneStruct{
-					Int:    1234,
 					String: "abc",
-					Boolp:  nb(false),
+					Int:    1234,
+					Uintp:  testNew[uint](2345),
+					Boolp:  testNew(false),
 				})
 			})
 
@@ -252,17 +257,29 @@ func TestMerge(t *testing.T)    { testMergeWithFunc(t, Merge) }
 func Test_mergeV1(t *testing.T) { testMergeWithFunc(t, mergeV1) }
 func Test_mergeV2(t *testing.T) { testMergeWithFunc(t, mergeV2) }
 
-func benchMergeFunc(b *testing.B, fnMerge func(target, source any, cfg ...*MergeConfig) error, clone bool) {
+type benchMergeFuncConfig struct {
+	merge       func(target, source any, cfg ...*MergeConfig) error
+	emptyTarget bool
+	config      *MergeConfig
+}
+
+func benchMergeFunc(b *testing.B, c *benchMergeFuncConfig) {
+	var (
+		merge = c.merge
+		cfg   = c.config
+	)
 	size := 1024
 	mask := size - 1
 	objs := benchPrepareObjects(size)
 	{
-		target := &copybenchstruct1.ItemCardData{}
-		source := objs[0]
-		fnMerge(target, source)
+		target := objs[0]
+		source := objs[1]
+		merge(target, source)
 	}
-	cfg := &MergeConfig{
-		Clone: clone,
+	getTarget := func() *copybenchstruct1.ItemCardData { return &copybenchstruct1.ItemCardData{} }
+	if !c.emptyTarget {
+		target := DeepClone(objs[0])
+		getTarget = func() *copybenchstruct1.ItemCardData { return target }
 	}
 	b.ResetTimer()
 	b.RunParallel(func(p *testing.PB) {
@@ -271,15 +288,32 @@ func benchMergeFunc(b *testing.B, fnMerge func(target, source any, cfg ...*Merge
 			idx := count & mask
 			count++
 
-			target := &copybenchstruct1.ItemCardData{}
+			target := getTarget()
 			source := objs[idx]
-			fnMerge(target, source, cfg)
+			merge(target, source, cfg)
 		}
 	})
 	b.StopTimer()
 }
 
-func Benchmark_mergeV1(b *testing.B)          { benchMergeFunc(b, mergeV1, false) }
-func Benchmark_mergeV2(b *testing.B)          { benchMergeFunc(b, mergeV2, false) }
-func Benchmark_mergeV1WithClone(b *testing.B) { benchMergeFunc(b, mergeV1, true) }
-func Benchmark_mergeV2WithClone(b *testing.B) { benchMergeFunc(b, mergeV2, true) }
+func BenchmarkMerge(b *testing.B) {
+	cfg := func(merge func(target, source any, cfg ...*MergeConfig) error, clone bool, emptyTarget bool) *benchMergeFuncConfig {
+		return &benchMergeFuncConfig{
+			merge:       merge,
+			emptyTarget: emptyTarget,
+			config: &MergeConfig{
+				Clone:      clone,
+				MergeArray: true,
+				MergeSlice: true,
+			},
+		}
+	}
+	b.Run("v1-empty-target", func(b *testing.B) { benchMergeFunc(b, cfg(mergeV1, false, true)) })
+	b.Run("v2-empty-target", func(b *testing.B) { benchMergeFunc(b, cfg(mergeV2, false, true)) })
+	b.Run("v1-value-target", func(b *testing.B) { benchMergeFunc(b, cfg(mergeV1, false, false)) })
+	b.Run("v2-value-target", func(b *testing.B) { benchMergeFunc(b, cfg(mergeV2, false, false)) })
+	b.Run("v1-empty-target-with-clone", func(b *testing.B) { benchMergeFunc(b, cfg(mergeV1, true, true)) })
+	b.Run("v2-empty-target-with-clone", func(b *testing.B) { benchMergeFunc(b, cfg(mergeV2, true, true)) })
+	b.Run("v1-value-target-with-clone", func(b *testing.B) { benchMergeFunc(b, cfg(mergeV1, true, false)) })
+	b.Run("v2-value-target-with-clone", func(b *testing.B) { benchMergeFunc(b, cfg(mergeV2, true, false)) })
+}
