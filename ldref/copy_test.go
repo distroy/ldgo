@@ -34,9 +34,9 @@ type testCopyStruct2 struct {
 	Ptr       *int
 }
 
-func testNewInt(v int) *int { return &v }
+func testNew[T any](v T) *T { return &v }
 
-func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ...*CopyConfig) error) {
+func testCopyFunc(t *testing.T, copyFunc func(target, source any, cfg ...*CopyConfig) error) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
 		c.Convey("int to int", func(c convey.C) {
 			var (
@@ -114,11 +114,11 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			})
 		})
 
-		c.Convey("to *interface{}", func(c convey.C) {
-			c.Convey("nil to *interface{}", func(c convey.C) {
+		c.Convey("to *any", func(c convey.C) {
+			c.Convey("nil to *any", func(c convey.C) {
 				var (
-					target interface{}
-					source interface{}
+					target any
+					source any
 				)
 
 				err := copyFunc(&target, source)
@@ -126,9 +126,9 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				c.So(target, convey.ShouldEqual, nil)
 			})
 
-			c.Convey("int to *interface{}", func(c convey.C) {
+			c.Convey("int to *any", func(c convey.C) {
 				var (
-					target interface{}
+					target any
 					source int = 100
 				)
 
@@ -137,9 +137,9 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				c.So(target, convey.ShouldEqual, source)
 			})
 
-			c.Convey("*int to *interface{}", func(c convey.C) {
+			c.Convey("*int to *any", func(c convey.C) {
 				var (
-					target interface{}
+					target any
 					source *int = new(int)
 				)
 				*source = 100
@@ -150,9 +150,9 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				c.So(target, convey.ShouldResemble, source)
 			})
 
-			c.Convey("**int to *interface{}", func(c convey.C) {
+			c.Convey("**int to *any", func(c convey.C) {
 				var (
-					target interface{}
+					target any
 					xxxx0  int   = 100
 					xxxx1  *int  = &xxxx0
 					source **int = &xxxx1
@@ -164,33 +164,33 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				c.So(target, convey.ShouldResemble, source)
 			})
 
-			c.Convey("struct to *interface{}", func(c convey.C) {
+			c.Convey("struct to *any", func(c convey.C) {
 				var (
-					target interface{}
-					source interface{} = &testCopyStruct{
+					target any
+					source any = &testCopyStruct{
 						Id:     100,
 						Ignore: true,
 						Name:   "abc",
 						Age:    23,
 						Female: true,
-						Ptr:    testNewInt(1234),
+						Ptr:    testNew(1234),
 					}
 				)
 
 				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
-				c.So(target, convey.ShouldResemble, map[string]interface{}{
+				c.So(target, convey.ShouldResemble, map[string]any{
 					`id`:     int64(100),
 					`Name`:   "abc",
 					`Age`:    int64(23),
 					`Female`: true,
-					`Ptr`:    testNewInt(1234),
+					`Ptr`:    testNew(1234),
 				})
 			})
 
-			c.Convey("[]struct to *interface{}", func(c convey.C) {
+			c.Convey("[]struct to *any", func(c convey.C) {
 				var (
-					target interface{}
+					target any
 					source = []*testCopyStruct{
 						{
 							Id:     100,
@@ -198,27 +198,27 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 							Name:   "abc",
 							Age:    23,
 							Female: true,
-							Ptr:    testNewInt(1234),
+							Ptr:    testNew(1234),
 						},
 					}
 				)
 
 				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
-				c.So(target, convey.ShouldResemble, []interface{}{
-					map[string]interface{}{
+				c.So(target, convey.ShouldResemble, []any{
+					map[string]any{
 						`id`:     int64(100),
 						`Name`:   "abc",
 						`Age`:    int64(23),
 						`Female`: true,
-						`Ptr`:    testNewInt(1234),
+						`Ptr`:    testNew(1234),
 					},
 				})
 			})
 
-			c.Convey("[...]struct to *interface{}", func(c convey.C) {
+			c.Convey("[...]struct to *any", func(c convey.C) {
 				var (
-					target interface{}
+					target any
 					source = [...]*testCopyStruct{
 						{
 							Id:     100,
@@ -226,20 +226,20 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 							Name:   "abc",
 							Age:    23,
 							Female: true,
-							Ptr:    testNewInt(1234),
+							Ptr:    testNew(1234),
 						},
 					}
 				)
 
 				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
-				c.So(target, convey.ShouldResemble, []interface{}{
-					map[string]interface{}{
+				c.So(target, convey.ShouldResemble, []any{
+					map[string]any{
 						`id`:     int64(100),
 						`Name`:   "abc",
 						`Age`:    int64(23),
 						`Female`: true,
-						`Ptr`:    testNewInt(1234),
+						`Ptr`:    testNew(1234),
 					},
 				})
 			})
@@ -282,7 +282,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			c.Convey("nil to **int", func(c convey.C) {
 				var (
 					target *int
-					source interface{}
+					source any
 				)
 
 				err := copyFunc(&target, source)
@@ -317,7 +317,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			c.Convey("func to *string", func(c convey.C) {
 				var (
 					target string
-					source func(interface{}) bool = IsZero
+					source func(any) bool = IsZero
 				)
 
 				err := copyFunc(&target, source)
@@ -329,7 +329,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			c.Convey("func to unsafe.Pointer", func(c convey.C) {
 				var (
 					target unsafe.Pointer
-					source func(interface{}) bool = IsZero
+					source func(any) bool = IsZero
 				)
 
 				err := copyFunc(&target, source)
@@ -338,7 +338,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				// err := copyFunc(&target, source)
 				// c.So(err, convey.ShouldBeNil)
 				//
-				// var target1 func(interface{}) bool
+				// var target1 func(any) bool
 				// err = copyFunc(&target1, target)
 				// c.So(err, convey.ShouldBeNil)
 			})
@@ -348,7 +348,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			c.Convey("nil to *bool", func(c convey.C) {
 				var (
 					target bool
-					source interface{}
+					source any
 				)
 
 				err := copyFunc(&target, source)
@@ -403,7 +403,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				c.Convey("nil to *int", func(c convey.C) {
 					var (
 						target int
-						source interface{}
+						source any
 					)
 
 					err := copyFunc(&target, source)
@@ -459,7 +459,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				c.Convey("nil to *uint", func(c convey.C) {
 					var (
 						target uint
-						source interface{}
+						source any
 					)
 
 					err := copyFunc(&target, source)
@@ -515,7 +515,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				c.Convey("nil to *float64", func(c convey.C) {
 					var (
 						target float64
-						source interface{}
+						source any
 					)
 
 					err := copyFunc(&target, source)
@@ -571,7 +571,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				c.Convey("nil to *complex128", func(c convey.C) {
 					var (
 						target complex128
-						source interface{}
+						source any
 					)
 
 					err := copyFunc(&target, source)
@@ -629,7 +629,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			c.Convey("nil to *string", func(c convey.C) {
 				var (
 					target string
-					source interface{}
+					source any
 				)
 
 				err := copyFunc(&target, source)
@@ -862,7 +862,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			c.Convey("nil to *map[int64]string", func(c convey.C) {
 				var (
 					target map[int64]string
-					source interface{}
+					source any
 				)
 
 				err := copyFunc(&target, source)
@@ -870,9 +870,9 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 				c.So(target, convey.ShouldBeNil)
 			})
 
-			c.Convey("map[int]string to *map[interface{}]interface{}", func(c convey.C) {
+			c.Convey("map[int]string to *map[any]any", func(c convey.C) {
 				var (
-					target map[interface{}]interface{}
+					target map[any]any
 					source map[int]string = map[int]string{
 						1: "abc",
 						2: "xyz",
@@ -881,7 +881,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 
 				err := copyFunc(&target, source)
 				c.So(err, convey.ShouldBeNil)
-				c.So(target, convey.ShouldResemble, map[interface{}]interface{}{
+				c.So(target, convey.ShouldResemble, map[any]any{
 					1: "abc",
 					2: "xyz",
 				})
@@ -986,7 +986,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			c.Convey("nil to *[]string", func(c convey.C) {
 				var (
 					target []string
-					source interface{}
+					source any
 				)
 
 				err := copyFunc(&target, source)
@@ -1035,7 +1035,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			c.Convey("nil to *struct", func(c convey.C) {
 				var (
 					target testCopyStruct
-					source interface{}
+					source any
 				)
 
 				err := copyFunc(&target, source)
@@ -1231,7 +1231,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 					Name:   "abc",
 					Age:    23,
 					Female: true,
-					Ptr:    testNewInt(1234),
+					Ptr:    testNew(1234),
 				})
 			})
 
@@ -1255,7 +1255,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 					Name:   "abc",
 					Age:    23,
 					Female: true,
-					Ptr:    testNewInt(1234),
+					Ptr:    testNew(1234),
 				})
 			})
 
@@ -1268,7 +1268,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 						`Name`:   "abc",
 						`Age`:    23,
 						`Female`: true,
-						`Ptr`:    testNewInt(1234),
+						`Ptr`:    testNew(1234),
 					}
 				)
 
@@ -1289,7 +1289,7 @@ func testCopyFunc(t *testing.T, copyFunc func(target, source interface{}, cfg ..
 			c.Convey("nil to *[2]string", func(c convey.C) {
 				var (
 					target [2]string
-					source interface{}
+					source any
 				)
 
 				err := copyFunc(&target, source)

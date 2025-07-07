@@ -14,11 +14,14 @@ func resizeSliceReflect(slice reflect.Value, size int) {
 		return
 	}
 
-	tmp := reflect.MakeSlice(slice.Type(), size, size)
-	for i := 0; i < l; i++ {
-		tmp.Index(i).Set(slice.Index(i))
-	}
-	slice.Set(tmp)
+	slice.Grow(size - l)
+	slice.SetLen(size)
+
+	// tmp := reflect.MakeSlice(slice.Type(), size, size)
+	// for i := 0; i < l; i++ {
+	// 	tmp.Index(i).Set(slice.Index(i))
+	// }
+	// slice.Set(tmp)
 }
 
 func reflectArrayToSlice(v reflect.Value) reflect.Value {

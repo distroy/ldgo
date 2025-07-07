@@ -12,9 +12,9 @@ import (
 func Clone[T any](d T) T { return cloneV1(d) }
 
 func cloneV1[T any](d T) T {
-	var i interface{} = d
+	var i any = d
 	if x, ok := i.(reflect.Value); ok {
-		var r interface{} = cloneRef(x)
+		var r any = cloneRef(x)
 		return r.(T)
 	}
 
@@ -27,9 +27,9 @@ func cloneV1[T any](d T) T {
 	return x.Interface().(T)
 }
 func cloneV2[T any](d T) T {
-	var i interface{} = d
+	var i any = d
 	if x, ok := i.(reflect.Value); ok {
-		var r interface{} = cloneRefV2(x)
+		var r any = cloneRefV2(x)
 		return r.(T)
 	}
 
