@@ -13,21 +13,25 @@ import (
 
 func GetLogger(h Handler) *Logger { return newLogger(newCore(h)) }
 
-func newHandler(w io.Writer) Handler {
-	return _handler.NewHandler(w, &_handler.Options{
-		Caller: true,
-		Level:  LevelInfo,
-	})
-}
+type HandlerOptions = _handler.Options
 
-func New(w io.Writer, opts ...Option) *Logger {
+func NewHandler(w io.Writer, opts *HandlerOptions) Handler {
 	if w == nil {
 		w = os.Stderr
 	}
-	core := newCore(newHandler(w))
+	if opts == nil {
+		opts = &HandlerOptions{
+			Caller: true,
+			Level:  LevelInfo,
+		}
+	}
+	return _handler.NewHandler(w, opts)
+}
+
+func New(h Handler, opts ...Option) *Logger {
+	core := newCore(h)
 	for _, opt := range opts {
 		opt(&core)
 	}
-
 	return newLogger(core)
 }

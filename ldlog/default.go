@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	defLogger = ldatomic.NewAny(New(os.Stderr))
-	console   = New(os.Stderr)
+	defLogger = ldatomic.NewAny(New(NewHandler(os.Stderr, nil)))
+	console   = New(NewHandler(os.Stderr, nil))
 	discard   = newDiscard()
 )
 

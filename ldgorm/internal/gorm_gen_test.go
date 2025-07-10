@@ -6,6 +6,7 @@ package internal
 
 import (
 	"fmt"
+	"io"
 	"strings"
 	"testing"
 
@@ -15,6 +16,10 @@ import (
 	"github.com/smartystreets/goconvey/convey"
 	"gorm.io/gorm"
 )
+
+func testNewLogger(w io.Writer) *ldlog.Wrapper {
+	return ldlog.New(ldlog.NewHandler(w, nil)).Wrapper()
+}
 
 func TestGormDb_Transaction(t *testing.T) {
 	convey.Convey(t.Name(), t, func() {
@@ -505,7 +510,7 @@ func TestGormDb_WithLogger(t *testing.T) {
 			defer db.Close()
 
 			buf := &strings.Builder{}
-			db = db.WithLogger(ldlog.New(buf).Wrapper())
+			db = db.WithLogger(testNewLogger(buf))
 
 			db = db.UseSlaver()
 
@@ -531,7 +536,7 @@ func TestGormDb_WithLogger(t *testing.T) {
 				db = db.UseSlaver()
 
 				buf := &strings.Builder{}
-				db = db.WithLogger(ldlog.New(buf).Wrapper())
+				db = db.WithLogger(testNewLogger(buf))
 
 				db.Save(&testTable{
 					ProjectId: 1001,
@@ -554,7 +559,7 @@ func TestGormDb_WithLogger(t *testing.T) {
 				db = db.UseSlaver(1)
 
 				buf := &strings.Builder{}
-				db = db.WithLogger(ldlog.New(buf).Wrapper())
+				db = db.WithLogger(testNewLogger(buf))
 
 				db.Save(&testTable{
 					ProjectId: 1001,

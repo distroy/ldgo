@@ -12,6 +12,10 @@ import (
 	"github.com/smartystreets/goconvey/convey"
 )
 
+func testNewHandler(w io.Writer) Handler {
+	return NewHandler(w, nil)
+}
+
 func Test_core_enable(t *testing.T) {
 	convey.Convey(t.Name(), t, func(c convey.C) {
 		test_core_enable_rate(c)
@@ -20,7 +24,7 @@ func Test_core_enable(t *testing.T) {
 }
 
 func test_core_enable_rate(c convey.C) {
-	l := newCore(newHandler(io.Discard))
+	l := newCore(testNewHandler(io.Discard))
 	lvl := LevelInfo
 
 	c.Convey("rate", func(c convey.C) {
@@ -56,7 +60,7 @@ func test_core_enable_rate(c convey.C) {
 }
 
 func test_core_enable_interval(c convey.C) {
-	l := newCore(newHandler(io.Discard))
+	l := newCore(testNewHandler(io.Discard))
 	lvl := LevelInfo
 
 	c.Convey("interval", func(c convey.C) {
