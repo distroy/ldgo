@@ -189,7 +189,10 @@ func isFlagDefaultZero(f *Flag) bool {
 	if getAddrValue(val) != nil {
 		typ := val.Type()
 		v := reflect.New(typ)
-		v.Elem().Set(reflect.New(typ.Elem()))
+		switch typ.Kind() {
+		case reflect.Interface:
+			v.Elem().Set(reflect.New(typ.Elem()))
+		}
 
 		z, _ := v.Interface().(Value)
 		return defaultValue == z.String()
