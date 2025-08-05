@@ -8,136 +8,120 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/distroy/ldgo/v3/ldlog/internal/field"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
+	"github.com/distroy/ldgo/v3/ldlog/internal/_attr"
 )
 
-type (
-	Field = zapcore.Field
+func Skip() Attr { return _attr.Skip() }
 
-	ObjectMarshaler = zapcore.ObjectMarshaler
-	ArrayMarshaler  = zapcore.ArrayMarshaler
-)
+func Bool(key string, val bool) Attr             { return _attr.Bool(key, val) }
+func String(key string, val string) Attr         { return _attr.String(key, val) }
+func Stringer(key string, val fmt.Stringer) Attr { return _attr.Stringer(key, val) }
+func Binary(key string, val []byte) Attr         { return _attr.Binary(key, val) }
+func ByteString(key string, val []byte) Attr     { return _attr.ByteString(key, val) }
 
-func Bool(key string, val bool) Field             { return zap.Bool(key, val) }
-func String(key string, val string) Field         { return zap.String(key, val) }
-func Stringer(key string, val fmt.Stringer) Field { return zap.Stringer(key, val) }
-func Binary(key string, val []byte) Field         { return zap.Binary(key, val) }
-func ByteString(key string, val []byte) Field     { return zap.ByteString(key, val) }
+func Int(key string, val int) Attr     { return _attr.Int(key, val) }
+func Int8(key string, val int8) Attr   { return _attr.Int64(key, int64(val)) }
+func Int16(key string, val int16) Attr { return _attr.Int64(key, int64(val)) }
+func Int32(key string, val int32) Attr { return _attr.Int64(key, int64(val)) }
+func Int64(key string, val int64) Attr { return _attr.Int64(key, val) }
 
-func Int(key string, val int) Field     { return zap.Int(key, val) }
-func Int8(key string, val int8) Field   { return zap.Int8(key, val) }
-func Int16(key string, val int16) Field { return zap.Int16(key, val) }
-func Int32(key string, val int32) Field { return zap.Int32(key, val) }
-func Int64(key string, val int64) Field { return zap.Int64(key, val) }
+func Uint(key string, val uint) Attr       { return _attr.Uint64(key, uint64(val)) }
+func Uint8(key string, val uint8) Attr     { return _attr.Uint64(key, uint64(val)) }
+func Uint16(key string, val uint16) Attr   { return _attr.Uint64(key, uint64(val)) }
+func Uint32(key string, val uint32) Attr   { return _attr.Uint64(key, uint64(val)) }
+func Uint64(key string, val uint64) Attr   { return _attr.Uint64(key, val) }
+func Uintptr(key string, val uintptr) Attr { return _attr.Uint64(key, uint64(val)) }
 
-func Uint(key string, val uint) Field       { return zap.Uint(key, val) }
-func Uint8(key string, val uint8) Field     { return zap.Uint8(key, val) }
-func Uint16(key string, val uint16) Field   { return zap.Uint16(key, val) }
-func Uint32(key string, val uint32) Field   { return zap.Uint32(key, val) }
-func Uint64(key string, val uint64) Field   { return zap.Uint64(key, val) }
-func Uintptr(key string, val uintptr) Field { return zap.Uintptr(key, val) }
+func Float32(key string, val float32) Attr { return _attr.Float64(key, float64(val)) }
+func Float64(key string, val float64) Attr { return _attr.Float64(key, val) }
 
-func Float32(key string, val float32) Field { return zap.Float32(key, val) }
-func Float64(key string, val float64) Field { return zap.Float64(key, val) }
+func Complex64(key string, val complex64) Attr   { return _attr.Complex64(key, val) }
+func Complex128(key string, val complex128) Attr { return _attr.Complex128(key, val) }
 
-func Complex64(key string, val complex64) Field   { return zap.Complex64(key, val) }
-func Complex128(key string, val complex128) Field { return zap.Complex128(key, val) }
+func Boolp(key string, val *bool) Attr                   { return _attr.Boolp(key, val) }
+func Bools(key string, val []bool) Attr                  { return _attr.Bools(key, val) }
+func Stringp(key string, val *string) Attr               { return _attr.Stringp(key, val) }
+func Strings(key string, val []string) Attr              { return _attr.Strings(key, val) }
+func Stringers[T fmt.Stringer](key string, val []T) Attr { return _attr.Stringers(key, val) }
+func ByteStrings(key string, val [][]byte) Attr          { return _attr.ByteStrings(key, val) }
 
-func Boolp(key string, val *bool) Field                   { return zap.Boolp(key, val) }
-func Bools(key string, val []bool) Field                  { return zap.Bools(key, val) }
-func Stringp(key string, val *string) Field               { return zap.Stringp(key, val) }
-func Strings(key string, val []string) Field              { return zap.Strings(key, val) }
-func Stringers[T fmt.Stringer](key string, val []T) Field { return zap.Stringers(key, val) }
-func ByteStrings(key string, val [][]byte) Field          { return zap.ByteStrings(key, val) }
+func Intp(key string, val *int) Attr     { return _attr.Intp(key, val) }
+func Int8p(key string, val *int8) Attr   { return _attr.Int8p(key, val) }
+func Int16p(key string, val *int16) Attr { return _attr.Int16p(key, val) }
+func Int32p(key string, val *int32) Attr { return _attr.Int32p(key, val) }
+func Int64p(key string, val *int64) Attr { return _attr.Int64p(key, val) }
 
-func Intp(key string, val *int) Field     { return zap.Intp(key, val) }
-func Int8p(key string, val *int8) Field   { return zap.Int8p(key, val) }
-func Int16p(key string, val *int16) Field { return zap.Int16p(key, val) }
-func Int32p(key string, val *int32) Field { return zap.Int32p(key, val) }
-func Int64p(key string, val *int64) Field { return zap.Int64p(key, val) }
+func Uintp(key string, val *uint) Attr       { return _attr.Uintp(key, val) }
+func Uint8p(key string, val *uint8) Attr     { return _attr.Uint8p(key, val) }
+func Uint16p(key string, val *uint16) Attr   { return _attr.Uint16p(key, val) }
+func Uint32p(key string, val *uint32) Attr   { return _attr.Uint32p(key, val) }
+func Uint64p(key string, val *uint64) Attr   { return _attr.Uint64p(key, val) }
+func Uintptrp(key string, val *uintptr) Attr { return _attr.Uintptrp(key, val) }
 
-func Uintp(key string, val *uint) Field       { return zap.Uintp(key, val) }
-func Uint8p(key string, val *uint8) Field     { return zap.Uint8p(key, val) }
-func Uint16p(key string, val *uint16) Field   { return zap.Uint16p(key, val) }
-func Uint32p(key string, val *uint32) Field   { return zap.Uint32p(key, val) }
-func Uint64p(key string, val *uint64) Field   { return zap.Uint64p(key, val) }
-func Uintptrp(key string, val *uintptr) Field { return zap.Uintptrp(key, val) }
+func Float32p(key string, val *float32) Attr { return _attr.Float32p(key, val) }
+func Float64p(key string, val *float64) Attr { return _attr.Float64p(key, val) }
 
-func Float32p(key string, val *float32) Field { return zap.Float32p(key, val) }
-func Float64p(key string, val *float64) Field { return zap.Float64p(key, val) }
+func Complex64p(key string, val *complex64) Attr   { return _attr.Complex64p(key, val) }
+func Complex128p(key string, val *complex128) Attr { return _attr.Complex128p(key, val) }
 
-func Complex64p(key string, val *complex64) Field   { return zap.Complex64p(key, val) }
-func Complex128p(key string, val *complex128) Field { return zap.Complex128p(key, val) }
+func Ints(key string, val []int) Attr     { return _attr.Ints(key, val) }
+func Int8s(key string, val []int8) Attr   { return _attr.Int8s(key, val) }
+func Int16s(key string, val []int16) Attr { return _attr.Int16s(key, val) }
+func Int32s(key string, val []int32) Attr { return _attr.Int32s(key, val) }
+func Int64s(key string, val []int64) Attr { return _attr.Int64s(key, val) }
 
-func Ints(key string, val []int) Field     { return zap.Ints(key, val) }
-func Int8s(key string, val []int8) Field   { return zap.Int8s(key, val) }
-func Int16s(key string, val []int16) Field { return zap.Int16s(key, val) }
-func Int32s(key string, val []int32) Field { return zap.Int32s(key, val) }
-func Int64s(key string, val []int64) Field { return zap.Int64s(key, val) }
+func Uints(key string, val []uint) Attr       { return _attr.Uints(key, val) }
+func Uint8s(key string, val []uint8) Attr     { return _attr.Uint8s(key, val) }
+func Uint16s(key string, val []uint16) Attr   { return _attr.Uint16s(key, val) }
+func Uint32s(key string, val []uint32) Attr   { return _attr.Uint32s(key, val) }
+func Uint64s(key string, val []uint64) Attr   { return _attr.Uint64s(key, val) }
+func Uintptrs(key string, val []uintptr) Attr { return _attr.Uintptrs(key, val) }
 
-func Uints(key string, val []uint) Field       { return zap.Uints(key, val) }
-func Uint8s(key string, val []uint8) Field     { return zap.Uint8s(key, val) }
-func Uint16s(key string, val []uint16) Field   { return zap.Uint16s(key, val) }
-func Uint32s(key string, val []uint32) Field   { return zap.Uint32s(key, val) }
-func Uint64s(key string, val []uint64) Field   { return zap.Uint64s(key, val) }
-func Uintptrs(key string, val []uintptr) Field { return zap.Uintptrs(key, val) }
+func Float32s(key string, val []float32) Attr { return _attr.Float32s(key, val) }
+func Float64s(key string, val []float64) Attr { return _attr.Float64s(key, val) }
 
-func Float32s(key string, val []float32) Field { return zap.Float32s(key, val) }
-func Float64s(key string, val []float64) Field { return zap.Float64s(key, val) }
+func Complex64s(key string, val []complex64) Attr   { return _attr.Complex64s(key, val) }
+func Complex128s(key string, val []complex128) Attr { return _attr.Complex128s(key, val) }
 
-func Complex64s(key string, val []complex64) Field   { return zap.Complex64s(key, val) }
-func Complex128s(key string, val []complex128) Field { return zap.Complex128s(key, val) }
+func Time(key string, val time.Time) Attr         { return _attr.Time(key, val) }
+func Duration(key string, val time.Duration) Attr { return _attr.Duration(key, val) }
 
-func Time(key string, val time.Time) Field         { return zap.Time(key, val) }
-func Duration(key string, val time.Duration) Field { return zap.Duration(key, val) }
+func Timep(key string, val *time.Time) Attr         { return _attr.Timep(key, val) }
+func Durationp(key string, val *time.Duration) Attr { return _attr.Durationp(key, val) }
 
-func Timep(key string, val *time.Time) Field         { return zap.Timep(key, val) }
-func Durationp(key string, val *time.Duration) Field { return zap.Durationp(key, val) }
+func Times(key string, val []time.Time) Attr         { return _attr.Times(key, val) }
+func Durations(key string, val []time.Duration) Attr { return _attr.Durations(key, val) }
 
-func Times(key string, val []time.Time) Field         { return zap.Times(key, val) }
-func Durations(key string, val []time.Duration) Field { return zap.Durations(key, val) }
+func Error(err error) Attr                  { return _attr.Error(err) }
+func Errors(key string, err []error) Attr   { return _attr.Errors(key, err) }
+func NamedError(key string, err error) Attr { return _attr.NamedError(key, err) }
 
-func Error(err error) Field                  { return zap.Error(err) }
-func Errors(key string, err []error) Field   { return zap.Errors(key, err) }
-func NamedError(key string, err error) Field { return zap.NamedError(key, err) }
+func Stack(key string) Attr               { return _attr.StackSkip(key, 1) }
+func StackSkip(key string, skip int) Attr { return _attr.StackSkip(key, skip+1) }
 
-func Stack(key string) Field               { return zap.StackSkip(key, 1) }
-func StackSkip(key string, skip int) Field { return zap.StackSkip(key, skip+1) }
+func Any(key string, val any) Attr     { return _attr.Any(key, val) }
+func Reflect(key string, val any) Attr { return _attr.Reflect(key, val) }
 
-func Namespace(key string) Field       { return zap.Namespace(key) }
-func Inline(val ObjectMarshaler) Field { return zap.Inline(val) }
-
-func Array(key string, val ArrayMarshaler) Field           { return zap.Array(key, val) }
-func Object(key string, val ObjectMarshaler) Field         { return zap.Object(key, val) }
-func Objects[T ObjectMarshaler](key string, val []T) Field { return zap.Objects(key, val) }
-
-func Any(key string, val interface{}) Field     { return zap.Any(key, val) }
-func Reflect(key string, val interface{}) Field { return zap.Reflect(key, val) }
-
-func Skip() Field { return zap.Skip() }
-
-type integer interface {
-	~int | ~int8 | ~int16 | ~int32 | ~int64 |
-		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 |
-		~uintptr
-}
-
-func Integer[Int integer](key string, val Int) Field {
+func Integer[Int ~int | ~int8 | ~int16 | ~int32 | ~int64 |
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr,
+](
+	key string, val Int,
+) Attr {
 	if val >= 0 {
 		return Uint64(key, uint64(val))
 	}
 	return Int64(key, int64(val))
 }
 
-func BriefString(key string, val string) Field         { return field.BriefString(key, val) }
-func BriefByteString(key string, val []byte) Field     { return field.BriefByteString(key, val) }
-func BriefStringer(key string, val fmt.Stringer) Field { return field.BriefStringer(key, val) }
+func Float[T ~float32 | ~float64](key string, val T) Attr { return Float64(key, float64(val)) }
 
-func BriefStringp(key string, val *string) Field               { return field.BriefStringp(key, val) }
-func BriefStrings(key string, val []string) Field              { return field.BriefStrings(key, val) }
-func BriefByteStrings(key string, val [][]byte) Field          { return field.BriefByteStrings(key, val) }
-func BriefStringers[T fmt.Stringer](key string, val []T) Field { return field.BriefStringers(key, val) }
+func BriefString(key string, val string) Attr         { return _attr.BriefString(key, val) }
+func BriefByteString(key string, val []byte) Attr     { return _attr.BriefByteString(key, val) }
+func BriefStringer(key string, val fmt.Stringer) Attr { return _attr.BriefStringer(key, val) }
 
-func BriefReflect(key string, val interface{}) Field { return field.BriefReflect(key, val) }
+func BriefStringp(key string, val *string) Attr               { return _attr.BriefStringp(key, val) }
+func BriefStrings(key string, val []string) Attr              { return _attr.BriefStrings(key, val) }
+func BriefByteStrings(key string, val [][]byte) Attr          { return _attr.BriefByteStrings(key, val) }
+func BriefStringers[T fmt.Stringer](key string, val []T) Attr { return _attr.BriefStringers(key, val) }
+
+func BriefReflect(key string, val any) Attr { return _attr.BriefReflect(key, val) }

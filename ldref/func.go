@@ -19,7 +19,7 @@ type FuncName struct {
 	Receiver string // *testOject
 }
 
-func GetFuncName(f interface{}) FuncName {
+func GetFuncName(f any) FuncName {
 	fullName := runtime.FuncForPC(reflect.ValueOf(f).Pointer()).Name()
 	return ParseFuncName(fullName)
 }

@@ -19,8 +19,8 @@ import (
 	"github.com/distroy/ldgo/v3/ldctx"
 	"github.com/distroy/ldgo/v3/lderr"
 	"github.com/distroy/ldgo/v3/ldgin"
+	"github.com/distroy/ldgo/v3/ldlog"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 type (
@@ -33,8 +33,8 @@ var (
 )
 
 func testOneError(c *ldgin.Context) lderr.Error {
-	ldctx.LogI(c, "", zap.String("method", c.GetMethod()), zap.String("path", c.GetPath()),
-		zap.String("handler", c.GetHandler()))
+	ldctx.LogI(c, "", ldlog.String("method", c.GetMethod()), ldlog.String("path", c.GetPath()),
+		ldlog.String("handler", c.GetHandler()))
 	return ErrTestOneError
 }
 
@@ -52,8 +52,8 @@ type testBindReq struct {
 func testBind(ctx StdContext, req *testBindReq) (*testBindReq, lderr.Error) {
 	g := ldgin.GetGin(ctx)
 	c := ldgin.GetContext(g)
-	ldctx.LogI(c, "", zap.String("method", c.GetMethod()), zap.String("path", c.GetPath()),
-		zap.String("handler", c.GetHandler()))
+	ldctx.LogI(c, "", ldlog.String("method", c.GetMethod()), ldlog.String("path", c.GetPath()),
+		ldlog.String("handler", c.GetHandler()))
 	return req, nil
 }
 
@@ -130,7 +130,7 @@ type testParseReq struct {
 
 func (req *testParseReq) Parse(c *ldgin.Context) lderr.Error {
 	if err := c.ShouldBindQuery(req); err != nil {
-		ldctx.LogE(c, "ShouldBindQuery() fail", zap.Error(err))
+		ldctx.LogE(c, "ShouldBindQuery() fail", ldlog.Error(err))
 		return lderr.ErrParseRequest
 	}
 	return nil
@@ -145,8 +145,8 @@ func testSucc(c *ldgin.Context) lderr.Error {
 }
 
 func testPanic(c *ldgin.Context) lderr.Error {
-	ldctx.LogI(c, "", zap.String("method", c.GetMethod()), zap.String("path", c.GetPath()),
-		zap.String("handler", c.GetHandler()))
+	ldctx.LogI(c, "", ldlog.String("method", c.GetMethod()), ldlog.String("path", c.GetPath()),
+		ldlog.String("handler", c.GetHandler()))
 
 	var p *int
 	*p = 1

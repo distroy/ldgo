@@ -91,7 +91,7 @@ func allow(c context.Context, l reserver, n int) bool {
 	// Wait if necessary
 	now := time.Now()
 	delay := r.DelayFrom(now)
-	// ldctx.LogI(c, " ** allow delay", zap.Duration("delay", delay))
+	// ldctx.LogI(c, " ** allow delay", ldlog.Duration("delay", delay))
 	if delay <= 0 {
 		return true
 	}

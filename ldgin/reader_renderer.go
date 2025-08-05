@@ -12,7 +12,7 @@ import (
 
 	"github.com/distroy/ldgo/v3/ldctx"
 	"github.com/distroy/ldgo/v3/lderr"
-	"go.uber.org/zap"
+	"github.com/distroy/ldgo/v3/ldlog"
 )
 
 type ReaderRenderer struct {
@@ -39,7 +39,7 @@ func (r ReaderRenderer) Render(c *Context) {
 		return
 	}
 
-	ldctx.LogE(c, "[ldgin] render from reader fail", zap.Error(err))
+	ldctx.LogE(c, "[ldgin] render from reader fail", ldlog.Error(err))
 	e := lderr.WithDetail(lderr.ErrHttpRenderBody, err.Error())
 	c.setError(e)
 

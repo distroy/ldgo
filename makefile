@@ -15,15 +15,16 @@ GO_FLAGS=${flags}
 GO_VERSION=$(shell go version | cut -d" " -f 3)
 GO_MAJOR_VERSION=$(shell echo $(GO_VERSION) | cut -d"." -f 1)
 GO_SUB_VERSION=$(shell echo $(GO_VERSION) | cut -d"." -f 2)
-# ifeq ($(shell expr ${GO_SUB_VERSION} '>' 10), 1)
-# 	GO_FLAGS+=-mod=vendor
-# endif
+ifeq ($(shell expr ${GO_SUB_VERSION} '>' 22), 1)
+	GO_FLAGS+=-ldflags=-checklinkname=0
+endif
 $(info GO_VERSION: $(GO_MAJOR_VERSION).$(GO_SUB_VERSION))
 $(info GO_FLAGS: $(GO_FLAGS))
 
 # go test
-GO_TEST_DIRS+=$(shell find . -name '*_test.go' | grep -v -E 'vendor|bak' | xargs dirname | sort | uniq)
-GO_TEST_DIRS_NAME=$(notdir $(GO_TEST_DIRS))
+GO_TEST_DIRS+=$(shell find . -name '*_test.go' | grep -v -E 'vendor|bak|git-go-tool' | xargs dirname | sort | uniq)
+# GO_TEST_DIRS_NAME=$(notdir $(GO_TEST_DIRS))
+GO_TEST_DIRS_NAME=$(patsubst ./%,%,$(GO_TEST_DIRS))
 # $(info GO_TEST_DIRS: $(GO_TEST_DIRS_NAME))
 
 ifeq (${test_report},)
@@ -66,8 +67,8 @@ all: go-test
 
 .PHONY: $(GO_TEST_DIRS_NAME)
 $(GO_TEST_DIRS_NAME):
-	@echo GO_TEST_DIRS: $(notdir $@)
-	$(GO) test $(GO_FLAGS) $(GO_TEST_FLAGS) ./$(notdir $@) \
+	@echo GO_TEST_DIRS: $@
+	$(GO) test $(GO_FLAGS) $(GO_TEST_FLAGS) ./$@ \
 		-coverprofile="$(GO_TEST_REPORT_DIR)/go-coverage.out"
 
 .PHONY: pb

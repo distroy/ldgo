@@ -1,0 +1,199 @@
+/*
+ * Copyright (C) distroy
+ */
+
+package _handler
+
+import (
+	"context"
+	"io"
+	"log/slog"
+	"slices"
+	"sync"
+)
+
+var (
+	_ slog.Handler = (*Handler)(nil)
+)
+
+func NewHandler(w io.Writer, opts *Options) Handler {
+	if opts == nil {
+		opts = &Options{
+			Caller: true,
+			Level:  slog.LevelInfo,
+		}
+	}
+	return Handler{
+		&commonHandler{
+			json:   false,
+			writer: wrapWriter(w),
+			opts:   *opts,
+			mu:     &sync.Mutex{},
+		},
+	}
+}
+
+type Handler struct {
+	*commonHandler
+}
+
+func (h Handler) Sequence() string { return h.opts.SeqId }
+func (h Handler) Level() Level     { return h.opts.Level.Level() }
+
+func (h Handler) Enabled(c context.Context, lvl slog.Level) bool  { return h.enabled(lvl) }
+func (h Handler) Handle(c context.Context, rec slog.Record) error { return h.handle(c, GetRecord(rec)) }
+func (h Handler) WithAttrs(as []slog.Attr) slog.Handler           { return Handler{h.withAttrs(GetAttrs(as))} }
+func (h Handler) WithGroup(name string) slog.Handler              { return Handler{h.withGroup(name)} }
+
+func (h Handler) Sync() error  { return h.writer.Sync() }
+func (h Handler) Close() error { return h.writer.Close() }
+
+type commonHandler struct {
+	json              bool // true => output JSON; false => output text
+	opts              Options
+	preformattedAttrs []byte
+	// groupPrefix is for the text handler only.
+	// It holds the prefix for groups that were already pre-formatted.
+	// A group will appear here when a call to WithGroup is followed by
+	// a call to WithAttrs.
+	groupPrefix string
+	groups      []string // all groups started from WithGroup
+	nOpenGroups int      // the number of groups opened in preformattedAttrs
+	mu          *sync.Mutex
+	writer      logWriter
+}
+
+func (h *commonHandler) clone() *commonHandler {
+	// We can't use assignment because we can't copy the mutex.
+	return &commonHandler{
+		json:              h.json,
+		opts:              h.opts,
+		preformattedAttrs: slices.Clip(h.preformattedAttrs),
+		groupPrefix:       h.groupPrefix,
+		groups:            slices.Clip(h.groups),
+		nOpenGroups:       h.nOpenGroups,
+		mu:                h.mu, // mutex shared among all clones of this handler
+		writer:            h.writer,
+	}
+}
+
+func (h *commonHandler) handle(_ context.Context, r Record) error {
+	seqId := h.opts.SeqId
+	if seqId == "" {
+		seqId = "-"
+	}
+
+	state := h.newHandleState(newBuffer(), true, ",")
+	defer state.free()
+
+	buf := state.buf
+
+	buf.WriteTime(r.Time, "")
+	buf.WriteByte('|')
+	buf.WriteString(r.Level.String())
+	buf.WriteByte('|')
+	buf.WriteString(seqId)
+	buf.WriteByte('|')
+	if !h.opts.Caller || r.PC == 0 {
+		buf.WriteByte('-')
+
+	} else {
+		src := r.Source()
+		buf.WriteString(src.Caller())
+	}
+	buf.WriteByte('|')
+	buf.WriteString(r.Message)
+	if pfa := h.preformattedAttrs; len(pfa) > 0 {
+		buf.WriteByte(',')
+		buf.Write(pfa)
+	}
+
+	if r.NumAttrs() > 0 {
+		buf.WriteByte('|')
+	}
+
+	state.sep = ""
+	state.appendNonBuiltIns(r)
+	buf.WriteByte('\n')
+
+	_, err := h.write(*state.buf)
+	// if r.Level >= LevelPanic {
+	// 	h.sync()
+	// 	panic(*state.buf)
+	// }
+	return err
+}
+
+func (h *commonHandler) write(buf []byte) (int, error) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	return h.writer.Write(buf)
+}
+
+// enabled reports whether l is greater than or equal to the
+// minimum level.
+func (h *commonHandler) enabled(l slog.Level) bool {
+	minLevel := slog.LevelInfo
+	if h.opts.Level != nil {
+		minLevel = h.opts.Level.Level()
+	}
+	return l >= minLevel
+}
+
+func (h *commonHandler) withAttrs(as []Attr) *commonHandler {
+	// We are going to ignore empty groups, so if the entire slice consists of
+	// them, there is nothing to do.
+	if CountEmptyGroups(as) == len(as) {
+		return h
+	}
+	h2 := h.clone()
+	// Pre-format the attributes as an optimization.
+	state := h2.newHandleState((*Buffer)(&h2.preformattedAttrs), false, "")
+	defer state.free()
+	state.prefix.WriteString(h.groupPrefix)
+	if pfa := h2.preformattedAttrs; len(pfa) > 0 {
+		state.sep = h.attrSep()
+		if h2.json && pfa[len(pfa)-1] == '{' {
+			state.sep = ""
+		}
+	}
+	// Remember the position in the buffer, in case all attrs are empty.
+	pos := state.buf.Len()
+	state.openGroups()
+	if !state.appendAttrs(as) {
+		state.buf.SetLen(pos)
+
+	} else {
+		// Remember the new prefix for later keys.
+		h2.groupPrefix = state.prefix.String()
+		// Remember how many opened groups are in preformattedAttrs,
+		// so we don't open them again when we handle a Record.
+		h2.nOpenGroups = len(h2.groups)
+	}
+	return h2
+}
+
+func (h *commonHandler) withGroup(name string) *commonHandler {
+	h2 := h.clone()
+	h2.groups = append(h2.groups, name)
+	return h2
+}
+
+// attrSep returns the separator between attributes.
+func (h *commonHandler) attrSep() string { return "," }
+
+func (h *commonHandler) newHandleState(buf *Buffer, freeBuf bool, sep string) handleState {
+	s := handleState{
+		h:       h,
+		buf:     buf,
+		freeBuf: freeBuf,
+		sep:     sep,
+		prefix:  newBuffer(),
+	}
+	if h.opts.ReplaceAttr != nil {
+		gs := groupPool.Get()
+		s.groups = &gs
+		*s.groups = append(*s.groups, h.groups[:h.nOpenGroups]...)
+	}
+	return s
+}
