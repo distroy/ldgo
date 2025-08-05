@@ -6,10 +6,14 @@ package ldflag
 
 import (
 	"reflect"
+	"strconv"
 	"strings"
 	"testing"
+	"time"
 
+	"github.com/distroy/ldgo/v2/internal/timeinternal"
 	"github.com/distroy/ldgo/v2/ldptr"
+	"github.com/distroy/ldgo/v2/ldtime"
 	"github.com/smartystreets/goconvey/convey"
 )
 
@@ -32,6 +36,24 @@ func (p *testExcludes) Default() string { return strings.Join([]string{"a", "b"}
 func (p *testExcludes) String() string  { return mustMarshalJson(*p) }
 func (p *testExcludes) Set(s string) error {
 	*p = append(*p, s)
+	return nil
+}
+
+type Duration ldtime.Duration
+
+func (d *Duration) get() *ldtime.Duration  { return (*ldtime.Duration)(d) }
+func (d Duration) Duration() time.Duration { return d.get().Duration() }
+
+func (d Duration) MarshalJSON() ([]byte, error)  { return d.get().MarshalJSON() }
+func (d *Duration) UnmarshalJSON(b []byte) error { return d.get().UnmarshalJSON(b) }
+
+func (d *Duration) String() string { return d.get().String() }
+func (d *Duration) Set(s string) error {
+	n, err := timeinternal.DurationUnmarshalJson([]byte(strconv.Quote(s)))
+	if err != nil {
+		return err
+	}
+	*d = Duration(n)
 	return nil
 }
 
@@ -159,6 +181,7 @@ Flags:
 		})
 		c.Convey("value with default", func(c convey.C) {
 			type Flags struct {
+				Timeout  Duration     `ldflag:"meta:timeout; default:5m"`
 				Includes testIncludes `ldflag:"name:include; meta:regexp; usage:include file regexps"`
 				Excludes testExcludes `ldflag:"name:exclude; meta:regexp; usage:exclude file regexps"`
 			}
@@ -169,6 +192,8 @@ Flags:
 
 			c.So(b.String(), convey.ShouldEqual, `Usage of unittest:
 Flags:
+        -timeout <timeout>
+                default: 5m
         -include <regexp>
                 include file regexps
         -exclude <regexp>
