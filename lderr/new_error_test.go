@@ -10,6 +10,12 @@ import (
 	"testing"
 )
 
+type testUnwrapError struct {
+	error
+}
+
+func (e testUnwrapError) Unwrap() error { return e.error }
+
 func TestIs(t *testing.T) {
 	tests := []struct {
 		name   string
@@ -103,8 +109,14 @@ func TestIs(t *testing.T) {
 		},
 		{
 			name:   "unknown & panic",
-			err:    ErrUnkown,
+			err:    testUnwrapError{ErrUnkown},
 			target: ErrServicePanic,
+			want:   false,
+		},
+		{
+			name:   "unknown & nil",
+			err:    testUnwrapError{ErrUnkown},
+			target: nil,
 			want:   false,
 		},
 	}
