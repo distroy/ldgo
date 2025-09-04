@@ -7,7 +7,7 @@ package _handler
 import "log/slog"
 
 type Leveler interface {
-	Level() Level
+	Level() slog.Level
 }
 
 type Options struct {

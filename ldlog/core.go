@@ -35,7 +35,7 @@ func (l *core) Handler() Handler { return l.handler }
 func (l *core) Sync() error  { return l.handler.Sync() }
 func (l *core) Close() error { return l.handler.Close() }
 
-func (l *core) Level() Level     { return l.handler.Level() }
+func (l *core) Level() Level     { return Level(l.handler.Level()) }
 func (l *core) Sequence() string { return l.handler.Sequence() }
 
 func (l *core) withAttrs(attr ...Attr) { l.handler = wrapHandler(l.handler.WithAttrs(attr)) }
@@ -49,7 +49,7 @@ func (l *core) ctx(c context.Context) context.Context {
 
 func (l *core) Enabled(c context.Context, lvl Level) bool { return l.enabled(l.ctx(c), lvl, 1) }
 func (l *core) enabled(c context.Context, lvl Level, skip int) bool {
-	if l == nil || l.handler == nil || !l.handler.Enabled(c, lvl) {
+	if l == nil || l.handler == nil || !l.handler.Enabled(c, lvl.Level()) {
 		return false
 	}
 	return l.enabler.Enable(lvl, skip+1)
@@ -62,14 +62,15 @@ func (l *core) getCaller(skip int) uintptr {
 	return pcs[0]
 }
 
-func (l *core) writeRecord(c context.Context, _ Level, r *Record) {
+func (l *core) writeRecord(c context.Context, lvl Level, r *Record) {
 	c = l.ctx(c)
 	_ = l.Handler().Handle(c, *r)
-	// if lvl < LevelPanic {
-	// 	return
-	// }
-	// l.Sync()
+	if lvl < LevelPanic {
+		return
+	}
+	l.Sync()
 	// panic(rec2err(r))
+	panic(r.Message)
 }
 
 func (l *core) log(c context.Context, lvl Level, skip int, msg string, args ...any) {
@@ -78,7 +79,7 @@ func (l *core) log(c context.Context, lvl Level, skip int, msg string, args ...a
 		return
 	}
 	pc := l.getCaller(skip + 1)
-	r := slog.NewRecord(time.Now(), lvl, msg, pc)
+	r := slog.NewRecord(time.Now(), lvl.Level(), msg, pc)
 	r.Add(args...)
 	l.writeRecord(c, lvl, &r)
 }
@@ -90,7 +91,7 @@ func (l *core) logFmt(c context.Context, lvl Level, skip int, format string, arg
 	}
 	pc := l.getCaller(skip + 1)
 	msg := fmt.Sprintf(format, args...)
-	r := slog.NewRecord(time.Now(), lvl, msg, pc)
+	r := slog.NewRecord(time.Now(), lvl.Level(), msg, pc)
 	// r.Add(args...)
 	l.writeRecord(c, lvl, &r)
 }
@@ -101,7 +102,7 @@ func (l *core) logAttrs(c context.Context, lvl Level, skip int, msg string, attr
 		return
 	}
 	pc := l.getCaller(skip + 1)
-	r := slog.NewRecord(time.Now(), lvl, msg, pc)
+	r := slog.NewRecord(time.Now(), lvl.Level(), msg, pc)
 	r.AddAttrs(attrs...)
 	l.writeRecord(c, lvl, &r)
 }
@@ -113,7 +114,7 @@ func (l *core) logln(c context.Context, lvl Level, skip int, args ...any) {
 	}
 	pc := l.getCaller(skip + 1)
 	msg := sprintln(args)
-	r := slog.NewRecord(time.Now(), lvl, msg, pc)
+	r := slog.NewRecord(time.Now(), lvl.Level(), msg, pc)
 	// r.Add(args...)
 	l.writeRecord(c, lvl, &r)
 }

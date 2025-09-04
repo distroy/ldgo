@@ -4,7 +4,15 @@
 
 package ldlog
 
-import "log/slog"
+import (
+	"log/slog"
+
+	"github.com/distroy/ldgo/v3/ldlog/internal/_handler"
+)
+
+var (
+	_ logHandler = (*_handler.Handler)(nil)
+)
 
 type logHandler interface {
 	Handler
@@ -12,7 +20,7 @@ type logHandler interface {
 	Sync() error
 	Close() error
 
-	Level() Level
+	Level() slog.Level
 	Sequence() string
 }
 
@@ -33,5 +41,5 @@ type handlerWrapper struct {
 func (h handlerWrapper) Sync() error  { return nil }
 func (h handlerWrapper) Close() error { return nil }
 
-func (h handlerWrapper) Level() Level     { return 0 }
-func (h handlerWrapper) Sequence() string { return "" }
+func (h handlerWrapper) Level() slog.Level { return 0 }
+func (h handlerWrapper) Sequence() string  { return "" }

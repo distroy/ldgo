@@ -37,8 +37,8 @@ type Handler struct {
 	*commonHandler
 }
 
-func (h Handler) Sequence() string { return h.opts.SeqId }
-func (h Handler) Level() Level     { return h.opts.Level.Level() }
+func (h Handler) Sequence() string  { return h.opts.SeqId }
+func (h Handler) Level() slog.Level { return h.opts.Level.Level() }
 
 func (h Handler) Enabled(c context.Context, lvl slog.Level) bool  { return h.enabled(lvl) }
 func (h Handler) Handle(c context.Context, rec slog.Record) error { return h.handle(c, GetRecord(rec)) }

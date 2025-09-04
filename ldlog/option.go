@@ -8,11 +8,6 @@ import (
 	"github.com/distroy/ldgo/v3/ldlog/internal/_handler"
 )
 
-const (
-	defaultLogLevel        = "INFO"
-	defaultLogEnableCaller = true
-)
-
 func GetLevelKey() string  { return _handler.LevelKey }
 func GetCallerKey() string { return _handler.CallerKey }
 

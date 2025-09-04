@@ -11,7 +11,7 @@ import (
 )
 
 type (
-	Level   = slog.Level
+	Level   = _slogtype.Level
 	Attr    = slog.Attr
 	Value   = slog.Value
 	Record  = slog.Record
@@ -19,6 +19,7 @@ type (
 )
 
 const (
+	LevelTrace Level = _slogtype.LevelTrace
 	LevelDebug Level = _slogtype.LevelDebug
 	LevelInfo  Level = _slogtype.LevelInfo
 	LevelWarn  Level = _slogtype.LevelWarn
