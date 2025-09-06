@@ -13,9 +13,9 @@ import (
 	"github.com/distroy/ldgo/v3/ldconv"
 	"github.com/distroy/ldgo/v3/ldctx"
 	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldlog"
 	"github.com/distroy/ldgo/v3/ldredis"
 	"github.com/distroy/ldgo/v3/ldredis/internal"
-	"go.uber.org/zap"
 )
 
 type Codec[T any] interface {
@@ -144,7 +144,7 @@ func (c *base[T]) unmarshal(cc context.Context, bytes []byte) (T, error) {
 	v, err := c.codec.Unmarshal(bytes)
 	if err != nil {
 		logger := ldctx.GetLogger(cc)
-		logger.Error("redis codec unmarshal fail", zap.Error(err),
+		logger.Error("redis codec unmarshal fail", ldlog.Error(err),
 			getCallerField(c.client))
 		return c.zero(), lderr.ErrCacheUnmarshal
 	}
@@ -165,7 +165,7 @@ func (c *base[T]) unmarshalInterface(cc context.Context, i interface{}) (T, erro
 	default:
 		logger := ldctx.GetLogger(cc)
 		logger.Error("redis codec cannot unmarshal the type",
-			zap.Stringer("type", reflect.TypeOf(i)), getCallerField(c.client))
+			ldlog.Stringer("type", reflect.TypeOf(i)), getCallerField(c.client))
 		return c.zero(), lderr.ErrCacheUnmarshal
 	}
 	return c.unmarshal(cc, bytes)
@@ -173,7 +173,7 @@ func (c *base[T]) unmarshalInterface(cc context.Context, i interface{}) (T, erro
 
 // ***** redis unmarshal end *****
 
-func getCallerField(rds *ldredis.Redis) zap.Field {
+func getCallerField(rds *ldredis.Redis) ldlog.Attr {
 	caller := true
 	if rds != nil {
 		caller = getOptions(rds).Caller

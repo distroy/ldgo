@@ -15,7 +15,7 @@ var (
 
 type Field struct {
 	Field     reflect.StructField
-	Type      reflect.Type
+	Type      reflect.Type // not be ptr
 	Name      string
 	Index     int
 	OmitEmpty bool
@@ -43,7 +43,7 @@ func getStruct(typ reflect.Type) *Struct {
 		fields: make([]Field, 0, n),
 	}
 
-	for i := 0; i < n; i++ {
+	for i := range n {
 		sf := typ.Field(i)
 		f, ok := getField(i, sf)
 		if ok {

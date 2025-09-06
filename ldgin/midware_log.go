@@ -10,8 +10,8 @@ import (
 
 	"github.com/distroy/ldgo/v3/ldctx"
 	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldlog"
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 func LogMidware() func(g *gin.Context) { return logMidwareFunc }
@@ -25,7 +25,7 @@ func logMidwareFunc(g *gin.Context) {
 	httpReqPath := c.Request.URL.Path
 
 	l := ldctx.GetLogger(g)
-	l = l.With(zap.String("method", httpReqMethod), zap.String("path", httpReqPath))
+	l = l.With(ldlog.String("method", httpReqMethod), ldlog.String("path", httpReqPath))
 	l.Info("http request begin")
 
 	c.Next()
@@ -44,19 +44,19 @@ func logMidwareFunc(g *gin.Context) {
 	// 计算耗时
 	cost := time.Since(start)
 
-	reqField := zap.Skip()
+	reqField := ldlog.Skip()
 	if req := GetRequest(c); req != nil {
-		reqField = zap.Reflect("req", req)
+		reqField = ldlog.Reflect("req", req)
 	}
 
 	// 获取业务的错误码
 	bizCode := 0
 	errMsg := ""
-	rspDataField := zap.Skip()
+	rspDataField := ldlog.Skip()
 	if rsp := GetResponse(c); rsp != nil {
 		bizCode = rsp.Error.Code
 		errMsg = rsp.Error.Message
-		rspDataField = zap.Reflect("rspData", rsp.Data)
+		rspDataField = ldlog.Reflect("rspData", rsp.Data)
 	}
 
 	if err := c.GetError(); !lderr.IsSuccess(err) {
@@ -70,6 +70,6 @@ func logMidwareFunc(g *gin.Context) {
 		errMsg = err.Error()
 	}
 
-	l.Info("http request end", zap.Int("httpCode", httpCode), zap.Int("bizCode", bizCode),
-		zap.String("errmsg", errMsg), zap.Duration("cost", cost), reqField, rspDataField)
+	l.Info("http request end", ldlog.Int("httpCode", httpCode), ldlog.Int("bizCode", bizCode),
+		ldlog.String("errmsg", errMsg), ldlog.Duration("cost", cost), reqField, rspDataField)
 }

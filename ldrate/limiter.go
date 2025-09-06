@@ -11,8 +11,8 @@ import (
 	"github.com/distroy/ldgo/v3/ldatomic"
 	"github.com/distroy/ldgo/v3/ldctx"
 	"github.com/distroy/ldgo/v3/lderr"
+	"github.com/distroy/ldgo/v3/ldlog"
 	"github.com/distroy/ldgo/v3/ldmath"
-	"go.uber.org/zap"
 	"golang.org/x/time/rate"
 )
 
@@ -65,8 +65,8 @@ func (l *Limiter) refresh(c context.Context, now time.Time) error {
 	if burst != l.lastBurst.Load() {
 		l.lastBurst.Store(burst)
 		l.limiter.SetBurstAt(now, int(burst))
-		ldctx.LogI(c, "[limiter] refresh the burst succ", zap.String("name", l.Name()),
-			zap.Int64("burst", burst))
+		ldctx.LogI(c, "[limiter] refresh the burst succ", ldlog.String("name", l.Name()),
+			ldlog.Int64("burst", burst))
 	}
 
 	limit := cfg.Limit.Load()
@@ -84,8 +84,8 @@ func (l *Limiter) refresh(c context.Context, now time.Time) error {
 	}
 
 	// if interval < 0 || limit <= 0 || nodeCount <= 0 {
-	// 	ldctx.LogE(c, "[limiter] invalid rate every parameters", zap.Int64("limit", limit),
-	// 		zap.Stringer("interval", interval), zap.Int64("nodeCount", nodeCount))
+	// 	ldctx.LogE(c, "[limiter] invalid rate every parameters", ldlog.Int64("limit", limit),
+	// 		ldlog.Stringer("interval", interval), ldlog.Int64("nodeCount", nodeCount))
 	// 	return lderr.ErrInternalServerError
 	// }
 
@@ -95,8 +95,8 @@ func (l *Limiter) refresh(c context.Context, now time.Time) error {
 
 	every := interval * time.Duration(nodeCount) / time.Duration(limit)
 	// if every < 0 {
-	// 	ldctx.LogE(c, "[limiter] invalid rate every", zap.Int64("limit", limit),
-	// 		zap.Stringer("interval", interval), zap.Int64("serviceCount", nodeCount))
+	// 	ldctx.LogE(c, "[limiter] invalid rate every", ldlog.Int64("limit", limit),
+	// 		ldlog.Stringer("interval", interval), ldlog.Int64("serviceCount", nodeCount))
 	// 	return lderr.ErrInternalServerError
 	// }
 
@@ -105,9 +105,9 @@ func (l *Limiter) refresh(c context.Context, now time.Time) error {
 	l.lastInterval.Store(interval)
 	l.lastNodeCount.Store(nodeCount)
 
-	ldctx.LogI(c, "[limiter] refresh rate every succ", zap.String("name", l.Name()),
-		zap.Int64("limit", limit), zap.Stringer("interval", interval),
-		zap.Int64("serviceCount", nodeCount), zap.Stringer("every", every))
+	ldctx.LogI(c, "[limiter] refresh rate every succ", ldlog.String("name", l.Name()),
+		ldlog.Int64("limit", limit), ldlog.Stringer("interval", interval),
+		ldlog.Int64("serviceCount", nodeCount), ldlog.Stringer("every", every))
 	return nil
 }
 
@@ -117,7 +117,7 @@ func (l *Limiter) Wait(c context.Context) error {
 
 func (l *Limiter) WaitN(c context.Context, n int) error {
 	if err := wait(c, l, n); err != nil {
-		ldctx.LogE(c, "[limiter] wait fail", zap.String("name", l.Name()), zap.Int("n", n), zap.Error(err))
+		ldctx.LogE(c, "[limiter] wait fail", ldlog.String("name", l.Name()), ldlog.Int("n", n), ldlog.Error(err))
 		return err
 	}
 	return nil

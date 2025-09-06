@@ -10,7 +10,6 @@ import (
 
 	"github.com/distroy/ldgo/v3/ldatomic"
 	"github.com/distroy/ldgo/v3/ldsync"
-	"go.uber.org/zap"
 )
 
 const (
@@ -62,7 +61,7 @@ func getIntervaler(skip int) *intervaler {
 	c := getIntervalerByKey(key)
 	if c == nil {
 		Default().Error("reached the limit of interval callers, drop it",
-			zap.String("file", file), zap.Int("line", line))
+			String("file", file), Int("line", line))
 	}
 	return c
 }

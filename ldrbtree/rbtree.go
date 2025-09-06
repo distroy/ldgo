@@ -143,7 +143,7 @@ func (rbt *RBTree[T]) Clear() {
 			child.Parent = parent
 		}
 
-		// ldlog.Default().Info("*** clear", zap.Any("data", node.Data))
+		// ldlog.Default().Info("*** clear", ldlog.Any("data", node.Data))
 		putRBTreeNode[T](node)
 
 		if child != sentinel {

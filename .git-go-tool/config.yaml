@@ -19,13 +19,13 @@ go-cognitive:
 go-format:
   git-diff:
     mode: all
-  # exclude:
-  #   - '(^|/)3rd/'
+  exclude:
+    - '^git-go-tool/'
   # file-line: 1000
   # import: true
   # formated: true
-  # package: true
-  func-input-num: 4
+  package: false
+  func-input-num: 5
   # func-output-num: 3
   # func-named-output: true
   # func-input-num-without-context: true

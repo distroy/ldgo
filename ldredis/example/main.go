@@ -14,11 +14,10 @@ import (
 	"github.com/distroy/ldgo/v3/ldlog"
 	"github.com/distroy/ldgo/v3/ldredis"
 	"github.com/distroy/ldgo/v3/ldredis/ldrediscodec"
-	"go.uber.org/zap"
 )
 
 func init() {
-	log := ldlog.New(ldlog.Level("debug"))
+	log := ldlog.New(nil, ldlog.SetLevel(ldlog.LevelDebug))
 	ldlog.SetDefault(log)
 }
 
@@ -45,10 +44,10 @@ func pipeline(ctx ldctx.Context) {
 	p.Get(ctx, keys[1])
 	p.Get(ctx, keys[2])
 	cmds, err := p.Exec(ctx)
-	ldctx.LogI(ctx, "pipeline return", zap.Error(err))
+	ldctx.LogI(ctx, "pipeline return", ldlog.Error(err))
 	for _, v := range cmds {
 		cmd, _ := v.(*ldredis.StringCmd)
-		ldctx.LogI(ctx, "pipeline res", zap.Reflect("cmd", cmd.Args()), zap.String("val", cmd.Val()), zap.Error(cmd.Err()))
+		ldctx.LogI(ctx, "pipeline res", ldlog.Reflect("cmd", cmd.Args()), ldlog.String("val", cmd.Val()), ldlog.Error(cmd.Err()))
 	}
 }
 
@@ -64,7 +63,7 @@ func slice(ctx ldctx.Context) {
 	rds.HSet(ctx, key, "3", 128.1)
 
 	cmd := rds.HMGet(ctx, key, "1", "2", "3", "4")
-	ldctx.LogI(ctx, "", zap.Stringer("type", reflect.TypeOf(cmd.Val())), zap.Reflect("value", cmd.Val()))
+	ldctx.LogI(ctx, "", ldlog.Stringer("type", reflect.TypeOf(cmd.Val())), ldlog.Reflect("value", cmd.Val()))
 	for i, v := range cmd.Val() {
 		ldctx.LogIf(ctx, "idx:%d, type:%T, value:%v", i, v, v)
 	}
@@ -88,7 +87,7 @@ func codecStruct(ctx ldctx.Context) {
 		Int1: 111,
 		Int2: 222,
 	}, time.Minute)
-	ldctx.LogI(ctx, "cmd", zap.Reflect("cmd", sCmd.Args()))
+	ldctx.LogI(ctx, "cmd", ldlog.Reflect("cmd", sCmd.Args()))
 
 	gCmd0 := ldrediscodec.New(rds, ldrediscodec.Json[*codecStruct]()).Get(ctx, key)
 	ldctx.LogIf(ctx, "type:%T, value:%v", gCmd0.Val(), gCmd0.Val())
@@ -114,7 +113,7 @@ func codecBaseType(ctx ldctx.Context) {
 	})
 
 	cmd := cli.HGetAll(ctx, key)
-	ldctx.LogI(ctx, "", zap.Reflect("cmd", cmd.Args()), zap.Stringer("type", reflect.TypeOf(cmd.Val())), zap.Reflect("val", cmd.Val()))
+	ldctx.LogI(ctx, "", ldlog.Reflect("cmd", cmd.Args()), ldlog.Stringer("type", reflect.TypeOf(cmd.Val())), ldlog.Reflect("val", cmd.Val()))
 }
 
 func main() {
@@ -132,12 +131,12 @@ func main() {
 type LogReporter struct{}
 
 func (_ LogReporter) Report(cmd ldredis.Cmder, d time.Duration) {
-	ldctx.LogI(nil, "report redis cmd", zap.Reflect("cmd", cmd.Args()))
+	ldctx.LogI(nil, "report redis cmd", ldlog.Reflect("cmd", cmd.Args()))
 }
 
 func (_ LogReporter) ReportPipeline(cmds []ldredis.Cmder, d time.Duration) {
 	ldctx.LogI(nil, "report redis pipline cmd")
 	for i, cmd := range cmds {
-		ldctx.LogI(nil, "report redis pipline cmd", zap.Int("idx", i), zap.Reflect("cmd", cmd.Args()))
+		ldctx.LogI(nil, "report redis pipline cmd", ldlog.Int("idx", i), ldlog.Reflect("cmd", cmd.Args()))
 	}
 }

@@ -8,11 +8,10 @@ import (
 	"time"
 
 	"github.com/distroy/ldgo/v3/ldrand"
-	"go.uber.org/zap/zapcore"
 )
 
 type Enabler interface {
-	Enable(lvl zapcore.Level, skip ...int) bool
+	Enable(lvl Level, skip ...int) bool
 }
 
 // RateEnabler: enable based on probability(rate).
@@ -65,17 +64,17 @@ func EnablerByNameAndInterval(name string, dur time.Duration) Enabler {
 
 type defaultEnabler struct{}
 
-func (p defaultEnabler) Enable(lvl zapcore.Level, skips ...int) bool { return true }
+func (p defaultEnabler) Enable(lvl Level, skips ...int) bool { return true }
 
 type falseEnabler struct{}
 
-func (p falseEnabler) Enable(lvl zapcore.Level, skips ...int) bool { return lvl >= zapcore.ErrorLevel }
+func (p falseEnabler) Enable(lvl Level, skips ...int) bool { return lvl >= LevelError }
 
 type rateEnabler struct {
 	rate float64
 }
 
-func (p rateEnabler) Enable(lvl zapcore.Level, skips ...int) bool {
+func (p rateEnabler) Enable(lvl Level, skips ...int) bool {
 	if (falseEnabler{}).Enable(lvl, skips...) {
 		return true
 	}
@@ -93,7 +92,7 @@ type intervalEnabler struct {
 	interval time.Duration
 }
 
-func (p intervalEnabler) Enable(lvl zapcore.Level, skips ...int) bool {
+func (p intervalEnabler) Enable(lvl Level, skips ...int) bool {
 	if (falseEnabler{}).Enable(lvl, skips...) {
 		return true
 	}
